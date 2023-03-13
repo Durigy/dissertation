@@ -2,7 +2,7 @@ from flask_wtf import FlaskForm
 # from flask_wtf.file import FileField, FileAllowed
 from wtforms import StringField, PasswordField, SubmitField, BooleanField, TextAreaField, IntegerField, SelectField, DateField
 from wtforms.validators import DataRequired, Length, EqualTo, ValidationError, Regexp, InputRequired, NumberRange, Email
-from .models import User
+from ..models import User
 from flask_login import current_user
 from datetime import timedelta, date
 
@@ -21,6 +21,9 @@ class RegistrationForm(FlaskForm):
             raise ValidationError('Display Name already Taken. Please choose a different one.')
 
     def validate_email(self, email):
+       """
+       TODO: add verification for uni email
+       """
        email = User.query.filter_by(email=email.data).first()
        if email:
            raise ValidationError('Email already Used. Please Use a different one.')
@@ -34,7 +37,7 @@ class LoginForm(FlaskForm):
     
 class UpdateAccountForm(FlaskForm):
     username = StringField('Display Name *', validators=[DataRequired(), Length(min=2, max=15)])
-    email = StringField('Email *', validators=[DataRequired(), Email()])
+    # email = StringField('Email *', validators=[DataRequired(), Email()])
     firstname = StringField('First Name *', validators=[DataRequired(), Length(min=2, max=15)])
     lastname = StringField('Last Name *', validators=[DataRequired(), Length(min=2, max=15)])
     submit = SubmitField('Update Account')
@@ -45,8 +48,8 @@ class UpdateAccountForm(FlaskForm):
             if user:
                 raise ValidationError('Display Name already Taken. Please choose a different one.')
 
-    def validate_email(self, email):
-        if email.data != current_user.email:
-            email = User.query.filter_by(email=email.data).first()
-            if email:
-                raise ValidationError('Email already Used. Please Use a different one.')
+    # def validate_email(self, email):
+    #     if email.data != current_user.email:
+    #         email = User.query.filter_by(email=email.data).first()
+    #         if email:
+    #             raise ValidationError('Email already Used. Please Use a different one.')

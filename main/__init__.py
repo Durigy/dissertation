@@ -1,6 +1,7 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
+from flask_migrate import Migrate
 from flask_bcrypt import Bcrypt
 from datetime import timedelta
 import os
@@ -22,7 +23,7 @@ sqlalchemy_track_modifications = False
 SECRET_KEY = ''
 SQLALCHEMY_DATABASE_URI = ''
 DEBUG = False
-REMEMBER_COOKIE_DURATION = timedelta(days=1)
+REMEMBER_COOKIE_DURATION = timedelta(days=1) # Still will result in the cookies, for a logeding user, will expire after 1 day
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 if os.path.exists('main/config.py'):
@@ -47,16 +48,30 @@ app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("SQLALCHEMY_DATABASE_URI"
 app.config['DEBUG'] = os.environ.get("DEBUG") if os.environ.get("DEBUG") else DEBUG
 
 # remember_me_cookie_setting
-app.config['REMEMBER_COOKIE_DURATION'] = os.environ.get("REMEMBER_COOKIE_DURATION") if os.environ.get("REMEMBER_COOKIE_DURATION") else REMEMBER_COOKIE_DURATION
+app.config['REMEMBER_COOKIE_DURATION'] = timedelta(days = os.environ.get("REMEMBER_COOKIE_DURATION")) if os.environ.get("REMEMBER_COOKIE_DURATION") else REMEMBER_COOKIE_DURATION
 
 # sqlalchemy_modifications_setting
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = os.environ.get("SQLALCHEMY_TRACK_MODIFICATIONS") if os.environ.get("SQLALCHEMY_TRACK_MODIFICATIONS") else SQLALCHEMY_TRACK_MODIFICATIONS
 
+# Database setup with login featues 
 db = SQLAlchemy(app)
 login_manager = LoginManager(app)
-login_manager.login_view = 'login'
+login_manager.login_view = 'users.login'
 login_manager.login_message_category = 'info'
+
+migrate = Migrate(app, db)
 
 bcrypt = Bcrypt(app)
 
-from . import routes
+
+
+## Reference for blueprints: https://flask.palletsprojects.com/en/2.2.x/blueprints/
+# import blueprint
+from .user.routes import users
+from .system.routes import system
+
+# register blueprint
+app.register_blueprint(users)
+app.register_blueprint(system)
+
+# from . import routes # This is nolonger needed as everything now uses blueprints

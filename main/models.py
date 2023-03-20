@@ -10,8 +10,17 @@ Links a user to one or more roles
 """
 user_role_link = db.Table(
     'user_role_link',
-    db.Column('user', db.String(32), db.ForeignKey('user.id'), nullable = False),
-    db.Column('user_role', db.String(3), db.ForeignKey('user_role.id'), nullable = False)
+    db.Column('user', db.String(20), db.ForeignKey('user.id'), nullable = False),
+    db.Column('user_role', db.String(20), db.ForeignKey('user_role.id'), nullable = False)
+)
+
+"""
+Links an image to university
+"""
+image_user_link = db.Table(
+    'user_university_link',
+    db.Column('user', db.String(20), db.ForeignKey('user.id'), nullable = False),
+    db.Column('university', db.String(20), db.ForeignKey('university.id'), nullable = False)
 )
 
 
@@ -49,30 +58,30 @@ class User(UserMixin, db.Model):
     join_date = db.Column(db.DateTime, nullable = True, default = datetime.utcnow)
 
     # Links (ForeignKeys) #
-    university = db.Column(db.String(20), db.ForeignKey('university.id'), nullable = False)
-    university_year = db.Column(db.String(20), db.ForeignKey('university_year.id'), nullable = False)
-    university_school = db.Column(db.String(20), db.ForeignKey('university_school.id'), nullable = False)
+    university_id = db.Column(db.String(20), db.ForeignKey('university.id'), nullable = True)
+    university_year_id = db.Column(db.String(20), db.ForeignKey('university_year.id'), nullable = True)
+    university_school_id = db.Column(db.String(20), db.ForeignKey('university_school.id'), nullable = True)
 
 
     # Relationships #
-    user_settings = db.relationship('UserSettings', backref = 'user', lazy = True, foreign_keys = 'UserSettings.user_id')
-    user_stats = db.relationship('UserStats', backref = 'user', lazy = True, foreign_keys = 'UserStats.user_id')
-    university_review = db.relationship('UniversityReview', backref = 'user', lazy = True, foreign_keys = 'UniversityReview.user_id')
-    module_review = db.relationship('ModuleReview', backref = 'user', lazy = True, foreign_keys = 'ModuleReview.user_id')
-    module_lecture = db.relationship('ModuleLecture', backref = 'user', lazy = True, foreign_keys = 'ModuleLecture.user_id')
-    module_lectue_vote = db.relationship('ModuleLectueVote', backref = 'user', lazy = True, foreign_keys = 'ModuleLectueVote.user_id')
-    module_post = db.relationship('ModulePost', backref = 'user', lazy = True, foreign_keys = 'ModulePost.user_id')
-    module_post_comment = db.relationship('ModulePostComment', backref = 'user', lazy = True, foreign_keys = 'ModulePostComment.user_id')
-    module_note = db.relationship('ModuleNote', backref = 'user', lazy = True, foreign_keys = 'ModuleNote.user_id')
-    module_file = db.relationship('ModuleFile', backref = 'user', lazy = True, foreign_keys = 'ModuleFile.user_id')
-    module_file = db.relationship('ModuleSubscription', backref = 'user', lazy = True, foreign_keys = 'ModuleSubscription.user_id')
-    public_profile = db.relationship('PublicProfile', backref = 'user', lazy = True, foreign_keys = 'PublicProfile.user_id')
-    public_post = db.relationship('PublicPost', backref = 'user', lazy = True, foreign_keys = 'PublicPost.user_id')
-    public_post_comment = db.relationship('PublicPostComment', backref = 'user', lazy = True, foreign_keys = 'PublicPostComment.user_id')
-    message_thread_owner = db.relationship('MessageThread', backref = 'user', lazy = True, foreign_keys = 'MessageThread.user_id')
-    message = db.relationship('Message', backref = 'user', lazy = True, foreign_keys = 'Message.user_id')
-    image = db.relationship('Image', backref = 'user', lazy = True, foreign_keys = 'Image.user_id')
-    document = db.relationship('Document', backref = 'user', lazy = True, foreign_keys = 'Document.user_id')
+    # user_settings = db.relationship('UserSettings', backref = 'user', lazy = True, foreign_keys = 'UserSettings.user_id')
+    # user_stats = db.relationship('UserStats', backref = 'user', lazy = True, foreign_keys = 'UserStats.user_id')
+    # university_review = db.relationship('UniversityReview', backref = 'user', lazy = True, foreign_keys = 'UniversityReview.user_id')
+    # module_review = db.relationship('ModuleReview', backref = 'user', lazy = True, foreign_keys = 'ModuleReview.user_id')
+    # module_lecture = db.relationship('ModuleLecture', backref = 'user', lazy = True, foreign_keys = 'ModuleLecture.user_id')
+    # module_lectue_vote = db.relationship('ModuleLectueVote', backref = 'user', lazy = True, foreign_keys = 'ModuleLectueVote.user_id')
+    # module_post = db.relationship('ModulePost', backref = 'user', lazy = True, foreign_keys = 'ModulePost.user_id')
+    # module_post_comment = db.relationship('ModulePostComment', backref = 'user', lazy = True, foreign_keys = 'ModulePostComment.user_id')
+    # module_note = db.relationship('ModuleNote', backref = 'user', lazy = True, foreign_keys = 'ModuleNote.user_id')
+    # module_file = db.relationship('ModuleFile', backref = 'user', lazy = True, foreign_keys = 'ModuleFile.user_id')
+    # module_file = db.relationship('ModuleSubscription', backref = 'user', lazy = True, foreign_keys = 'ModuleSubscription.user_id')
+    # public_profile = db.relationship('PublicProfile', backref = 'user', lazy = True, foreign_keys = 'PublicProfile.user_id')
+    # public_post = db.relationship('PublicPost', backref = 'user', lazy = True, foreign_keys = 'PublicPost.user_id')
+    # public_post_comment = db.relationship('PublicPostComment', backref = 'user', lazy = True, foreign_keys = 'PublicPostComment.user_id')
+    # message_thread_owner = db.relationship('MessageThread', backref = 'user', lazy = True, foreign_keys = 'MessageThread.user_id')
+    # message = db.relationship('Message', backref = 'user', lazy = True, foreign_keys = 'Message.user_id')
+    # image = db.relationship('Image', backref = 'user', lazy = True, foreign_keys = 'Image.user_id')
+    # document = db.relationship('Document', backref = 'user', lazy = True, foreign_keys = 'Document.user_id')
     
 
 @login_manager.user_loader
@@ -144,10 +153,10 @@ class University(db.Model):
     avg_rating = db.Column(db.Float, nullable = False, default = 0)
     
     # Links (ForeignKeys) #
-    logo_image_id = db.Column(db.String(20), db.ForeignKey('image.id'), nullable = True)
+    # logo_image_id = db.Column(db.String(20), db.ForeignKey('image.id'), nullable = True)
 
     # Relationships #
-    user = db.relationship('User', backref = 'university', lazy = True, foreign_keys = 'User.university_id')
+    # user = db.relationship('User', backref = 'university', lazy = True, foreign_keys = 'User.university_id')
      
 
 # University
@@ -162,7 +171,8 @@ class UniversitySchool(db.Model):
     # Links (ForeignKeys) #
 
     # Relationships #
-    user = db.relationship('User', backref = 'university_school', lazy = True, foreign_keys = 'User.university_school_id')
+    # user = db.relationship('User', backref = 'university_school', lazy = True, foreign_keys = 'User.university_school_id')
+    # module = db.relationship('Module', backref = 'university_school', lazy = True, foreign_keys = 'Module.university_school_id')
     
 class UniversityYear(db.Model):
     # Datebase Columns 
@@ -175,7 +185,8 @@ class UniversityYear(db.Model):
     # Links (ForeignKeys) #
 
     # Relationships #
-    user = db.relationship('User', backref = 'university_year', lazy = True, foreign_keys = 'User.university_year_id')
+    # user = db.relationship('User', backref = 'university_year', lazy = True, foreign_keys = 'User.university_year_id')
+    # module = db.relationship('Module', backref = 'university_year', lazy = True, foreign_keys = 'Module.university_year_id')
     
 class UniversityReview(db.Model):
     # Datebase Columns 
@@ -208,18 +219,18 @@ class Module(db.Model):
 
 
     # Links (ForeignKeys) #
-    university_id = db.Column(db.String(20), db.ForeignKey('university.id'), nullable = False)
-    university_school_id = db.Column(db.String(20), db.ForeignKey('university_school.id'), nullable = False)
-    university_year_id = db.Column(db.String(20), db.ForeignKey('university_year.id'), nullable = False)
+    university_id = db.Column(db.String(20), db.ForeignKey('university.id'), nullable = True)
+    university_school_id = db.Column(db.String(20), db.ForeignKey('university_school.id'), nullable = True)
+    university_year_id = db.Column(db.String(20), db.ForeignKey('university_year.id'), nullable = True)
 
     # Relationships #
-    module_post = db.relationship('ModulePost', backref = 'module', lazy = True, foreign_keys = 'ModulePost.module_id')
-    module_post_comment = db.relationship('ModulePostComment', backref = 'module', lazy = True, foreign_keys = 'ModulePostComment.module_id')
-    module_lecture = db.relationship('ModuleLecture', backref = 'module', lazy = True, foreign_keys = 'ModuleLecture.module_id')
-    module_lecture_vote = db.relationship('ModuleLectureVote', backref = 'module', lazy = True, foreign_keys = 'ModuleLectureVote.module_id')
-    module_note = db.relationship('ModuleNote', backref = 'module', lazy = True, foreign_keys = 'ModuleNote.module_id')
-    module_file = db.relationship('ModuleFile', backref = 'module', lazy = True, foreign_keys = 'ModuleFile.module_id')
-    module_subscription = db.relationship('ModuleSubscription', backref = 'module', lazy = True, foreign_keys = 'ModuleSubscription.module_id')
+    # module_post = db.relationship('ModulePost', backref = 'module', lazy = True, foreign_keys = 'ModulePost.module_id')
+    # module_post_comment = db.relationship('ModulePostComment', backref = 'module', lazy = True, foreign_keys = 'ModulePostComment.module_id')
+    # module_lecture = db.relationship('ModuleLecture', backref = 'module', lazy = True, foreign_keys = 'ModuleLecture.module_id')
+    # module_lecture_vote = db.relationship('ModuleLectureVote', backref = 'module', lazy = True, foreign_keys = 'ModuleLectureVote.module_id')
+    # module_note = db.relationship('ModuleNote', backref = 'module', lazy = True, foreign_keys = 'ModuleNote.module_id')
+    # module_file = db.relationship('ModuleFile', backref = 'module', lazy = True, foreign_keys = 'ModuleFile.module_id')
+    # module_subscription = db.relationship('ModuleSubscription', backref = 'module', lazy = True, foreign_keys = 'ModuleSubscription.module_id')
 
 class ModuleSubscription(db.Model):
     # Datebase Columns 
@@ -261,7 +272,7 @@ class ModuleLecture(db.Model):
     module_id = db.Column(db.String(20), db.ForeignKey('module.id'), nullable = False)
 
     # Relationships #
-    module_lecture_vote = db.relationship('ModuleLectueVote', backref = 'module_lecture', lazy = True, foreign_keys = 'ModuleLectureVote.module_lecture_id')
+    # module_lecture_vote = db.relationship('ModuleLectueVote', backref = 'module_lecture', lazy = True, foreign_keys = 'ModuleLectureVote.module_lecture_id')
     
 
 class ModuleLectueVote(db.Model):
@@ -291,7 +302,7 @@ class ModulePost(db.Model):
     module_id = db.Column(db.String(20), db.ForeignKey('module.id'), nullable = False)
 
     # Relationships #
-    module_post_comment = db.relationship('ModulePostComment', backref = 'module_post', lazy = True, foreign_keys = 'ModulePostComment.module_post_id')
+    # module_post_comment = db.relationship('ModulePostComment', backref = 'module_post', lazy = True, foreign_keys = 'ModulePostComment.module_post_id')
     
 
 class ModulePostComment(db.Model):
@@ -308,7 +319,7 @@ class ModulePostComment(db.Model):
     parent_comment_id = db.Column(db.String(20), db.ForeignKey('module_post_comment.id'), nullable = False)
 
     # Relationships #
-    module_post_comment = db.relationship('ModulePostComment', backref = 'parent_comment', lazy = True, foreign_keys = 'ModulePostComment.parent_comment_id')
+    # module_post_comment = db.relationship('ModulePostComment', backref = 'parent_comment', lazy = True, foreign_keys = 'ModulePostComment.parent_comment_id')
     
 
 
@@ -372,7 +383,7 @@ class PublicPost(db.Model):
     user_id = db.Column(db.String(20), db.ForeignKey('user.id'), nullable = False)
 
     # Relationships #
-    public_post_comment = db.relationship('PublicPostComment', backref = 'public_post', lazy = True, foreign_keys = 'PublicPostComment.public_post_id')
+    # public_post_comment = db.relationship('PublicPostComment', backref = 'public_post', lazy = True, foreign_keys = 'PublicPostComment.public_post_id')
     
 
 class PublicPostComment(db.Model):
@@ -388,7 +399,7 @@ class PublicPostComment(db.Model):
     parent_comment_id = db.Column(db.String(20), db.ForeignKey('public_post_comment.id'), nullable = False)
 
     # Relationships #
-    public_post_comment = db.relationship('PublicPostComment', backref = 'parent_comment', lazy = True, foreign_keys = 'PublicPostComment.parent_comment_id')
+    # public_post_comment = db.relationship('PublicPostComment', backref = 'parent_comment', lazy = True, foreign_keys = 'PublicPostComment.parent_comment_id')
     
 
 class MessageThread(db.Model):
@@ -404,7 +415,7 @@ class MessageThread(db.Model):
     user_id = db.Column(db.String(20), db.ForeignKey('user.id'), nullable = False)
 
     # Relationships #
-    message = db.relationship('Message', backref = 'thread', lazy = True, foreign_keys = 'Message.message_thread_id')
+    # message = db.relationship('Message', backref = 'thread', lazy = True, foreign_keys = 'Message.message_thread_id')
 
 
 class Message(db.Model):
@@ -438,7 +449,7 @@ class Image(db.Model):
     user_id = db.Column(db.String(20), db.ForeignKey('user.id'), nullable = False)
 
     # Relationships #
-    university = db.relationship('University', backref = 'image', lazy = True, foreign_keys = 'University.logo_image_id')
+    # university = db.relationship('University', backref = 'image', lazy = True, foreign_keys = 'University.logo_image_id')
     
 
 class Document(db.Model):

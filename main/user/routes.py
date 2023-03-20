@@ -67,7 +67,7 @@ def login():
             if next_page:
                 return redirect(next_page)
             else:
-                return redirect(url_for("system.index"))
+                return redirect(url_for("index"))
         else:
             flash('Login Unsuccessful. Check username/email and Password')
 

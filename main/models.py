@@ -22,7 +22,7 @@ class Example(db.Model):
     id = db.Column(db.String(20), primary_key = True)
     int = db.Column(db.Integer, nullable = False)
     float = db.Column(db.Float, nullable = False)
-    bool = db.Column(db.Boolen, nullable = False)
+    bool = db.Column(db.Boolean, nullable = False)
     text = db.Column(db.Text, nullable = True)
     date = db.Column(db.DateTime, nullable = True, default = datetime.utcnow)
 
@@ -99,7 +99,7 @@ class UserRole(db.Model):
 class UserSettings(db.Model):
     # Datebase Columns 
     id = db.Column(db.String(20), primary_key = True, default = secrets.token_hex(10))
-    darkmode = db.Column(db.Boolen, nullable = False, default = False)
+    darkmode = db.Column(db.Boolean, nullable = False, default = False)
     date_edited = db.Column(db.Date, nullable = True)
 
     # Links (ForeignKeys) #

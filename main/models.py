@@ -212,7 +212,7 @@ class Module(db.Model):
     name = db.Column(db.String(240), nullable = False)
     code = db.Column(db.String(30), nullable = False)
     avg_rating = db.Column(db.Float, nullable = False, default = 0)
-    desctription = db.Column(db.Text, nullable = True)
+    description = db.Column(db.Text, nullable = True)
     tutor = db.Column(db.String(240), nullable = True, default = "Unknown")
     date_created = db.Column(db.Date, nullable = False, default = datetime.utcnow)
     date_edited = db.Column(db.Date, nullable = True)

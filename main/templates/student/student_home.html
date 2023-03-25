@@ -1,0 +1,14 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<div>
+    <h1>This is the student home page</h1>
+</div>
+
+<br>
+<br>
+
+<a class="btn btn-secondary" href="{{ url_for('modules.module_list') }}"> See all modules</a>
+
+
+{% endblock content %}

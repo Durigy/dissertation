@@ -68,11 +68,15 @@ bcrypt = Bcrypt(app)
 ## Reference for blueprints: https://flask.palletsprojects.com/en/2.2.x/blueprints/
 # import blueprint
 from .user.routes import users
+from .student.routes import students
+from .module.routes import modules
 # from .system.routes import system
 from .system import routes
 
 # register blueprint
 app.register_blueprint(users)
+app.register_blueprint(students)
+app.register_blueprint(modules)
 # app.register_blueprint(system)
 
 # from . import routes # This is nolonger needed as everything now uses blueprints

@@ -1,0 +1,16 @@
+from flask import render_template, url_for, request, redirect, flash, Blueprint
+from flask_login import login_user, logout_user, login_required, current_user
+# from .forms import 
+from ..models import User
+from ..main_utils import generate_id
+
+# referece: https://flask.palletsprojects.com/en/2.2.x/blueprints/#registering-blueprints
+students = Blueprint('students', __name__, template_folder='templates',  url_prefix='/student') 
+
+@students.route("/")
+@login_required
+def student_home():
+    return render_template(
+        'student/student_home.html',
+        title='Home'
+    )

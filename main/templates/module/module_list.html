@@ -1,0 +1,17 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<div class="d-flex flex-wrap p-2">
+    {% for module in modules %}
+    <div class="card m-1" style="width: 47%;">
+        <!-- <img src="..." class="card-img-top" alt="..."> -->
+        <div class="card-body">
+            <h5 class="card-title">{{ module.code }} - {{ module.name }}</h5>
+            <!-- <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p> -->
+            <a href="{{ url_for('modules.module_single', module_id=module.id) }}" class="btn btn-primary">see more</a>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+{% endblock content %}

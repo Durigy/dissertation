@@ -36,6 +36,9 @@ def page_not_found(e):
 
 @app.route('/')
 def index():
+    if current_user.is_authenticated:
+        return redirect(url_for("students.student_home"))
+
     return render_template(
         'system/index.html',
         title='Home'

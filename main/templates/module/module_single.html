@@ -1,0 +1,78 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<a href="{{ url_for('modules.module_list') }}"> <i class="fa-solid fa-arrow-left"></i> all modules</a>
+
+<br>
+<br>
+
+<div class="container text-center">
+    <div class="row">
+        <div class="col-8">
+            <h2>{{ module.code }} - {{ module.name }}</h2>
+        </div>
+        {% set rating = 3 %}
+        <div class="col-4">
+            {% set solid_star = "<i class='fa-solid fa-star' style='color: rgb(146, 127, 17); font-size: 20px'></i>" %}
+            {% set open_star = "<i class='fa-regular fa-star' style='color: rgb(146, 127, 17); font-size: 20px'></i>" %}
+            
+            <a href="{{ url_for('modules.module_review_list', module_id=module.id) }}" class="btn btn-secondary">
+                <!-- <h4>Rating: <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-regular fa-star"></i><i class="fa-regular fa-star"></i></h4> -->
+                <span style="font-size: 20px">Rating</span></a> 
+                
+                {% set int_rating = module.avg_rating %}
+                {% for i in range(module.avg_rating | int) %}
+                {{ solid_star | safe }}
+                {% endfor %}
+
+                {% for i in range(5 - (module.avg_rating | int)) %}
+                {{ open_star | safe }}
+                {% endfor %}
+                
+                {#
+                <br>
+                {% set int_rating = rating %}
+                {% for i in range(rating | int) %}
+                {{ solid_star | safe }}
+                {% endfor %}
+
+                {% for i in range(5 - (rating | int)) %}
+                {{ open_star | safe }}
+                {% endfor %}
+                #}
+        </div>
+    </div>
+</div>
+
+
+
+<hr>
+
+<h3>Lecture Today</h3>
+<br>
+<a href="#" class="btn btn-secondary">See more lectures</a>
+
+<hr>
+
+<h3>Posts</h3>
+<\ all posts will appeare here - paginated \>
+<br>
+<br>
+<a href="#" class="btn btn-secondary">Post a Question</a>
+
+<hr>
+
+<h3>Module Chat</h3>
+The live chat for this module
+
+<hr>
+
+<h3>Resources</h3>
+This is for resources such as:
+<ul>
+    <li>images</li>
+    <li>docs (words, pdf, etc)</li>
+    <li>videos (lectures, youtube, etc)</li>
+</ul>
+
+{% endblock content %}

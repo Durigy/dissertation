@@ -1,0 +1,15 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<a href="#" class="btn-btn-secondary">Add a review</a>
+
+{% for module_review in module_reviews %}
+<!-- <img src="..." class="card-img-top" alt="..."> -->
+<div class="card-body">
+    <h5 class="card-title">{{ module_review.title }} - {{ module_review.rating }}</h5>
+    <p class="card-text">{{ module.description }}</p>
+    <a href="{{ url_for('module_reviews.module_review_single', module_review_id=module_review.id) }}" class="btn btn-primary">see more</a>
+</div>
+{% endfor %}
+
+{% endblock content %}

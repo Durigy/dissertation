@@ -3,7 +3,7 @@ import secrets
 # this can be used for generating ids of string lenght 20 default
 # or the default in modules can be used for small projects if preferred
 def generate_id(query_table, id_length = 20):
-    id = ''
+    id = secrets.token_hex(round(abs(id_length/2)))
 
     while True:
         if not check_id(query_table, id): 

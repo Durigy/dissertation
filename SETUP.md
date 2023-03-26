@@ -57,7 +57,7 @@ mysql+pymysql://root@localhost/databasename
 
 ---
 
-## To creating the database tables:
+## To creating the database tables (old way without migrations):
 ``` Note: Once the models.py file is updated you can use the following commands to add the tables to your local database for testing ```
 
 ```
@@ -66,4 +66,28 @@ mysql+pymysql://root@localhost/databasename
 >>> from main import db
 
 >>> db.create_all()
+```
+
+## To creating the database tables (using migrations):
+``` Note: Once the tables have been added to the models.py file the foolowing commands can be used to add the tables to the database ```
+
+```
+> flask db init
+
+> flask db migrate -m "inital migration"
+
+> flask db upgrade
+```
+
+## To update the database tables (using migrations)
+``` Note: When tables in the models.py file have been updated or new ones have been added, use the folloing comand to update the database add a message <add message here> to make finding the file in the next step easier and to know latter what the update was for ```
+
+```
+> flask db migrate -m "<add message here>"
+```
+
+``` Note: Check the new file in the "main > migrations > versions > <randString>_<message>.py" folders to make sure update is correct, then use the following command to push the update to the database ```
+  
+```
+> flask db upgrade
 ```

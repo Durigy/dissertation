@@ -8,7 +8,7 @@ from .. import db
 # referece: https://flask.palletsprojects.com/en/2.2.x/blueprints/#registering-blueprints
 modules = Blueprint('modules', __name__, template_folder='templates',  url_prefix='/module') 
 
-@modules.route("/all")
+@modules.route("")
 @login_required
 def module_list():
 

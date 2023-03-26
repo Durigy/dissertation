@@ -7,10 +7,51 @@ from ..main_utils import generate_id
 # referece: https://flask.palletsprojects.com/en/2.2.x/blueprints/#registering-blueprints
 students = Blueprint('students', __name__, template_folder='templates',  url_prefix='/student') 
 
-@students.route("/")
+@students.route("")
 @login_required
 def student_home():
     return render_template(
         'student/student_home.html',
         title='Home'
     )
+
+@students.route("/notes")
+@login_required
+def student_note():
+    return render_template(
+        'student/student_home.html',
+        title='Home'
+    )
+
+@students.route("/notes/<note_id>")
+@login_required
+def student_note_single(note_id):
+    return render_template(
+        'student/student_home.html',
+        title='Home'
+    )
+
+@students.route("/messages")
+@login_required
+def student_message():
+    return render_template(
+        'student/student_home.html',
+        title='Home'
+    )
+
+@students.route("/messages/<message_id>")
+@login_required
+def student_message_single(message_id):
+    return render_template(
+        'student/student_home.html',
+        title='Home'
+    )
+
+@students.route("/my-modules")
+@login_required
+def student_modules():
+    return render_template(
+        'student/student_home.html',
+        title='Home'
+    )
+

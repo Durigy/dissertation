@@ -154,3 +154,19 @@ input[type=submit] {
 input[type=submit]:hover {
   background-color: #45a049;
 }
+
+
+aside {
+    display: flex;
+    flex-wrap: nowrap;
+    height: 94vh;
+    height: -webkit-fill-available;
+    max-height: 100vh;
+    overflow-x: auto;
+    overflow-y: hidden;
+    margin-top: -15px;
+  }
+  
+  .scrollarea {
+    overflow-y: auto;
+  } 

@@ -1,10 +1,14 @@
+{# 
+    reference:
+    - https://getbootstrap.com/docs/5.0/examples/ [date accessed: 26 March 2023]
+#}
 <aside>
     <div class="d-flex flex-column flex-shrink-0 p-3 bg-light" style="width: 300px;">
         <ul class="nav nav-pills flex-column mb-auto">
             <h5>Modules</h5>
             <div class="scrollarea" style="max-height: 25vh;">
-                {% for i in range(20) %}
-                This is for resources such as:
+                {% for i in range(6) %}
+                This is a module I take
                 <br>
                 <br>
                 {% endfor %}
@@ -14,7 +18,7 @@
             <h5>Chats</h5>
             <div class="scrollarea" style="max-height: 25vh;">
                 {% for i in range(20) %}
-                This is for resources such as:
+                A chat group here
                 <br>
                 <br>
                 {% endfor %}
@@ -25,13 +29,14 @@
             <h5>Posts</h5>
             <div class="scrollarea" style="max-height: 25vh;">
                 {% for i in range(20) %}
-                This is for resources such as:
+                A recent post
                 <br>
                 <br>
                 {% endfor %}
             </div>
         </ul>
-<!-- 
+
+        {#
         <hr>
         
         <div class="dropdown">
@@ -46,7 +51,8 @@
                 <li><hr class="dropdown-divider"></li>
                 <li><a class="dropdown-item" href="#">Sign out</a></li>
             </ul>
-        </div> -->
+        </div>
+        #}
     </div>
 </aside>
 

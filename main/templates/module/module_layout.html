@@ -1,0 +1,47 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<div class="container">
+    <div class="row text-center">
+        <div class="col-8">
+            <h2>{{ module.code }} - {{ module.name }}</h2>
+        </div>
+        {#% set rating = 3 %#}
+        <div class="col-4">
+            {% set solid_star = "<i class='fa-solid fa-star' style='color: rgb(146, 127, 17); font-size: 20px'></i>" %}
+            {% set open_star = "<i class='fa-regular fa-star' style='color: rgb(146, 127, 17); font-size: 20px'></i>" %}
+            
+            <a href="{{ url_for('modules.module_review_list', module_id=module.id) }}" class="btn btn-secondary">
+                <!-- <h4>Rating: <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-regular fa-star"></i><i class="fa-regular fa-star"></i></h4> -->
+                <span style="font-size: 20px">Rating</span></a> 
+                
+                {% set int_rating = module.avg_rating %}
+                {% for i in range(module.avg_rating | int) %}
+                {{ solid_star | safe }}
+                {% endfor %}
+
+                {% for i in range(5 - (module.avg_rating | int)) %}
+                {{ open_star | safe }}
+                {% endfor %}
+                
+                {#
+                <br>
+                {% set int_rating = rating %}
+                {% for i in range(rating | int) %}
+                {{ solid_star | safe }}
+                {% endfor %}
+
+                {% for i in range(5 - (rating | int)) %}
+                {{ open_star | safe }}
+                {% endfor %}
+                #}
+        </div>
+    </div>
+
+    <hr>
+
+    {% block module %}
+
+    {% endblock module %}
+</div>
+{% endblock content %}

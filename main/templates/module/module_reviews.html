@@ -1,7 +1,12 @@
-{% extends "layout.html" %}
-{% block content %}
+{% extends "module/module_layout.html" %}
+{% block module %}
 
-<a href="#" class="btn-btn-secondary">Add a review</a>
+<a href="{{ url_for('modules.module_single', module_id = module.id) }}"> <i class="fa-solid fa-arrow-left"></i> Back to current module</a>
+
+<br>
+<br>
+
+<a href="#" class="btn btn-secondary">Add a review</a>
 
 {% for module_review in module_reviews %}
 <!-- <img src="..." class="card-img-top" alt="..."> -->
@@ -12,4 +17,5 @@
 </div>
 {% endfor %}
 
-{% endblock content %}
+
+{% endblock module %}

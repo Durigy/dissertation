@@ -26,10 +26,10 @@
 
             </div>
             
-            {% include 'includes/flash_msg.html' %}
             
             <div class="scrollarea" style="max-height: 93vh; width: 100%">
                 <div class="container" style="min-height: 81vh;">
+                    {% include 'includes/flash_msg.html' %}
                 {% block content %}
                     <!-- page content gets added here -->
                 {% endblock content %}

@@ -21,11 +21,12 @@
         {% include 'includes/header/header.html' %}
 
         <div class="d-flex">
+            {% if current_user.is_authenticated %}
             <div class="d-none d-lg-block">
                 {% include 'includes/aside.html' %}
 
             </div>
-            
+            {% endif %}
             
             <div class="scrollarea" style="max-height: 93vh; width: 100%">
                 <div class="container" style="min-height: 81vh;">

@@ -6,43 +6,60 @@
 <header>
     <nav class="navbar navbar-expand-lg bg-light d-none d-lg-block">
         <div class="container-fluid">
-            {% include 'includes/header/logo.html' %}
+            <div class="row">
+                <div class="col-2 text-start">
+                {% include 'includes/header/logo.html' %}
+                </div>
+            </div>
 
             <div class="container">
                 <div class="row">
-                    <div class="container collapse navbar-collapse" id="navbarScroll">
-                        <div class="col">
-                            <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px;">
-                                {% if current_user.is_authenticated %}
+                    <div class="col text-start">
+                        <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px;">
+                            {% if current_user.is_authenticated %}
 
-                                {% include 'includes/header/logged_in_li.html' %}
-                                
-                                {% else %}
+                            {% include 'includes/header/logged_in_li.html' %}
+                            
+                            {% else %}
 
-                                {% include 'includes/header/logged_out_li.html' %}
+                            {% include 'includes/header/logged_out_li.html' %}
 
-                                {% endif %}
-                            </ul>
-                        </div>
-                        {% if current_user.is_authenticated %}
-                        <div class="col-2 text-end">
-                            <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px;">
-                            {% include 'includes/header/user_dropdown.html' %}
-                            </ul>
-                        </div>
-                        {% endif %}
+                            {% endif %}
+                        </ul>
                     </div>
+                    
+                    {% if current_user.is_authenticated %}
+                    <div class="col-2 text-end">
+                        <ul class="navbar-nav my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px;">
+                            {% include 'includes/header/user_dropdown.html' %}
+                        </ul>
+                    </div>
+                    {% endif %}
                 </div>
             </div>
         </div>
     </nav>
 
-    <nav class="navbar navbar-expand-lg bg-light d-sm-block d-lg-none">
+    <!-- <nav class="navbar navbar-expand-lg bg-light d-sm-block d-lg-none">
         <div class="container-fluid">
             {% include 'includes/header/logo.html' %}
 
             <div class="container collapse navbar-collapse" id="navbarScroll">
-                    <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px;">
+                    <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px;"> -->
+    <nav class="navbar bg-light fixed-top bg-light d-sm-block d-lg-none">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Student Focus</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
+                <div class="offcanvas-header">
+                    <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Student Focus</h5>
+                     <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                </div>
+            <div class="offcanvas-body">
+                <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+
                         {% if current_user.is_authenticated %}
                         
                         {% include 'includes/header/logged_in_li.html' %}

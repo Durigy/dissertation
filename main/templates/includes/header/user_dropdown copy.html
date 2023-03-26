@@ -1,0 +1,80 @@
+<li class="nav-item dropdown-center">
+    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+        Hello {{ current_user.username }}
+    </a>
+    <ul class="dropdown-menu dropdown-menu-end dropdown-menu-start">
+        <!-- Account -->
+        <li>
+            <a class="dropdown-item d-block d-lg-none d-xl-block" href="{{ url_for('users.account') }}">
+                <i class="fa-solid fa-user-large"></i>  Account
+            </a>
+            <a class="dropdown-item d-none d-lg-block d-xl-none" data-toggle="tooltip" data-placement="bottom" title="Account" href="{{ url_for('users.account') }}">
+                <i class="fa-solid fa-user-large"></i>
+            </a>
+        </li>
+
+        <!-- Add a note -->
+        <li>
+            <a class="dropdown-item d-block d-lg-none d-xl-block" href="#">
+                <i class="fa-solid fa-note-sticky"></i>  Add a note
+            </a>
+            <a class="dropdown-item d-none d-lg-block d-xl-none" data-toggle="tooltip" data-placement="bottom" title="Add a note" href="#">
+                <i class="fa-solid fa-note-sticky"></i>
+            </a>
+        </li>
+
+        <!-- Ask a Question -->
+        <li>
+            <a class="dropdown-item d-block d-lg-none d-xl-block" href="#">
+                <i class="fa-solid fa-question"></i>  Ask a Question
+            </a>
+            <a class="dropdown-item d-none d-lg-block d-xl-none" data-toggle="tooltip" data-placement="bottom" title="Ask a Question" href="#">
+                <i class="fa-solid fa-question"></i>
+            </a>
+        </li>
+
+        <!-- Post Something -->
+        <li>
+            <a class="dropdown-item d-block d-lg-none d-xl-block" href="#">
+                <i class="fa-solid fa-plus"></i>  Post Something
+            </a>
+            <a class="dropdown-item d-none d-lg-block d-xl-none" data-toggle="tooltip" data-placement="bottom" title="Post Something" href="#">
+                <i class="fa-solid fa-plus"></i>
+            </a>
+        </li>
+
+        <!-- Message a friend -->
+        <li>
+            <a class="dropdown-item d-block d-lg-none d-xl-block" href="#">
+                <i class="fa-regular fa-comments"></i>  Message a Friend
+            </a>
+            <a class="dropdown-item d-none d-lg-block d-xl-none" data-toggle="tooltip" data-placement="bottom" title="Message a Friend" href="#">
+                <i class="fa-regular fa-comments"></i>
+            </a>
+        </li>
+
+        <li>
+            <span class="p-1"></span>
+        </li>
+        <li>
+            <hr class="dropdown-divider">
+        </li>
+        <li>
+            <a class="dropdown-item logout-btn d-block d-lg-none d-xl-block" href="{{ url_for('users.logout') }}">
+                <i class="fa-solid fa-right-from-bracket"></i> Logout
+            </a>
+            <a class="dropdown-item logout-btn d-none d-lg-block d-xl-none" data-toggle="tooltip" data-placement="bottom" title="Logout" href="{{ url_for('users.logout') }}">
+                <i class="fa-solid fa-right-from-bracket"></i>
+            </a>
+        </li>
+
+        <!-- <li class="nav-item pe-4">
+            <a class="nav-link d-block d-lg-none d-xl-block" href="{{ url_for('students.student_note') }}">
+                <i class="fa-solid fa-note-sticky"></i> Notes
+            </a>
+            <a class="nav-link d-none d-lg-block d-xl-none" data-toggle="tooltip" data-placement="bottom" title="Notes" href="{{ url_for('students.student_note') }}">
+                <i class="fa-solid fa-note-sticky"></i>
+            </a>
+        </li> -->
+    </ul>
+</li>

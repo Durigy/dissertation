@@ -19,8 +19,8 @@ def student_home():
 @login_required
 def student_note():
     return render_template(
-        'student/student_home.html',
-        title='Home'
+        'student/student_note.html',
+        title='Notes'
     )
 
 @students.route("/notes/<note_id>")
@@ -28,23 +28,7 @@ def student_note():
 def student_note_single(note_id):
     return render_template(
         'student/student_home.html',
-        title='Home'
-    )
-
-@students.route("/messages")
-@login_required
-def student_message():
-    return render_template(
-        'student/student_home.html',
-        title='Home'
-    )
-
-@students.route("/messages/<message_id>")
-@login_required
-def student_message_single(message_id):
-    return render_template(
-        'student/student_home.html',
-        title='Home'
+        title='Single Note'
     )
 
 @students.route("/my-modules")
@@ -52,6 +36,6 @@ def student_message_single(message_id):
 def student_modules():
     return render_template(
         'student/student_home.html',
-        title='Home'
+        title='Modules'
     )
 

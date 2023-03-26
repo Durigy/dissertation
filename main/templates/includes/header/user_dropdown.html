@@ -2,7 +2,7 @@
     <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
         Hello {{ current_user.username }}
     </a>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu dropdown-menu-end">
         <li>
             <a class="dropdown-item" href="{{ url_for('users.account') }}">
                 <i class="fa-solid fa-user-large"></i>  Account
@@ -10,7 +10,22 @@
         </li>
         <li>
             <a class="dropdown-item" href="#">
-                <i class="fa-solid fa-plus"></i>  Add a note
+                <i class="fa-solid fa-note-sticky"></i>  Add a note
+            </a>
+        </li>
+        <li>
+            <a class="dropdown-item" href="#">
+                <i class="fa-solid fa-question"></i>  Ask a Question
+            </a>
+        </li>
+        <li>
+            <a class="dropdown-item" href="#">
+                <i class="fa-solid fa-plus"></i>  Post Something
+            </a>
+        </li>
+        <li>
+            <a class="dropdown-item" href="#">
+                <i class="fa-regular fa-comments"></i>  Message a Friend
             </a>
         </li>
         <li>

@@ -23,8 +23,9 @@ def module_list():
 @modules.route("/s/<module_id>")
 @login_required
 def module_single(module_id):
-
     module = Module.query.get_or_404(module_id)
+
+    module_list = Module.query.order_by(Module.code).all()
 
     return render_template(
         'module/module_single.html',
@@ -35,7 +36,8 @@ def module_single(module_id):
 @modules.route("/add", methods=['GET', 'POST'])
 @login_required
 def module_add():
-    # module = Module.query.all()
+
+    module_list = Module.query.order_by(Module.code).all()
 
     form = AddModuleForm()
 
@@ -56,14 +58,16 @@ def module_add():
     return render_template(
         'module/module_add.html',
         title = "Add a new module",
-        form = form
+        form = form,
+        modules = module_list
     )
 
 @modules.route("/s/<module_id>/reviews")
 @login_required
 def module_review_list(module_id):
-
     module = Module.query.get_or_404(module_id)
+
+    module_list = Module.query.order_by(Module.code).all()
 
     module_reviews = ModuleReview.query.filter_by(module_id = module_id).order_by(ModuleReview.date_sent)
 
@@ -71,5 +75,17 @@ def module_review_list(module_id):
         'module/module_reviews.html',
         title = f"{module.name} - Reviews",
         module = module,
-        module_reviews = module_reviews
+        module_reviews = module_reviews,
+        modules = module_list
+    )
+
+@modules.route("/questions")
+@login_required
+def module_question():
+    module_list = Module.query.order_by(Module.code).all()
+
+    return render_template(
+        'module/module_question.html',
+        title = "Questions",
+        modules = module_list
     )

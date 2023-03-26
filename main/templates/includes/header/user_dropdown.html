@@ -1,0 +1,23 @@
+<li class="nav-item dropdown">
+    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+        Hello {{ current_user.username }}
+    </a>
+    <ul class="dropdown-menu">
+        <li>
+            <a class="dropdown-item" href="{{ url_for('users.account') }}">
+                Account
+            </a>
+        </li>
+        <li>
+            <span class="p-1"></span>
+        </li>
+        <li>
+            <hr class="dropdown-divider">
+        </li>
+        <li>
+            <a class="dropdown-item logout-btn" href="{{ url_for('users.logout') }}">
+                Logout
+            </a>
+        </li>
+    </ul>
+</li>

@@ -29,12 +29,12 @@
             {% include 'includes/flash_msg.html' %}
             
             <div class="scrollarea" style="max-height: 93vh; width: 100%">
-                <div class="container">
+                <div class="container" style="min-height: 81vh;">
                 {% block content %}
-
+                    <!-- page content gets added here -->
                 {% endblock content %}
-                
                 </div>
+
             {% include 'includes/footer.html' %}                
             </div>
         </div>

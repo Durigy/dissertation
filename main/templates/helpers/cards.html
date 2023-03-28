@@ -1,0 +1,22 @@
+{# reference: https://ttl255.com/jinja2-tutorial-part-5-macros/ #}
+{% macro card(img_source = none, img_alt = none, title = none, description = none, link = none, link_text = none, width = 47) %}
+<div class="card m-1" style="width: {{ width }}%;">
+    {% if img_source %}
+    <img src="{{ img_source }}" class="card-img-top" alt="{{ img_alt }}">
+    {% endif %}
+
+    <div class="card-body">
+        {% if title %}
+        <h5 class="card-title">{{ title }}</h5>
+        {% endif %}
+
+        {% if description %}
+        <p class="card-text">{{ description }}</p>
+        {% endif %}
+        
+        {% if link %}
+        <a href="{{ link }}" class="stretched-link">{{ link_text }}</a>
+        {% endif %}
+    </div>
+</div>
+{% endmacro %}

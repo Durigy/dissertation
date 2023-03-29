@@ -30,12 +30,7 @@
 
 <h1>All Modules</h1>
 
-<div class="d-flex flex-wrap p-2">
-    {% for module in module_list %}
-    {% set temp = module.code + " - " + module.name %}
-    {{ card(title = temp, link = url_for('modules.module_single', module_id=module.id), link_text = 'View') }}
-    {% endfor %}
-</div>
+<a href="{{ url_for('modules.module_all') }}" class="btn btn-secondary">See all Modules</a>
 
 <br>
 

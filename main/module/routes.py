@@ -6,9 +6,9 @@ from ..main_utils import generate_id, defaults
 from .. import db
 
 # referece: https://flask.palletsprojects.com/en/2.2.x/blueprints/#registering-blueprints
-modules = Blueprint('modules', __name__, template_folder='templates',  url_prefix='/module') 
+modules = Blueprint('modules', __name__, template_folder='templates',  url_prefix='/modules') 
 
-@modules.route("")
+@modules.route("/all")
 @login_required
 def module_all():
     module_list, subscribed_modules, non_taking_modules = defaults(current_user)

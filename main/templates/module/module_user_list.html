@@ -1,0 +1,24 @@
+{% extends "layout.html" %}
+{% block content %}
+
+{% from "helpers/cards.html" import card %}
+
+<h2>My Modules</h2>
+<div class="">
+    {% if subscribed_modules %}
+    <a href="{{ url_for('modules.module_selection') }}" class="btn btn-secondary">Edit</a>
+    
+    <div class="d-flex flex-wrap p-2">
+        {% for module in subscribed_modules %}
+        {% set temp = module.module.code + " - " + module.module.name %}
+        {{ card(title = temp, link = url_for('modules.module_single', module_id=module.module.id), link_text = 'View') }}
+        {% endfor %}
+    </div>
+    {% else %}
+    <h5>You haven't subscribed to any modules yet.</h5>
+    {% endif %}
+</div>
+
+<br>
+
+{% endblock content %}

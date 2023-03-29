@@ -70,8 +70,8 @@ class User(UserMixin, db.Model):
     # module_review = db.relationship('ModuleReview', backref = 'user', lazy = True, foreign_keys = 'ModuleReview.user_id')
     # module_lecture = db.relationship('ModuleLecture', backref = 'user', lazy = True, foreign_keys = 'ModuleLecture.user_id')
     # module_lectue_vote = db.relationship('ModuleLectueVote', backref = 'user', lazy = True, foreign_keys = 'ModuleLectueVote.user_id')
-    # module_post = db.relationship('ModulePost', backref = 'user', lazy = True, foreign_keys = 'ModulePost.user_id')
-    # module_post_comment = db.relationship('ModulePostComment', backref = 'user', lazy = True, foreign_keys = 'ModulePostComment.user_id')
+    # module_question = db.relationship('ModuleQuestion', backref = 'user', lazy = True, foreign_keys = 'ModuleQuestion.user_id')
+    # module_question_comment = db.relationship('ModuleQuestionComment', backref = 'user', lazy = True, foreign_keys = 'ModuleQuestionComment.user_id')
     # module_note = db.relationship('ModuleNote', backref = 'user', lazy = True, foreign_keys = 'ModuleNote.user_id')
     # module_file = db.relationship('ModuleFile', backref = 'user', lazy = True, foreign_keys = 'ModuleFile.user_id')
     # module_file = db.relationship('ModuleSubscription', backref = 'user', lazy = True, foreign_keys = 'ModuleSubscription.user_id')
@@ -224,18 +224,19 @@ class Module(db.Model):
     university_year_id = db.Column(db.String(20), db.ForeignKey('university_year.id'), nullable = True)
 
     # Relationships #
-    # module_post = db.relationship('ModulePost', backref = 'module', lazy = True, foreign_keys = 'ModulePost.module_id')
-    # module_post_comment = db.relationship('ModulePostComment', backref = 'module', lazy = True, foreign_keys = 'ModulePostComment.module_id')
+    # module_question = db.relationship('ModuleQuestion', backref = 'module', lazy = True, foreign_keys = 'ModuleQuestion.module_id')
+    # module_question_comment = db.relationship('ModuleQuestionComment', backref = 'module', lazy = True, foreign_keys = 'ModuleQuestionComment.module_id')
     # module_lecture = db.relationship('ModuleLecture', backref = 'module', lazy = True, foreign_keys = 'ModuleLecture.module_id')
     # module_lecture_vote = db.relationship('ModuleLectureVote', backref = 'module', lazy = True, foreign_keys = 'ModuleLectureVote.module_id')
     # module_note = db.relationship('ModuleNote', backref = 'module', lazy = True, foreign_keys = 'ModuleNote.module_id')
     # module_file = db.relationship('ModuleFile', backref = 'module', lazy = True, foreign_keys = 'ModuleFile.module_id')
-    # module_subscription = db.relationship('ModuleSubscription', backref = 'module', lazy = True, foreign_keys = 'ModuleSubscription.module_id')
+    module_subscription = db.relationship('ModuleSubscription', backref = 'module', lazy = True, foreign_keys = 'ModuleSubscription.module_id')
 
 class ModuleSubscription(db.Model):
     # Datebase Columns 
     id = db.Column(db.String(20), primary_key = True) # Must be randomly generated -> default = secrets.token_hex(10)
     date_added = db.Column(db.DateTime, nullable = False, default = datetime.utcnow)
+    # nickname = db.Column(db.String(50), nullable = True)
 
     # Links (ForeignKeys)
     user_id = db.Column(db.String(20), db.ForeignKey('user.id'), nullable = False)

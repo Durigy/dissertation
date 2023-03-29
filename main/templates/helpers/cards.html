@@ -1,5 +1,5 @@
 {# reference: https://ttl255.com/jinja2-tutorial-part-5-macros/ #}
-{% macro card(img_source = none, img_alt = none, title = none, description = none, link = none, link_text = none, width = 47) %}
+{% macro card(img_source = none, img_alt = none, title = none, description = none, link = none, link_text = none, link_streached = true, link_2 = none, link_text_2 = none, link_streached_2 = false, width = 47) %}
 <div class="card m-1" style="width: {{ width }}%;">
     {% if img_source %}
     <img src="{{ img_source }}" class="card-img-top" alt="{{ img_alt }}">
@@ -14,9 +14,19 @@
         <p class="card-text">{{ description }}</p>
         {% endif %}
         
-        {% if link %}
-        <a href="{{ link }}" class="stretched-link">{{ link_text }}</a>
-        {% endif %}
+        <div class="row">
+            {% if link %}
+            <div class="col">
+                <a href="{{ link }}" class="{% if link_streached == true %}stretched-link{% endif %}">{{ link_text }}</a>
+            </div>
+            {% endif %}
+
+            {% if link_2 %}
+            <div class="col text-end">
+                <a href="{{ link_2 }}" class="{% if link_streached_2 == true %}stretched-link{% endif %}">{{ link_text_2 }}</a>
+            </div>
+            {% endif %}
+        </div>
     </div>
 </div>
 {% endmacro %}

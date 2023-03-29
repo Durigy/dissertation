@@ -1,71 +1,65 @@
 {% extends "layout.html" %}
 {% block content %}
-<div class="row">
-    <div class="col-lg-3"></div>
+<h2 class="pb-3">Add Module</h2>
+<form method="POST" action="">
+    {{ form.hidden_tag() }}
+    <fieldset>
+        <div>
+            {{ form.name.label(class="form-label") }}
 
-    <div class="col">
-        <h2 class="pb-3">Add Module</h2>
-        <form method="POST" action="">
-            {{ form.hidden_tag() }}
-            <fieldset>
-                <div>
-                    {{ form.name.label(class="form-label") }}
-
-                    <div class="input-group mb-3">
-                        {{ form.name(class="form-control") }}
-                    </div>
-                        
-                    {% if form.name.errors %}
-                    <div>
-                        {% for error in form.name.errors %}
-                        <span style="color: red;">{{ error }}</span>
-                        {% endfor %}
-                    </div>
-                    {% endif %}
-                </div>
-
-                <br>
-
-                <div>
-                    {{ form.code.label(class="form-label") }}
-
-                    <div class="input-group mb-3">
-                        {{ form.code(class="form-control") }}
-                    </div>
-                        
-                    {% if form.code.errors %}
-                    <div>
-                        {% for error in form.code.errors %}
-                        <span style="color: red;">{{ error }}</span>
-                        {% endfor %}
-                    </div>
-                    {% endif %}
-                </div>
-
-                <br>
-
-                <div>
-                    {{ form.description.label(class="form-label") }}
-
-                    <div class="mb-3">
-                        {{ form.description(class="form-control", rows='5') }}
-                    </div>
-                        
-                    {% if form.description.errors %}
-                    <div>
-                        {% for error in form.description.errors %}
-                        <span style="color: red;">{{ error }}</span>
-                        {% endfor %}
-                    </div>
-                    {% endif %}
-                </div>
-            </fieldset>
-
-            <div>
-                {{ form.submit(class="btn btn-primary") }}
+            <div class="input-group mb-3">
+                {{ form.name(class="form-control") }}
             </div>
-        </form>
+                
+            {% if form.name.errors %}
+            <div>
+                {% for error in form.name.errors %}
+                <span style="color: red;">{{ error }}</span>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+
+        <br>
+
+        <div>
+            {{ form.code.label(class="form-label") }}
+
+            <div class="input-group mb-3">
+                {{ form.code(class="form-control") }}
+            </div>
+                
+            {% if form.code.errors %}
+            <div>
+                {% for error in form.code.errors %}
+                <span style="color: red;">{{ error }}</span>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+
+        <br>
+
+        <div>
+            {{ form.description.label(class="form-label") }}
+
+            <div class="mb-3">
+                {{ form.description(class="form-control", rows='5') }}
+            </div>
+                
+            {% if form.description.errors %}
+            <div>
+                {% for error in form.description.errors %}
+                <span style="color: red;">{{ error }}</span>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+    </fieldset>
+
+    <div>
+        {{ form.submit(class="btn btn-primary") }}
     </div>
-</div>
+</form>
 
 {% endblock content %}

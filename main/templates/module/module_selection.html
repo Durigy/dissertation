@@ -1,0 +1,42 @@
+{% extends "layout.html" %}
+{% block content %}
+
+{% from "helpers/cards.html" import card %}
+
+<h2>My Modules</h2>
+
+<div class="d-flex flex-wrap p-2">
+    {% for module in subscribed_modules %}
+    {% set temp = module.module.code + " - " + module.module.name %}
+    {{ card(title = temp, link = url_for('modules.module_single', module_id=module.module.id), link_text = 'View', link_streached = false, link_2 = url_for('modules.module_remove_sub', module_id=module.module.id), link_text_2 = 'unsubscribe') }}
+    {% endfor %}
+</div>
+
+<br><br>
+
+<h2>Not My Modules</h2>
+
+<div class="d-flex flex-wrap p-2">
+    {% for module in non_taking_modules %}
+    {% set temp = module.code + " - " + module.name %}
+    {{ card(title = temp, link = url_for('modules.module_single', module_id=module.id), link_text = 'View', link_streached = false, link_2 = url_for('modules.module_add_sub', module_id=module.id), link_text_2 = 'subscribe') }}
+    {% endfor %}
+</div>
+
+<br>
+<hr>
+<br>
+
+
+<h1>All Modules</h1>
+
+<div class="d-flex flex-wrap p-2">
+    {% for module in module_list %}
+    {% set temp = module.code + " - " + module.name %}
+    {{ card(title = temp, link = url_for('modules.module_single', module_id=module.id), link_text = 'View') }}
+    {% endfor %}
+</div>
+
+<br>
+
+{% endblock content %}

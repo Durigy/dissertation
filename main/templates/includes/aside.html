@@ -7,11 +7,23 @@
         <ul class="nav nav-pills flex-column mb-auto">
             <h5>Modules</h5>
             <div class="scrollarea" style="max-height: 25vh;">
-                {% for i in range(6) %}
-                This is a module I take
-                <br>
-                <br>
+                {% if subscribed_modules %}
+                {% for module in subscribed_modules %}
+                <div class="mb-2">
+                    {% set mod_name = module.module.code + ' - ' + module.module.name %}
+                    <a href="{{ url_for('modules.module_single', module_id=module.module.id) }}">{{ mod_name|truncate(30, True) }}</a>
+                </div>
                 {% endfor %}
+
+                {% else %}
+
+                Not subed to any modules
+
+                <br>
+                
+                <a href="{{ url_for('modules.module_selection') }}" class="btn btn-secondary">Pick one now</a>
+
+                {% endif %}
             </div>
             
             <hr>

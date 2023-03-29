@@ -1,4 +1,16 @@
 {% extends "layout.html" %}
 {% block content %}
+
+{% from "helpers/cards.html" import card %}
+
 <h1>List of Your notes</h1>
+
+<div class="d-flex flex-wrap p-2">
+    {% for i in range(10) %}
+    {% set num = i + 1 %}
+    {% set temp = 'Note ' + num | string %}
+    {{ card(title = temp, link = '#', link_text = 'See More') }}
+    {% endfor %}
+</div>
+
 {% endblock content %}

@@ -87,6 +87,7 @@ def logout():
 @login_required
 def account():
     form = UpdateAccountForm()
+    
     if form.validate_on_submit() and request.method == "POST":
 
         current_user.firstname = form.firstname.data

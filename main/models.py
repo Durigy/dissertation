@@ -70,8 +70,8 @@ class User(UserMixin, db.Model):
     # module_review = db.relationship('ModuleReview', backref = 'user', lazy = True, foreign_keys = 'ModuleReview.user_id')
     # module_lecture = db.relationship('ModuleLecture', backref = 'user', lazy = True, foreign_keys = 'ModuleLecture.user_id')
     # module_lectue_vote = db.relationship('ModuleLectueVote', backref = 'user', lazy = True, foreign_keys = 'ModuleLectueVote.user_id')
-    # module_question = db.relationship('ModuleQuestion', backref = 'user', lazy = True, foreign_keys = 'ModuleQuestion.user_id')
-    # module_question_comment = db.relationship('ModuleQuestionComment', backref = 'user', lazy = True, foreign_keys = 'ModuleQuestionComment.user_id')
+    module_question = db.relationship('ModuleQuestion', backref = 'user', lazy = True, foreign_keys = 'ModuleQuestion.user_id')
+    module_question_comment = db.relationship('ModuleQuestionComment', backref = 'user', lazy = True, foreign_keys = 'ModuleQuestionComment.user_id')
     # module_note = db.relationship('ModuleNote', backref = 'user', lazy = True, foreign_keys = 'ModuleNote.user_id')
     # module_file = db.relationship('ModuleFile', backref = 'user', lazy = True, foreign_keys = 'ModuleFile.user_id')
     # module_file = db.relationship('ModuleSubscription', backref = 'user', lazy = True, foreign_keys = 'ModuleSubscription.user_id')
@@ -96,25 +96,27 @@ class UserRole(db.Model):
     """
     id = db.Column(db.String(20), primary_key = True, default = secrets.token_hex(10))
     name = db.Column(db.String(60), nullable = False)
-    date_created = db.Column(db.Date, nullable = False, default = datetime.utcnow)
-    date_edited = db.Column(db.Date, nullable = True)
+    date_created = db.Column(db.DateTime, nullable = False, default = datetime.utcnow)
+    date_edited = db.Column(db.DateTime, nullable = True)
     user_count = db.Column(db.Integer, nullable = False, default = 0)
 
     # Links (ForeignKeys) #
 
     # Relationships #
+    # Add Here
     
 
 # class UserSettings(db.Model):
 #     # Datebase Columns 
 #     id = db.Column(db.String(20), primary_key = True, default = secrets.token_hex(10))
 #     darkmode = db.Column(db.Boolean, nullable = False, default = False)
-#     date_edited = db.Column(db.Date, nullable = True)
+#     date_edited = db.Column(db.DateTime, nullable = True)
 
 #     # Links (ForeignKeys) #
 #     user_id = db.Column(db.String(20), db.ForeignKey('user.id'), nullable = False)
 
 #     # Relationships #
+#     # Add Here
     
 
 # class UserStats(db.Model):
@@ -124,13 +126,14 @@ class UserRole(db.Model):
 #     comments = db.Column(db.Integer, nullable = False, default = 0)
 #     friends = db.Column(db.Integer, nullable = False, default = 0)
 #     reviews = db.Column(db.Integer, nullable = False, default = 0)
-#     date_edited = db.Column(db.Date, nullable = True)
+#     date_edited = db.Column(db.DateTime, nullable = True)
 
 
 #     # Links (ForeignKeys) #
 #     user_id = db.Column(db.String(20), db.ForeignKey('user.id'), nullable = False)
 
 #     # Relationships #
+#     # Add Here
     
 
 
@@ -141,9 +144,9 @@ class University(db.Model):
     id = db.Column(db.String(20), primary_key = True, default = secrets.token_hex(10))
     name = db.Column(db.String(120), nullable = False)
     url = db.Column(db.String(300), nullable = True)
-    date_created = db.Column(db.Date, nullable = False, default = datetime.utcnow)
-    date_edited = db.Column(db.Date, nullable = True)
-    date_established = db.Column(db.Date, nullable = True)
+    date_created = db.Column(db.DateTime, nullable = False, default = datetime.utcnow)
+    date_edited = db.Column(db.DateTime, nullable = True)
+    date_established = db.Column(db.DateTime, nullable = True)
     first_line = db.Column(db.String(120), nullable = True)
     second_line = db.Column(db.String(120), nullable = True)
     city = db.Column(db.String(100), nullable = True)
@@ -165,8 +168,8 @@ class UniversitySchool(db.Model):
     id = db.Column(db.String(20), primary_key = True, default = secrets.token_hex(10))
     name = db.Column(db.String(120), nullable = False)
     user_count = db.Column(db.Integer, nullable = False, default = 0)
-    date_created = db.Column(db.Date, nullable = False, default = datetime.utcnow)
-    date_edited = db.Column(db.Date, nullable = True)
+    date_created = db.Column(db.DateTime, nullable = False, default = datetime.utcnow)
+    date_edited = db.Column(db.DateTime, nullable = True)
 
     # Links (ForeignKeys) #
 
@@ -179,8 +182,8 @@ class UniversityYear(db.Model):
     id = db.Column(db.String(20), primary_key = True, default = secrets.token_hex(10))
     name = db.Column(db.String(120), nullable = False)
     user_count = db.Column(db.Integer, nullable = False, default = 0)
-    date_created = db.Column(db.Date, nullable = False, default = datetime.utcnow)
-    date_edited = db.Column(db.Date, nullable = True)
+    date_created = db.Column(db.DateTime, nullable = False, default = datetime.utcnow)
+    date_edited = db.Column(db.DateTime, nullable = True)
 
     # Links (ForeignKeys) #
 
@@ -194,14 +197,15 @@ class UniversityYear(db.Model):
 #     rating = db.Column(db.Integer, nullable = False, default = 0) # this will be 1-5 for the ratings
 #     title = db.Column(db.String(240), nullable = True)
 #     description = db.Column(db.Text, nullable = True)
-#     date_created = db.Column(db.Date, nullable = False, default = datetime.utcnow)
-#     date_edited = db.Column(db.Date, nullable = True)
+#     date_created = db.Column(db.DateTime, nullable = False, default = datetime.utcnow)
+#     date_edited = db.Column(db.DateTime, nullable = True)
 
 
 #     # Links (ForeignKeys) #
 #     user_id = db.Column(db.String(20), db.ForeignKey('user.id'), nullable = False)
 
 #     # Relationships #
+#     # Add Here
 
 
 
@@ -214,8 +218,8 @@ class Module(db.Model):
     avg_rating = db.Column(db.Float, nullable = False, default = 0)
     description = db.Column(db.Text, nullable = True)
     tutor = db.Column(db.String(240), nullable = True, default = "Unknown")
-    date_created = db.Column(db.Date, nullable = False, default = datetime.utcnow)
-    date_edited = db.Column(db.Date, nullable = True)
+    date_created = db.Column(db.DateTime, nullable = False, default = datetime.utcnow)
+    date_edited = db.Column(db.DateTime, nullable = True)
 
 
     # Links (ForeignKeys) #
@@ -224,7 +228,7 @@ class Module(db.Model):
     university_year_id = db.Column(db.String(20), db.ForeignKey('university_year.id'), nullable = True)
 
     # Relationships #
-    # module_question = db.relationship('ModuleQuestion', backref = 'module', lazy = True, foreign_keys = 'ModuleQuestion.module_id')
+    module_question = db.relationship('ModuleQuestion', backref = 'module', lazy = True, foreign_keys = 'ModuleQuestion.module_id')
     # module_question_comment = db.relationship('ModuleQuestionComment', backref = 'module', lazy = True, foreign_keys = 'ModuleQuestionComment.module_id')
     # module_lecture = db.relationship('ModuleLecture', backref = 'module', lazy = True, foreign_keys = 'ModuleLecture.module_id')
     # module_lecture_vote = db.relationship('ModuleLectureVote', backref = 'module', lazy = True, foreign_keys = 'ModuleLectureVote.module_id')
@@ -242,16 +246,17 @@ class ModuleSubscription(db.Model):
     user_id = db.Column(db.String(20), db.ForeignKey('user.id'), nullable = False)
     module_id = db.Column(db.String(20), db.ForeignKey('module.id'), nullable = False)
 
-    # Relationships
+    # Relationships #
+    # Add Here
 
 class ModuleReview(db.Model):
     # Datebase Columns 
     id = db.Column(db.String(20), primary_key = True, default = secrets.token_hex(10))
-    date_sent = db.Column(db.Date, nullable = False, default = datetime.utcnow)
-    date_edited = db.Column(db.Date, nullable = True)
-    rating = db.Column(db.Integer, nullable = False)
     title = db.Column(db.String(240), nullable = True)
+    rating = db.Column(db.Integer, nullable = False, default = 0)
     description = db.Column(db.Text, nullable = True)
+    date_sent = db.Column(db.DateTime, nullable = False, default = datetime.utcnow)
+    date_edited = db.Column(db.DateTime, nullable = True)
 
 
     # Links (ForeignKeys) #
@@ -259,13 +264,14 @@ class ModuleReview(db.Model):
     module_id = db.Column(db.String(20), db.ForeignKey('module.id'), nullable = False)
 
     # Relationships #
+    # Add Here
     
 
 # class ModuleLecture(db.Model):
 #     # Datebase Columns 
 #     id = db.Column(db.String(20), primary_key = True, default = secrets.token_hex(10))
-#     date_sent = db.Column(db.Date, nullable = False, default = datetime.utcnow)
-#     date_edited = db.Column(db.Date, nullable = True)
+#     date_sent = db.Column(db.DateTime, nullable = False, default = datetime.utcnow)
+#     date_edited = db.Column(db.DateTime, nullable = True)
 
 
 #     # Links (ForeignKeys) #
@@ -279,7 +285,7 @@ class ModuleReview(db.Model):
 # class ModuleLectueVote(db.Model):
 #     # Datebase Columns 
 #     id = db.Column(db.String(20), primary_key = True, default = secrets.token_hex(10))
-#     date_sent = db.Column(db.Date, nullable = False, default = datetime.utcnow)
+#     date_sent = db.Column(db.DateTime, nullable = False, default = datetime.utcnow)
 #     vote = db.Column(db.Boolean, nullable = False)
 
 
@@ -291,41 +297,58 @@ class ModuleReview(db.Model):
 #     # Relationships #
     
 
-# class ModuleQuestion(db.Model):
-#     # Datebase Columns 
-#     id = db.Column(db.String(20), primary_key = True, default = secrets.token_hex(10))
-#     date_sent = db.Column(db.Date, nullable = False, default = datetime.utcnow)
-#     date_edited = db.Column(db.Date, nullable = True)
-#     title = db.Column(db.String(240), nullable = True)
-#     description = db.Column(db.Text, nullable = True)
-#     solved = db.Column(db.Boolean, nullable = False, default = False)
+class ModuleQuestion(db.Model):
+    # Datebase Columns 
+    id = db.Column(db.String(20), primary_key = True, default = secrets.token_hex(10))
+    title = db.Column(db.String(240), nullable = False)
+    description = db.Column(db.Text, nullable = True)
+    date = db.Column(db.DateTime, nullable = False, default = datetime.utcnow)
+    date_edited = db.Column(db.DateTime, nullable = True)
+    solved = db.Column(db.Boolean, nullable = False, default = False)
+    comment_count = db.Column(db.Integer, nullable = True, default = 0)
+    view_count = db.Column(db.Integer, nullable = True, default = 0)
+    unique_view_count = db.Column(db.Integer, nullable = True, default = 0)
 
+    # Links (ForeignKeys) #
+    user_id = db.Column(db.String(20), db.ForeignKey('user.id'), nullable = False)
+    module_id = db.Column(db.String(20), db.ForeignKey('module.id'), nullable = False)
 
-
-#     # Links (ForeignKeys) #
-#     user_id = db.Column(db.String(20), db.ForeignKey('user.id'), nullable = False)
-#     module_id = db.Column(db.String(20), db.ForeignKey('module.id'), nullable = False)
-
-#     # Relationships #
-#     # module_question_comment = db.relationship('ModuleQuestionComment', backref = 'module_question', lazy = True, foreign_keys = 'ModuleQuestionComment.module_question_id')
+    # Relationships #
+    module_question_edit = db.relationship('ModuleQuestionEdit', backref = 'module_question', lazy = True, foreign_keys = 'ModuleQuestionEdit.module_question_id')
+    module_question_comment = db.relationship('ModuleQuestionComment', backref = 'module_question', lazy = True, foreign_keys = 'ModuleQuestionComment.module_question_id')
     
 
-# class ModuleQuestionComment(db.Model):
-#     # Datebase Columns 
-#     id = db.Column(db.String(20), primary_key = True, default = secrets.token_hex(10))
-#     date_sent = db.Column(db.Date, nullable = False, default = datetime.utcnow)
-#     date_edited = db.Column(db.Date, nullable = True)
-#     message = db.Column(db.Text, nullable = True)
+class ModuleQuestionEdit(db.Model):
+    # Datebase Columns 
+    id = db.Column(db.String(20), primary_key = True, default = secrets.token_hex(10))
+    date = db.Column(db.DateTime, nullable = False, default = datetime.utcnow)
+    description = db.Column(db.Text, nullable = True)
+    order = db.Column(db.Integer, nullable = True, default = 0)
 
+    # Links (ForeignKeys) #
+    user_id = db.Column(db.String(20), db.ForeignKey('user.id'), nullable = False)
+    module_question_id = db.Column(db.String(20), db.ForeignKey('module_question.id'), nullable = False)
 
-#     # Links (ForeignKeys) #
-#     user_id = db.Column(db.String(20), db.ForeignKey('user.id'), nullable = False)
-#     module_id = db.Column(db.String(20), db.ForeignKey('module.id'), nullable = False)
-#     module_question_id = db.Column(db.String(20), db.ForeignKey('module_question.id'), nullable = False)
-#     parent_comment_id = db.Column(db.String(20), db.ForeignKey('module_question_comment.id'), nullable = False)
+    # Relationships #
+    # Add Here
+    
 
-#     # Relationships #
-#     # module_question_comment = db.relationship('ModuleQuestionComment', backref = 'parent_comment', lazy = True, foreign_keys = 'ModuleQuestionComment.parent_comment_id')
+class ModuleQuestionComment(db.Model):
+    # Datebase Columns 
+    id = db.Column(db.String(20), primary_key = True, default = secrets.token_hex(10))
+    date_sent = db.Column(db.DateTime, nullable = False, default = datetime.utcnow)
+    date_edited = db.Column(db.DateTime, nullable = True)
+    message = db.Column(db.Text, nullable = False)
+    sub_comment_count = db.Column(db.Integer, nullable = True, default = 0)
+
+    # Links (ForeignKeys) #
+    user_id = db.Column(db.String(20), db.ForeignKey('user.id'), nullable = False)
+    module_question_id = db.Column(db.String(20), db.ForeignKey('module_question.id'), nullable = False)
+    parent_comment_id = db.Column(db.String(20), db.ForeignKey('module_question_comment.id'), nullable = True)
+
+    # Relationships #
+    # reference for using remote_side: https://docs.sqlalchemy.org/en/20/orm/relationship_api.html#sqlalchemy.orm.relationship.params.remote_side [accessed: 30 March 2023]
+    module_question_comment = db.relationship('ModuleQuestionComment', backref = 'parent_comment', lazy = True, remote_side = id, foreign_keys = 'ModuleQuestionComment.parent_comment_id')
     
 
 
@@ -333,17 +356,17 @@ class ModuleReview(db.Model):
 # class ModuleNote(db.Model):
 #     # Datebase Columns 
 #     id = db.Column(db.String(20), primary_key = True, default = secrets.token_hex(10))
-#     date_created = db.Column(db.Date, nullable = False, default = datetime.utcnow)
-#     date_edited = db.Column(db.Date, nullable = True)
+#     date_created = db.Column(db.DateTime, nullable = False, default = datetime.utcnow)
+#     date_edited = db.Column(db.DateTime, nullable = True)
 #     title = db.Column(db.String(240), nullable = True)
 #     description = db.Column(db.Text, nullable = True)
-
 
 #     # Links (ForeignKeys) #
 #     user_id = db.Column(db.String(20), db.ForeignKey('user.id'), nullable = False)
 #     module_id = db.Column(db.String(20), db.ForeignKey('module.id'), nullable = False)
 
 #     # Relationships #
+#     # Add Here
     
 
 # class ModuleFile(db.Model):
@@ -351,14 +374,14 @@ class ModuleReview(db.Model):
 #     id = db.Column(db.String(20), primary_key = True, default = secrets.token_hex(10))
 #     name = db.Column(db.String(240), nullable = True)
 #     description = db.Column(db.Text, nullable = True)
-#     date_created = db.Column(db.Date, nullable = False, default = datetime.utcnow)
-
+#     date_created = db.Column(db.DateTime, nullable = False, default = datetime.utcnow)
 
 #     # Links (ForeignKeys) #
 #     user_id = db.Column(db.String(20), db.ForeignKey('user.id'), nullable = False)
 #     module_id = db.Column(db.String(20), db.ForeignKey('module.id'), nullable = False)
 
 #     # Relationships #
+#     # Add Here
     
 
 
@@ -368,22 +391,21 @@ class ModuleReview(db.Model):
 #     id = db.Column(db.String(20), primary_key = True, default = secrets.token_hex(10))
 #     username = db.Column(db.String(50), nullable = False)
 #     bio = db.Column(db.Text, nullable = True)
-#     date_created = db.Column(db.Date, nullable = False, default = datetime.utcnow)
-#     date_edited = db.Column(db.Date, nullable = True)
-
+#     date_created = db.Column(db.DateTime, nullable = False, default = datetime.utcnow)
+#     date_edited = db.Column(db.DateTime, nullable = True)
 
 #     # Links (ForeignKeys) #
 #     user_id = db.Column(db.String(20), db.ForeignKey('user.id'), nullable = False)
 
 #     # Relationships #
+#     # Add Here
     
 
 # class PublicPost(db.Model):
 #     # Datebase Columns 
 #     id = db.Column(db.String(20), primary_key = True, default = secrets.token_hex(10))
-#     date_sent = db.Column(db.Date, nullable = False, default = datetime.utcnow)
-#     date_edited = db.Column(db.Date, nullable = True)
-
+#     date_sent = db.Column(db.DateTime, nullable = False, default = datetime.utcnow)
+#     date_edited = db.Column(db.DateTime, nullable = True)
 
 #     # Links (ForeignKeys) #
 #     user_id = db.Column(db.String(20), db.ForeignKey('user.id'), nullable = False)
@@ -395,9 +417,8 @@ class ModuleReview(db.Model):
 # class PublicPostComment(db.Model):
 #     # Datebase Columns 
 #     id = db.Column(db.String(20), primary_key = True, default = secrets.token_hex(10))
-#     date_sent = db.Column(db.Date, nullable = False, default = datetime.utcnow)
-#     date_edited = db.Column(db.Date, nullable = True)
-
+#     date_sent = db.Column(db.DateTime, nullable = False, default = datetime.utcnow)
+#     date_edited = db.Column(db.DateTime, nullable = True)
 
 #     # Links (ForeignKeys) #
 #     user_id = db.Column(db.String(20), db.ForeignKey('user.id'), nullable = False)
@@ -412,12 +433,10 @@ class ModuleReview(db.Model):
 #     # Datebase Columns 
 #     id = db.Column(db.String(20), primary_key = True, default = secrets.token_hex(10))
 #     name = db.Column(db.String(240), nullable = True)
-#     date_created = db.Column(db.Date, nullable = False, default = datetime.utcnow)
-#     date_last_message = db.Column(db.Date, nullable = True)
+#     date_created = db.Column(db.DateTime, nullable = False, default = datetime.utcnow)
+#     date_last_message = db.Column(db.DateTime, nullable = True)
 #     member_count = db.Column(db.Integer, nullable = False, default = 0)
-#     message_count = db.Column(db.Integer, nullable = False, default = 0)
-
-#     # Links (ForeignKeys) #
+#     message_count = db.Column(db.Integer, nullable = False, default_count= 0# Links (ForeignKeys) #
 #     user_id = db.Column(db.String(20), db.ForeignKey('user.id'), nullable = False)
 
 #     # Relationships #
@@ -428,14 +447,15 @@ class ModuleReview(db.Model):
 #     # Datebase Columns 
 #     id = db.Column(db.String(20), primary_key = True, default = secrets.token_hex(10))
 #     body = db.Column(db.Text, nullable = False)
-#     date_sent = db.Column(db.Date, nullable = False, default = datetime.utcnow)
-#     date_edited = db.Column(db.Date, nullable = True)
+#     date_sent = db.Column(db.DateTime, nullable = False, default = datetime.utcnow)
+#     date_edited = db.Column(db.DateTime, nullable = True)
 
 #     # Links (ForeignKeys) #
 #     user_id = db.Column(db.String(20), db.ForeignKey('user.id'), nullable = False)
 #     message_thread_id = db.Column(db.String(20), db.ForeignKey('message_thread.id'), nullable = False)
 
 #     # Relationships #
+#     # Add Here
     
 
 
@@ -448,7 +468,7 @@ class ModuleReview(db.Model):
 #     id = db.Column(db.String(20), primary_key = True, default = secrets.token_hex(10))
 #     title = db.Column(db.String(240), nullable = True)
 #     description = db.Column(db.Text, nullable = True)
-#     date_added = db.Column(db.Date, nullable = False, default = datetime.utcnow)
+#     date_added = db.Column(db.DateTime, nullable = False, default = datetime.utcnow)
 
 
 #     # Links (ForeignKeys) #
@@ -466,12 +486,13 @@ class ModuleReview(db.Model):
 #     id = db.Column(db.String(20), primary_key = True, default = secrets.token_hex(10))
 #     title = db.Column(db.String(240), nullable = True)
 #     description = db.Column(db.Text, nullable = True)
-#     date_added = db.Column(db.Date, nullable = False, default = datetime.utcnow)
+#     date_added = db.Column(db.DateTime, nullable = False, default = datetime.utcnow)
 
 
 #     # Links (ForeignKeys) #
 #     user_id = db.Column(db.String(20), db.ForeignKey('user.id'), nullable = False)
 
 #     # Relationships #
+#     # Add Here
     
     

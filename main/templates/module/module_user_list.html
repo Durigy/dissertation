@@ -3,11 +3,17 @@
 
 {% from "helpers/cards.html" import card %}
 
-<h2>My Modules</h2>
+<div class="d-flex flex-wrap p-2">
+    <div class="col">
+        <h2>My Modules</h2>
+    </div>
+    <div class="">
+        <a href="{{ url_for('modules.module_selection') }}" class="btn btn-secondary">Edit</a>
+    </div>
+</div>
+
 <div class="">
-    {% if subscribed_modules %}
-    <a href="{{ url_for('modules.module_selection') }}" class="btn btn-secondary">Edit</a>
-    
+    {% if subscribed_modules %}    
     <div class="d-flex flex-wrap p-2">
         {% for module in subscribed_modules %}
         {% set temp = module.module.code + " - " + module.module.name %}
@@ -20,5 +26,7 @@
 </div>
 
 <br>
+{% from "helpers/blue_tile.html" import blue_tile %}
+{{ blue_tile(title = 'Subscribe to some modules', description = '', link = url_for('modules.module_selection'), link_text = 'Edit now') }}
 
 {% endblock content %}

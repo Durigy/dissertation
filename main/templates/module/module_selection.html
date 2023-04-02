@@ -3,6 +3,7 @@
 
 {% from "helpers/cards.html" import card %}
 
+{% if subscribed_modules %}
 <h2>My Modules</h2>
 
 <div class="d-flex flex-wrap p-2">
@@ -12,9 +13,14 @@
     {% endfor %}
 </div>
 
-<br><br>
+<br>
 
-<h2>Not My Modules</h2>
+{% endif %}
+
+{% if non_taking_modules %}
+<br>
+
+<h2>Module to choose from</h2>
 
 <div class="d-flex flex-wrap p-2">
     {% for module in non_taking_modules %}
@@ -24,6 +30,9 @@
 </div>
 
 <br>
+
+{% endif %}
+
 <hr>
 <br>
 

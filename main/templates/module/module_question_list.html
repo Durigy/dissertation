@@ -1,0 +1,82 @@
+{% extends "layout.html" %}
+{% block content %}
+
+{% from "helpers/cards.html" import card %}
+{% from "helpers/blue_tile.html" import blue_tile %}
+
+<div class="d-flex flex-wrap p-2">
+    <div class="col">
+        <h1>Questions for Modules you Take</h1>
+    </div>
+    <div class="">
+        <a href="{{ url_for('modules.module_question_add') }}" class="btn btn-secondary">I have a Question</a>
+    </div>
+</div>
+
+{% if questions.pages > 0 %}
+<div class="d-flex flex-wrap p-2">
+    {% for question in questions.items %}
+    {% set temp = question.title|truncate(40, True) + ' - ' + question.module.code %}
+    {# reference: https://stackoverflow.com/questions/36458482/how-to-not-render-a-entire-string-with-jinja2 [accessed: 26 Mar 2023] #}
+    {{ card(
+        title = temp,
+        description = question.description|truncate(300, True) if question.description else None,
+        link = url_for('modules.module_question_single', question_id = question.id),
+        link_text = 'See More',
+        width = 100
+    ) }}
+    {% endfor %}
+</div>
+
+{% if questions.pages > 1 %}
+{# reference to my past code for pagination: https://github.com/Durigy/neighbourfy-v2/blob/main/main/templates/user/account.html #}
+<!-- Pagination Links-->
+
+<nav aria-label="Question Page Navigation">
+    <ul class="pagination">
+        <li class="page-item">
+            <a href="{{ url_for('modules.module_question', module_page=questions.prev_num) }}" {% if questions.page == 1 %} style="pointer-events: none; cursor: default;" class = "page-link text-secondary"{% else %} class="page-link" {% endif %}>
+                Previous
+            </a>
+        </li>
+
+        {% for page_num in questions.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+        {% if page_num %}
+        
+        <li class="page-item">
+            <a class="page-link {% if page_num == questions.page %} text-danger {% endif %}" href="{{url_for('modules.module_question', module_page=page_num)}}">
+                {{page_num}}
+            </a>
+        </li>
+        
+        {% else %}
+        
+        <li class="page-item">
+            <a class="page-link text-secondary" href="" style="pointer-events: none; cursor: default;">
+                . . .
+            </a>
+        </li>
+        
+        {% endif %}
+        {% endfor %}
+
+        <li class="page-item">
+            <a href="{{ url_for('modules.module_question', module_page=questions.next_num) }}" {% if questions.page == questions.pages %} style="pointer-events: none; cursor: default;" class = "page-link text-secondary"{% else %} class="page-link" {% endif %}>
+                Next
+            </a>
+        </li>
+    </ul>
+</nav>
+{% endif %}
+
+{% else %}
+<div>
+    There are no questions for any of your modules yet
+</div>
+{% endif %}
+
+<br><br><br><br>
+
+{{ blue_tile(title = 'Why not ask a question?', description = 'You never know, someone else might have the answer you\'re looking for', link = url_for('modules.module_question_add'), link_text = 'I have a Question') }}
+
+{% endblock content %}

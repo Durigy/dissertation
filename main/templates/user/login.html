@@ -9,11 +9,11 @@
             {{ form.hidden_tag() }}
 
             <div>
-                {{ form.username_email.label() }}
+                {{ form.username_email.label( class="form-label" ) }}
             
-                </br>
+                <br>
 
-                {{ form.username_email()}}
+                {{ form.username_email( class="form-control" ) }}
                 
                 {% if form.username_email.errors %}
                     <div>
@@ -27,11 +27,11 @@
             <br>
             
             <div>
-                {{ form.password.label() }}
+                {{ form.password.label( class="form-label" ) }}
             
-                </br>
+                <br>
                 
-                {{ form.password()}}
+                {{ form.password( class="form-control" ) }}
                 
                 {% if form.password.errors %}
                     <div>
@@ -42,14 +42,14 @@
                 {% endif %}
             </div>
 
-            </br>
+            <br>
 
             <div>
                 {{ form.remember() }}
                 {{ form.remember.label() }}
             </div>
 
-            </br>
+            <br>
         
             <div>
                 {{ form.submit( class='btn' ) }}

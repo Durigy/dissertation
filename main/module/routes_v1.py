@@ -68,15 +68,8 @@ def module_review_list(module_id):
 def module_question():
     module_list, subscribed_modules, non_taking_modules = defaults(current_user)
 
-    # # reference: https://stackoverflow.com/questions/4186062/sqlalchemy-order-by-descending [accessed: 1 April 2023]
-    # questions = ModuleQuestion.query.filter_by(module_id = ModuleSubscription.module_id).order_by(ModuleQuestion.date.desc()).all()
-
-    # reference to my past code: https://github.com/Durigy/neighbourfy-v2/blob/main/main/routes.py [accessed: 1 April 2023]
-    module_page = request.args.get('module_page', 1, type = int)
-    questions = ModuleQuestion.query \
-        .filter_by(module_id = ModuleSubscription.module_id) \
-        .order_by(ModuleQuestion.date.desc()) \
-        .paginate(page = module_page, per_page = 1)
+    # reference: https://stackoverflow.com/questions/4186062/sqlalchemy-order-by-descending [accessed: 1 April 2023]
+    questions = ModuleQuestion.query.filter_by(module_id = ModuleSubscription.module_id).order_by(ModuleQuestion.date.desc()).all()
 
     return render_template(
         'module/module_question_list.html',
@@ -98,26 +91,19 @@ def module_question_single(question_id):
 
     form = AddModuleQuestionCommentForm()
 
-    comment_page = request.args.get('comment_page', 1, type = int)
-    comments = ModuleQuestionComment.query \
-        .filter_by(module_question_id = ModuleQuestion.id) \
-        .order_by(ModuleQuestion.date.desc()) \
-        .paginate(page = comment_page, per_page = 1)
+    # if form.validate_on_submit() and request.method == "POST":
+    #     question = ModuleQuestionComment(
+    #         id = generate_id(ModuleQuestionComment),
+    #         title = form.title.data,
+    #         description = form.description.data if len(form.description.data) > 0 else None
+    #     )
 
-    if form.validate_on_submit() and request.method == "POST":
-        message = ModuleQuestionComment(
-            id = generate_id(ModuleQuestionComment),
-            message = form.message.data,
-            user_id = current_user.id,
-            module_question_id = question_id
-        )
+    #     db.session.add(question)
+    #     db.session.commit()
 
-        db.session.add(message)
-        db.session.commit()
-
-        flash('Your Question has been posted')
+    #     flash('Your Question has been posted')
     
-        return redirect(url_for('modules.module_question_single', question_id = question_id))
+    #     return redirect(url_for('modules.module_question_single', question_id = question_id))
 
     return render_template(
         'module/module_question_single.html',
@@ -126,10 +112,7 @@ def module_question_single(question_id):
         subscribed_modules = subscribed_modules,
         non_taking_modules = non_taking_modules,
         question = question,
-        module = module,
-        comments = comments,
-        question_id = question_id,
-        form = form
+        module = module
     )
 
 @modules.route("/questions/add", methods = ["GET", "POST"])
@@ -138,9 +121,6 @@ def module_question_add():
     module_list, subscribed_modules, non_taking_modules = defaults(current_user)
 
     form = AddModuleQuestionForm()
-
-    # reference: https://werkzeug.palletsprojects.com/en/0.14.x/datastructures/#werkzeug.datastructures.MultiDict.get [accessed: 1 April 2023]
-    selected_module_id = request.args.get('selected_module', default = None, type = str)
 
     if form.validate_on_submit() and request.method == "POST":
         question_id = generate_id(ModuleQuestion)
@@ -151,7 +131,7 @@ def module_question_add():
             title = form.title.data,
             description = form.description.data if len(form.description.data) > 0 else None,
             user_id = current_user.id,
-            module_id = module_id 
+            module_id = module_id        
         )
 
         db.session.add(question)
@@ -167,8 +147,7 @@ def module_question_add():
         module_list = module_list,
         subscribed_modules = subscribed_modules,
         non_taking_modules = non_taking_modules,
-        form = form,
-        selected_module_id = selected_module_id
+        form = form
     )
 
 # @modules.route("/questions/<question_id>/remove")

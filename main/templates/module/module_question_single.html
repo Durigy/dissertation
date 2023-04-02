@@ -1,0 +1,98 @@
+{% extends "module/module_layout.html" %}
+{% block module %}
+
+{% from "helpers/cards.html" import card %}
+
+<h1>{{ question.title }}</h1>
+
+{% if question.description %}
+{{ question.description }}
+<hr>
+{% endif %}
+
+
+comments
+
+{% if comments.pages > 0 %}
+<div class="d-flex flex-wrap p-2">
+    {% for comment in comments.items %}
+    {% set temp = comment.user.name %}
+    {# reference: https://stackoverflow.com/questions/36458482/how-to-not-render-a-entire-string-with-jinja2 [accessed: 26 Mar 2023] #}
+    {{ card(
+        title = comment.user.username,
+        description = comment.message,
+        width = 100
+    ) }}
+    {% endfor %}
+</div>
+
+{% if comments.pages > 1 %}
+{# reference to my past code for pagination: https://github.com/Durigy/neighbourfy-v2/blob/main/main/templates/user/account.html #}
+<!-- Pagination Links-->
+
+<nav aria-label="Question Page Navigation">
+    <ul class="pagination">
+        <li class="page-item">
+            <a href="{{ url_for('modules.module_question_single', question_id = question_id, comment_page=comments.prev_num) }}" {% if comments.page == 1 %} style="pointer-events: none; cursor: default;" class = "page-link text-secondary"{% else %} class="page-link" {% endif %}>
+                Previous
+            </a>
+        </li>
+
+        {% for page_num in comments.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+        {% if page_num %}
+        
+        <li class="page-item">
+            <a class="page-link {% if page_num == comments.page %} text-danger {% endif %}" href="{{url_for('modules.module_question_single', question_id = question_id, comment_page=page_num)}}">
+                {{page_num}}
+            </a>
+        </li>
+        
+        {% else %}
+        
+        <li class="page-item">
+            <a class="page-link text-secondary" href="" style="pointer-events: none; cursor: default;">
+                . . .
+            </a>
+        </li>
+        
+        {% endif %}
+        {% endfor %}
+
+        <li class="page-item">
+            <a href="{{ url_for('modules.module_question_single', question_id = question_id, comment_page=comments.next_num) }}" {% if comments.page == comments.pages %} style="pointer-events: none; cursor: default;" class = "page-link text-secondary"{% else %} class="page-link" {% endif %}>
+                Next
+            </a>
+        </li>
+    </ul>
+</nav>
+{% endif %}
+
+{% else %}
+<div>
+    There are no questions for any of your modules yet
+</div>
+{% endif %}
+
+<br><br><br>
+
+
+<div>
+    <form method="POST" action="">
+        {{ form.hidden_tag() }}
+        {{ form.message.label( class="form-label" ) }}
+    
+        <br>
+
+        {{ form.message( class="form-control" ) }}
+        
+        {% if form.message.errors %}
+            <div>
+                {% for error in form.message.errors %}
+                    <span style="color: red;">{{ error }}</span>
+                {% endfor %}
+            </div>
+        {% endif %}
+        {{ form.submit( class="btn btn-primary" ) }}
+    </form>
+</div>
+{% endblock module %}

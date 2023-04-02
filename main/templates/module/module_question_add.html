@@ -1,0 +1,64 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="centre">
+    <h1>Question</h1>
+</div>
+
+<div>
+    <form method="POST" action="">
+        {{ form.hidden_tag() }}
+        <div>
+            <p class="form-label">Select a Module *</p>
+            <select name="module" id="module" required>
+                <option value="">Select a Module</option>
+                {% for module in subscribed_modules %}
+                    <option value="{{ module.module.id }}" {% if module.module.id == selected_module_id %} selected {% endif %}>{{ module.module.code }} - {{ module.module.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <br>
+
+        <div>
+            {{ form.title.label( class="form-label" ) }}
+        
+            <br>
+
+            {{ form.title( class="form-control" ) }}
+            
+            {% if form.title.errors %}
+                <div>
+                    {% for error in form.title.errors %}
+                        <span style="color: red;">{{ error }}</span>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <br>
+        
+        <div>
+            {{ form.description.label( class="form-label" ) }}
+        
+            <br>
+            
+            {{ form.description( class="form-control", rows="6" ) }}
+            
+            {% if form.description.errors %}
+                <div>
+                    {% for error in form.description.errors %}
+                        <span style="color: red;">{{ error }}</span>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <br>
+    
+        <div>
+            {{ form.submit( class='btn' ) }}
+        </div>
+        <br>
+    </form>
+</div>
+{% endblock content %}

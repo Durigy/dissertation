@@ -1,21 +1,42 @@
 {% extends "module/module_layout.html" %}
 {% block module %}
 
-<a href="{{ url_for('modules.module_single', module_id = module.id) }}"> <i class="fa-solid fa-arrow-left"></i> Back to current module</a>
-
-<br>
-<br>
-
-<a href="#" class="btn btn-secondary">Add a review</a>
-
-{% for module_review in module_reviews %}
-<!-- <img src="..." class="card-img-top" alt="..."> -->
-<div class="card-body">
-    <h5 class="card-title">{{ module_review.title }} - {{ module_review.rating }}</h5>
-    <p class="card-text">{{ module.description }}</p>
-    <a href="{{ url_for('module_reviews.module_review_single', module_review_id=module_review.id) }}" class="btn btn-primary">see more</a>
+<div class="d-flex flex-wrap p-2">
+    <div class="col">
+        <a href="{{ url_for('modules.module_single', module_id = module.id) }}"> <i class="fa-solid fa-arrow-left"></i> Back to current module</a>
+    </div>
+    <div class="">
+        <a href="#" class="btn btn-secondary">Post a review</a>
+    </div>
 </div>
-{% endfor %}
+
+<div style="min-height: 15vh;">
+    {% if module_reviews %}
+    {% for module_review in module_reviews %}
+    <!-- <img src="..." class="card-img-top" alt="..."> -->
+    <div class="card-body">
+        <h5 class="card-title">{{ module_review.title }} - {{ module_review.rating }}</h5>
+        <p class="card-text">{{ module.description }}</p>
+        <a href="{{ url_for('module_reviews.module_review_single', module_review_id=module_review.id) }}" class="btn btn-primary">see more</a>
+    </div>
+    {% endfor %}
+
+    {% else %}
+    <div>
+
+        There are no Reviews for this module yet
+    </div>
+    {% endif %}
+</div>
+
+
+<br><br><br>
+
+<div class="text-center py-5 bg-info">
+    <h3>Why not post a review yourself?</h3>
+    <br>
+    <a href="{{ url_for('modules.module_question_add') }}" class="btn btn-secondary">Post a review</a>
+</div>
 
 
 {% endblock module %}

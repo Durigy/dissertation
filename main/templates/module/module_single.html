@@ -1,36 +1,71 @@
 {% extends "module/module_layout.html" %}
 {% block module %}
 
-<h3>Lecture Today</h3>
-<br>
-<a href="#" class="btn btn-secondary">See more lectures</a>
+<div class="d-flex flex-wrap p-2">
+    <div class="col-3 pe-4">
+        <h3>Lecture Today</h3>
+    </div>
+    <div class="">
+        <a href="#" class="btn btn-secondary">See more lectures</a>
+    </div>
+</div>
 
 <hr>
 
-<h3>Posts</h3>
+<div class="d-flex flex-wrap p-2">
+    <div class="col-3 pe-4">
+        <h3>Questions</h3>
+    </div>
+    <div class="">
+        <a href="{{ url_for('modules.module_question_add', selected_module = module.id) }}" class="btn btn-secondary">Post a Question</a>
+    </div>
+</div>
+
 <\ all posts will appeare here - paginated \>
-<br>
-<br>
-<a href="#" class="btn btn-secondary">Post a Question</a>
 
 <hr>
 
-<h3>Module Chat</h3>
-The live chat for this module
-<br>
-<br>
-<a href="#" class="btn btn-secondary">Join the discussion!</a>
+<div class="d-flex flex-wrap p-2">
+    <div class="col-3 pe-4">
+        <h3>Module Chat</h3>
+    </div>
+    <div class="">
+        <a href="#" class="btn btn-secondary">Join the discussion!</a>
+    </div>
+</div>
+
+The live chat for this Module
 
 <hr>
 
-<h3>Resources</h3>
+<div class="d-flex flex-wrap p-2">
+    <div class="col-3 pe-4">
+        <h3>Resources</h3>
+    </div>
+    <div class="">
+        <a href="#" class="btn btn-secondary">Add a resource</a>
+    </div>
+</div>
+
 This is for resources such as:
 <ul>
     <li>images</li>
     <li>docs (words, pdf, etc)</li>
     <li>videos (lectures, youtube, etc)</li>
 </ul>
-<a href="#" class="btn btn-secondary">Add a resource</a>
+
+<br>
+
+<hr>
+
+<br>
+
+<h3>About the module</h3>
+<iframe src="https://data.cardiff.ac.uk/legacy/grails/module/{{ module.code }}/22.html" frameborder="0" width="100%", height="1000px"></iframe>
+
+<br><br>
+
+Infomation from: <a href="https://data.cardiff.ac.uk/legacy/grails/module/{{ module.code }}/22.html">https://data.cardiff.ac.uk/legacy/grails/module/{{ module.code }}/22.html</a>
 
 <br><br>
 

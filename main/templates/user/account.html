@@ -23,11 +23,11 @@
             <div class="row g-2">
                 <div class="col-md">
                     <div>
-                        {{ form.firstname.label() }}
+                        {{ form.firstname.label( class="form-label" ) }}
                         
                         <br>
                         
-                        {{ form.firstname() }}
+                        {{ form.firstname( class="form-control" ) }}
 
                         {% if form.firstname.errors %}
                             <div>
@@ -41,11 +41,11 @@
 
                 <div class="col-md">
                     <div>
-                        {{ form.lastname.label() }}
+                        {{ form.lastname.label( class="form-label" ) }}
 
                         <br>
 
-                        {{ form.lastname()}}
+                        {{ form.lastname( class="form-control" ) }}
 
                         {% if form.lastname.errors %}
                             <div>
@@ -61,11 +61,11 @@
             <br>
 
             <div>
-                {{ form.username.label() }}
+                {{ form.username.label( class="form-label" ) }}
 
                 <br>
 
-                {{ form.username()}}
+                {{ form.username( class="form-control" ) }}
 
                 {% if form.username.errors %}
                     <div>

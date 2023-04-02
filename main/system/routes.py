@@ -23,10 +23,7 @@ from ..main_utils import defaults
 
 @app.errorhandler(404)
 def page_not_found(e):
-    if current_user.is_authenticated:
-        module_list, subscribed_modules, non_taking_modules = defaults(current_user)
-    else:
-        module_list, subscribed_modules, non_taking_modules = [], [], []
+    module_list, subscribed_modules, non_taking_modules = defaults(current_user) if current_user.is_authenticated else [], [], []
 
     return render_template(
         'errors/404.html',
@@ -38,10 +35,7 @@ def page_not_found(e):
 
 @app.errorhandler(500)
 def page_not_found(e):
-    if current_user.is_authenticated:
-        module_list, subscribed_modules, non_taking_modules = defaults(current_user)
-    else:
-        module_list, subscribed_modules, non_taking_modules = [], [], []
+    module_list, subscribed_modules, non_taking_modules = defaults(current_user) if current_user.is_authenticated else [], [], []
 
     return render_template(
         'errors/500.html',
@@ -61,7 +55,7 @@ def index():
         title='Home'
     )
 
-# when '/home' or '/index' are typed in the URL or redirected, it will the redirect to the url without anything after the /
+# when '/home' or '/index' are typed into the URL or redirected, it will then redirect to the url without anything after the /
 @app.route("/index")
 @app.route("/home")
 def home_redirect():

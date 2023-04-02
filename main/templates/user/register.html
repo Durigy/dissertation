@@ -13,7 +13,7 @@
             
                 <br>
 
-                {{ form.username()}}
+                {{ form.username() }}
 
                 {% if form.username.errors %}
                     <div>
@@ -31,7 +31,7 @@
             
                 <br>
 
-                {{ form.email()}}
+                {{ form.email() }}
 
                 {% if form.email.errors %}
                     <div>
@@ -49,7 +49,7 @@
             
                 <br>
 
-                {{ form.firstname()}}
+                {{ form.firstname() }}
 
                 {% if form.firstname.errors %}
                     <div>
@@ -67,7 +67,7 @@
             
                 <br>
 
-                {{ form.lastname()}}
+                {{ form.lastname() }}
 
                 {% if form.lastname.errors %}
                     <div>
@@ -85,7 +85,7 @@
             
                 <br>
             
-                {{ form.password()}}
+                {{ form.password() }}
                 {% if form.password.errors %}
                     <div>
                         {% for error in form.password.errors %}
@@ -102,7 +102,7 @@
             
                 <br>
             
-                {{ form.confirm_password()}}
+                {{ form.confirm_password() }}
                 {% if form.confirm_password.errors %}
                     <div>
                         {% for error in form.confirm_password.errors %}
@@ -125,5 +125,7 @@
     <div>
         Already have an account? <a href="{{ url_for('users.login') }}">Login</a>
     </div>
+    
+    <br><br>
 
 {% endblock content %}

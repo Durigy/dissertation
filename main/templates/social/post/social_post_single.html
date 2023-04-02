@@ -1,0 +1,106 @@
+{% extends "layout.html" %}
+{% block content %}
+
+{% from "helpers/cards.html" import card %}
+{% from "helpers/blue_tile.html" import blue_tile %}
+
+<div class="col">
+    <h1>{{ post.title }}</h1>
+</div>
+
+{% if post.description %}
+{{ post.description }}
+{% endif %}
+
+<br><br>
+<hr>
+
+{% if comments.pages > 0 %}
+<div class="d-flex flex-wrap p-2">
+    {% for comment in comments.items %}
+    {# reference for formating time: https://www.programiz.com/python-programming/datetime/strftime [accessed: 2 apr, 2023] #}
+    {% set temp = comment.user.username + ' - ' + comment.date.strftime('%I:%M, %d %b %Y') %}
+    {# reference: https://stackoverflow.com/posts/36458482/how-to-not-render-a-entire-string-with-jinja2 [accessed: 26 Mar 2023] #}
+    {{ card(
+        title = temp,
+        description = comment.message,
+        width = 100
+    ) }}
+    {% endfor %}
+</div>
+
+{% if comments.pages > 1 %}
+{# reference to my past code for pagination: https://github.com/Durigy/neighbourfy-v2/blob/main/main/templates/user/account.html #}
+<!-- Pagination Links-->
+
+<div aria-label="Comment Page Navigation">
+    <ul class="pagination">
+        <li class="page-item">
+            <a href="{{ url_for('socials.social_post_single', post_id = post_id, comment_page=comments.prev_num) }}" {% if comments.page == 1 %} style="pointer-events: none; cursor: default;" class = "page-link text-secondary"{% else %} class="page-link" {% endif %}>
+                Previous
+            </a>
+        </li>
+
+        {% for page_num in comments.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+        {% if page_num %}
+        
+        <li class="page-item">
+            <a class="page-link {% if page_num == comments.page %} text-danger {% endif %}" href="{{url_for('socials.social_post_single', post_id = post_id, comment_page=page_num)}}">
+                {{page_num}}
+            </a>
+        </li>
+        
+        {% else %}
+        
+        <li class="page-item">
+            <a class="page-link text-secondary" href="" style="pointer-events: none; cursor: default;">
+                . . .
+            </a>
+        </li>
+        
+        {% endif %}
+        {% endfor %}
+
+        <li class="page-item">
+            <a href="{{ url_for('socials.social_post_single', post_id = post_id, comment_page=comments.next_num) }}" {% if comments.page == comments.pages %} style="pointer-events: none; cursor: default;" class = "page-link text-secondary"{% else %} class="page-link" {% endif %}>
+                Next
+            </a>
+        </li>
+    </ul>
+</div>
+{% endif %}
+
+{% else %}
+<div>
+    There are no posts for any of your socials yet
+</div>
+{% endif %}
+
+<br>
+<div>
+    <form method="POST" action="">
+        {{ form.hidden_tag() }}
+        {{ form.message.label( class="form-label" ) }}
+    
+        <br>
+
+        {{ form.message( class="form-control" ) }}
+        
+        {% if form.message.errors %}
+            <div>
+                {% for error in form.message.errors %}
+                    <span style="color: red;">{{ error }}</span>
+                {% endfor %}
+            </div>
+        {% endif %}
+        {{ form.submit( class="btn btn-primary" ) }}
+    </form>
+</div>
+
+<br><br><br>
+
+{{ blue_tile(title = 'Couldn\'t find what you were looking for?', description = ' Why not ask a post? You never know, who might have the answer you\'re looking for', link = url_for('socials.social_post_add'), link_text = 'I have a post') }}
+
+<br><br><br>
+
+{% endblock content %}

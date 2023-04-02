@@ -1,0 +1,84 @@
+{% extends "layout.html" %}
+{% block content %}
+
+{% from "helpers/cards.html" import card %}
+{% from "helpers/blue_tile.html" import blue_tile %}
+
+<div class="d-flex flex-wrap p-2">
+    <div class="col">
+        <h1>Posts for Socials you Take</h1>
+    </div>
+    <div class="">
+        <a href="{{ url_for('socials.social_post_add') }}" class="btn btn-secondary">I have a Post</a>
+    </div>
+</div>
+
+{% if posts.pages > 0 %}
+<div class="d-flex flex-wrap p-2">
+    {% for post in posts.items %}
+    {% set temp = post.title|truncate(40, True)  %}
+    {# reference: https://stackoverflow.com/posts/36458482/how-to-not-render-a-entire-string-with-jinja2 [accessed: 26 Mar 2023] #}
+    {{ card(
+        title = temp,
+        description = post.description|truncate(300, True) if post.description else None,
+        link = url_for('socials.social_post_single', post_id = post.id),
+        link_text = 'See More',
+        width = 100
+    ) }}
+    {% endfor %}
+</div>
+
+{% if posts.pages > 1 %}
+{# reference to my past code for pagination: https://github.com/Durigy/neighbourfy-v2/blob/main/main/templates/user/account.html #}
+<!-- Pagination Links-->
+
+<div aria-label="Post Page Navigation">
+    <ul class="pagination">
+        <li class="page-item">
+            <a href="{{ url_for('socials.social_post', social_page=posts.prev_num) }}" {% if posts.page == 1 %} style="pointer-events: none; cursor: default;" class = "page-link text-secondary"{% else %} class="page-link" {% endif %}>
+                Previous
+            </a>
+        </li>
+
+        {% for page_num in posts.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+        {% if page_num %}
+        
+        <li class="page-item">
+            <a class="page-link {% if page_num == posts.page %} text-danger {% endif %}" href="{{url_for('socials.social_post', social_page=page_num)}}">
+                {{page_num}}
+            </a>
+        </li>
+        
+        {% else %}
+        
+        <li class="page-item">
+            <a class="page-link text-secondary" href="" style="pointer-events: none; cursor: default;">
+                . . .
+            </a>
+        </li>
+        
+        {% endif %}
+        {% endfor %}
+
+        <li class="page-item">
+            <a href="{{ url_for('socials.social_post', social_page=posts.next_num) }}" {% if posts.page == posts.pages %} style="pointer-events: none; cursor: default;" class = "page-link text-secondary"{% else %} class="page-link" {% endif %}>
+                Next
+            </a>
+        </li>
+    </ul>
+</div>
+{% endif %}
+
+{% else %}
+<div>
+    There are no posts for any of your socials yet
+</div>
+{% endif %}
+
+<br>
+
+{{ blue_tile(title = 'Why not ask a post?', description = 'You never know, someone else might have the answer you\'re looking for', link = url_for('socials.social_post_add'), link_text = 'I have a Post') }}
+
+<br><br><br>
+
+{% endblock content %}

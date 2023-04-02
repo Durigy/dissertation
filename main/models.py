@@ -76,8 +76,8 @@ class User(UserMixin, db.Model):
     # module_file = db.relationship('ModuleFile', backref = 'user', lazy = True, foreign_keys = 'ModuleFile.user_id')
     # module_file = db.relationship('ModuleSubscription', backref = 'user', lazy = True, foreign_keys = 'ModuleSubscription.user_id')
     # public_profile = db.relationship('PublicProfile', backref = 'user', lazy = True, foreign_keys = 'PublicProfile.user_id')
-    # public_post = db.relationship('PublicPost', backref = 'user', lazy = True, foreign_keys = 'PublicPost.user_id')
-    # public_post_comment = db.relationship('PublicPostComment', backref = 'user', lazy = True, foreign_keys = 'PublicPostComment.user_id')
+    public_post = db.relationship('PublicPost', backref = 'user', lazy = True, foreign_keys = 'PublicPost.user_id')
+    public_post_comment = db.relationship('PublicPostComment', backref = 'user', lazy = True, foreign_keys = 'PublicPostComment.user_id')
     # message_thread_owner = db.relationship('MessageThread', backref = 'user', lazy = True, foreign_keys = 'MessageThread.user_id')
     # message = db.relationship('Message', backref = 'user', lazy = True, foreign_keys = 'Message.user_id')
     # image = db.relationship('Image', backref = 'user', lazy = True, foreign_keys = 'Image.user_id')
@@ -401,32 +401,38 @@ class ModuleQuestionComment(db.Model):
 #     # Add Here
     
 
-# class PublicPost(db.Model):
-#     # Datebase Columns 
-#     id = db.Column(db.String(20), primary_key = True, default = secrets.token_hex(10))
-#     date_sent = db.Column(db.DateTime, nullable = False, default = datetime.utcnow)
-#     date_edited = db.Column(db.DateTime, nullable = True)
+class PublicPost(db.Model):
+    # Datebase Columns 
+    id = db.Column(db.String(20), primary_key = True, default = secrets.token_hex(10))
+    title = db.Column(db.String(240), nullable = False)
+    description = db.Column(db.Text, nullable = True)
+    date = db.Column(db.DateTime, nullable = False, default = datetime.utcnow)
+    date_edited = db.Column(db.DateTime, nullable = True)
+    comment_count = db.Column(db.Integer, nullable = True, default = 0)
+    view_count = db.Column(db.Integer, nullable = True, default = 0)
+    unique_view_count = db.Column(db.Integer, nullable = True, default = 0)
 
-#     # Links (ForeignKeys) #
-#     user_id = db.Column(db.String(20), db.ForeignKey('user.id'), nullable = False)
+    # Links (ForeignKeys) #
+    user_id = db.Column(db.String(20), db.ForeignKey('user.id'), nullable = False)
 
-#     # Relationships #
-#     # public_post_comment = db.relationship('PublicPostComment', backref = 'public_post', lazy = True, foreign_keys = 'PublicPostComment.public_post_id')
-    
+    # Relationships #
 
-# class PublicPostComment(db.Model):
-#     # Datebase Columns 
-#     id = db.Column(db.String(20), primary_key = True, default = secrets.token_hex(10))
-#     date_sent = db.Column(db.DateTime, nullable = False, default = datetime.utcnow)
-#     date_edited = db.Column(db.DateTime, nullable = True)
+class PublicPostComment(db.Model):
+    # Datebase Columns 
+    id = db.Column(db.String(20), primary_key = True, default = secrets.token_hex(10))
+    date = db.Column(db.DateTime, nullable = False, default = datetime.utcnow)
+    date_edited = db.Column(db.DateTime, nullable = True)
+    message = db.Column(db.Text, nullable = False)
+    sub_comment_count = db.Column(db.Integer, nullable = True, default = 0)
 
-#     # Links (ForeignKeys) #
-#     user_id = db.Column(db.String(20), db.ForeignKey('user.id'), nullable = False)
-#     public_post_id = db.Column(db.String(20), db.ForeignKey('public_post.id'), nullable = False)
-#     parent_comment_id = db.Column(db.String(20), db.ForeignKey('public_post_comment.id'), nullable = False)
+    # Links (ForeignKeys) #
+    user_id = db.Column(db.String(20), db.ForeignKey('user.id'), nullable = False)
+    public_post_id = db.Column(db.String(20), db.ForeignKey('public_post.id'), nullable = False)
+    parent_comment_id = db.Column(db.String(20), db.ForeignKey('public_post_comment.id'), nullable = True)
 
-#     # Relationships #
-#     # public_post_comment = db.relationship('PublicPostComment', backref = 'parent_comment', lazy = True, foreign_keys = 'PublicPostComment.parent_comment_id')
+    # Relationships #
+    # reference for using remote_side: https://docs.sqlalchemy.org/en/20/orm/relationship_api.html#sqlalchemy.orm.relationship.params.remote_side [accessed: 30 March 2023]
+    public_post_comment = db.relationship('PublicPostComment', backref = 'parent_comment', lazy = True, remote_side = id, foreign_keys = 'PublicPostComment.parent_comment_id')
     
 
 # class MessageThread(db.Model):

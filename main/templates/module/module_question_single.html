@@ -2,24 +2,35 @@
 {% block module %}
 
 {% from "helpers/cards.html" import card %}
+{% from "helpers/blue_tile.html" import blue_tile %}
 
-<h1>{{ question.title }}</h1>
+<div class="d-flex flex-wrap">
+        <div class="col">
+            <h1>{{ question.title }}</h1>
+        </div>
+        
+        {% if question.solved == False %}
+        <div class="col text-end">
+            <a href="{{ url_for('modules.module_question_solved', question_id = question_id) }}" class="btn btn-danger">Mark as Solved</a>
+        </div>
+        {% endif %}
+</div>
 
 {% if question.description %}
 {{ question.description }}
-<hr>
 {% endif %}
 
-
-comments
+<br><br>
+<hr>
 
 {% if comments.pages > 0 %}
 <div class="d-flex flex-wrap p-2">
     {% for comment in comments.items %}
-    {% set temp = comment.user.name %}
+    {# reference for formating time: https://www.programiz.com/python-programming/datetime/strftime [accessed: 2 apr, 2023] #}
+    {% set temp = comment.user.username + ' - ' + comment.date_sent.strftime('%I:%M, %d %b %Y') %}
     {# reference: https://stackoverflow.com/questions/36458482/how-to-not-render-a-entire-string-with-jinja2 [accessed: 26 Mar 2023] #}
     {{ card(
-        title = comment.user.username,
+        title = temp,
         description = comment.message,
         width = 100
     ) }}
@@ -30,7 +41,7 @@ comments
 {# reference to my past code for pagination: https://github.com/Durigy/neighbourfy-v2/blob/main/main/templates/user/account.html #}
 <!-- Pagination Links-->
 
-<nav aria-label="Question Page Navigation">
+<div aria-label="Comment Page Navigation">
     <ul class="pagination">
         <li class="page-item">
             <a href="{{ url_for('modules.module_question_single', question_id = question_id, comment_page=comments.prev_num) }}" {% if comments.page == 1 %} style="pointer-events: none; cursor: default;" class = "page-link text-secondary"{% else %} class="page-link" {% endif %}>
@@ -64,7 +75,7 @@ comments
             </a>
         </li>
     </ul>
-</nav>
+</div>
 {% endif %}
 
 {% else %}
@@ -73,9 +84,8 @@ comments
 </div>
 {% endif %}
 
-<br><br><br>
-
-
+<br>
+{% if question.solved == False %}
 <div>
     <form method="POST" action="">
         {{ form.hidden_tag() }}
@@ -95,4 +105,14 @@ comments
         {{ form.submit( class="btn btn-primary" ) }}
     </form>
 </div>
+
+<br><br><br>
+{% else %}
+
+{{ blue_tile(title = 'Couldn\'t find what you were looking for?', description = ' Why not ask a question? You never know, who might have the answer you\'re looking for', link = url_for('modules.module_question_add'), link_text = 'I have a Question') }}
+
+<br><br><br>
+
+{% endif %}
+
 {% endblock module %}

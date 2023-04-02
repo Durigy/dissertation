@@ -28,5 +28,5 @@ class AddModuleQuestionCommentForm(FlaskForm):
     this is a form is to post a comment on a module question
     '''
     
-    message = TextAreaField('Comment:', render_kw = {"placeholder": "Comment"}, validators = [Length(min=4, max=240)])
+    message = TextAreaField('Comment:', render_kw = {"placeholder": "Write your comment/answer here"}, validators = [Length(min=4, max=240)])
     submit = SubmitField('Post Comment')

@@ -21,7 +21,7 @@ def module_all():
         non_taking_modules = non_taking_modules
     )
 
-@modules.route("/s/<module_id>")
+@modules.route("/<module_id>")
 @login_required
 def module_single(module_id):
     module = Module.query.get_or_404(module_id)
@@ -37,7 +37,7 @@ def module_single(module_id):
         non_taking_modules = non_taking_modules
     )
 
-@modules.route("/s/<module_id>/reviews")
+@modules.route("/<module_id>/reviews")
 @login_required
 def module_review_list(module_id):
     module = Module.query.get_or_404(module_id)
@@ -76,7 +76,7 @@ def module_question():
     questions = ModuleQuestion.query \
         .filter_by(module_id = ModuleSubscription.module_id) \
         .order_by(ModuleQuestion.date.desc()) \
-        .paginate(page = module_page, per_page = 1)
+        .paginate(page = module_page, per_page = 10)
 
     return render_template(
         'module/module_question_list.html',
@@ -99,10 +99,13 @@ def module_question_single(question_id):
     form = AddModuleQuestionCommentForm()
 
     comment_page = request.args.get('comment_page', 1, type = int)
+
+    items_per_page = 10
+
     comments = ModuleQuestionComment.query \
         .filter_by(module_question_id = ModuleQuestion.id) \
-        .order_by(ModuleQuestion.date.desc()) \
-        .paginate(page = comment_page, per_page = 1)
+        .order_by(ModuleQuestionComment.date_sent) \
+        .paginate(page = comment_page, per_page = items_per_page)
 
     if form.validate_on_submit() and request.method == "POST":
         message = ModuleQuestionComment(
@@ -115,9 +118,21 @@ def module_question_single(question_id):
         db.session.add(message)
         db.session.commit()
 
-        flash('Your Question has been posted')
-    
-        return redirect(url_for('modules.module_question_single', question_id = question_id))
+        flash('Your Comment has been posted')
+
+        # this checks how may items are on the last page. 
+        comments_2 = ModuleQuestionComment.query \
+            .filter_by(module_question_id = ModuleQuestion.id) \
+            .order_by(ModuleQuestionComment.date_sent) \
+            .paginate(page = comments.pages, per_page = items_per_page)
+
+        my_page = comments.pages
+        
+        # if there are 'items_per_page' number of items, then a new page will be created, so go to the new last page
+        if len(comments.items) == items_per_page:
+            my_page += 1
+        
+        return redirect(url_for('modules.module_question_single', question_id = question_id, comment_page = my_page))
 
     return render_template(
         'module/module_question_single.html',
@@ -131,6 +146,21 @@ def module_question_single(question_id):
         question_id = question_id,
         form = form
     )
+
+@modules.route("/questions/<question_id>/solved", methods = ["GET", "POST"])
+@login_required
+def module_question_solved(question_id):
+    question = ModuleQuestion.query.get_or_404(question_id)
+    if question.user_id != current_user.id:
+        flash('Sorry you don\'t have access to that!')
+        return redirect(url_for('modules.module_question_single', question_id = question_id))
+
+    question.solved = True
+    db.session.commit()
+    flash('The question have now been soved')
+    return redirect(url_for('modules.module_question_single', question_id = question_id))
+
+
 
 @modules.route("/questions/add", methods = ["GET", "POST"])
 @login_required

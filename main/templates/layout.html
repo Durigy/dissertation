@@ -21,7 +21,7 @@
         {% include 'includes/header/header.html' %}
 
         <div class="d-flex">
-            {% if current_user.is_authenticated %}
+            {% if current_user.is_authenticated and subscribed_modules %}
             <div class="d-none d-lg-block">
                 {% include 'includes/aside.html' %}
 

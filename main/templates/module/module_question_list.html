@@ -16,7 +16,11 @@
 {% if questions.pages > 0 %}
 <div class="d-flex flex-wrap p-2">
     {% for question in questions.items %}
+    {% if question.solved == True %}
+    {% set temp = question.title|truncate(40, True) + ' - ' + question.module.code + ' - Solved' %}
+    {% else %}
     {% set temp = question.title|truncate(40, True) + ' - ' + question.module.code %}
+    {% endif %}
     {# reference: https://stackoverflow.com/questions/36458482/how-to-not-render-a-entire-string-with-jinja2 [accessed: 26 Mar 2023] #}
     {{ card(
         title = temp,
@@ -32,7 +36,7 @@
 {# reference to my past code for pagination: https://github.com/Durigy/neighbourfy-v2/blob/main/main/templates/user/account.html #}
 <!-- Pagination Links-->
 
-<nav aria-label="Question Page Navigation">
+<div aria-label="Question Page Navigation">
     <ul class="pagination">
         <li class="page-item">
             <a href="{{ url_for('modules.module_question', module_page=questions.prev_num) }}" {% if questions.page == 1 %} style="pointer-events: none; cursor: default;" class = "page-link text-secondary"{% else %} class="page-link" {% endif %}>
@@ -66,7 +70,7 @@
             </a>
         </li>
     </ul>
-</nav>
+</div>
 {% endif %}
 
 {% else %}
@@ -75,8 +79,10 @@
 </div>
 {% endif %}
 
-<br><br><br><br>
+<br>
 
 {{ blue_tile(title = 'Why not ask a question?', description = 'You never know, someone else might have the answer you\'re looking for', link = url_for('modules.module_question_add'), link_text = 'I have a Question') }}
+
+<br><br><br>
 
 {% endblock content %}

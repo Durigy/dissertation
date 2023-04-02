@@ -23,7 +23,7 @@ from ..main_utils import defaults
 
 @app.errorhandler(404)
 def page_not_found(e):
-    module_list, subscribed_modules, non_taking_modules = defaults(current_user) if current_user.is_authenticated else [], [], []
+    module_list, subscribed_modules, non_taking_modules = defaults(current_user)
 
     return render_template(
         'errors/404.html',
@@ -35,14 +35,10 @@ def page_not_found(e):
 
 @app.errorhandler(500)
 def page_not_found(e):
-    module_list, subscribed_modules, non_taking_modules = defaults(current_user) if current_user.is_authenticated else [], [], []
 
     return render_template(
         'errors/500.html',
-        title='500 error',
-        module_list = module_list,
-        subscribed_modules = subscribed_modules,
-        non_taking_modules = non_taking_modules
+        title='500 error'
     )
 
 @app.route('/')

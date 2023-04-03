@@ -2,7 +2,7 @@ from .. import db, bcrypt, app
 from flask import render_template, url_for, request, redirect, flash, Blueprint
 from flask_login import login_required, current_user
 from ..models import User
-from ..main_utils import defaults
+from ..main_utils import defaults, aside_dict
 
 # system = Blueprint('system', __name__, template_folder='templates')
 
@@ -23,14 +23,10 @@ from ..main_utils import defaults
 
 @app.errorhandler(404)
 def page_not_found(e):
-    module_list, subscribed_modules, non_taking_modules = defaults(current_user)
-
     return render_template(
         'errors/404.html',
         title='404 error',
-        module_list = module_list,
-        subscribed_modules = subscribed_modules,
-        non_taking_modules = non_taking_modules
+        my_aside_dict = aside_dict(current_user)
     )
 
 @app.errorhandler(500)

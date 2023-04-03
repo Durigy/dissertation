@@ -1,5 +1,8 @@
 import secrets
-from .models import Module, ModuleSubscription
+from .models import Module, ModuleQuestion, ModuleSubscription
+
+# reference to using addict: https://youtu.be/y7fZJDIU8V8?t=347 [accessed: 3 Apr 2023]
+from addict import Dict
 
 # this can be used for generating ids of string lenght 20 default
 # or the default in modules can be used for small projects if preferred
@@ -42,3 +45,13 @@ def defaults(current_user):
         subscribed_modules,
         non_taking_modules,
     )
+
+def aside_dict(current_user):
+    subscribed_modules = ModuleSubscription.query.filter_by(user_id = current_user.id).join(Module).order_by(Module.name).all()
+   
+    questions = ModuleQuestion.query.filter_by(module_id = ModuleSubscription.module_id).order_by(ModuleQuestion.date.desc()).limit(10)
+    
+    return Dict({
+        'subscribed_modules': subscribed_modules,
+        'questions': questions
+    })

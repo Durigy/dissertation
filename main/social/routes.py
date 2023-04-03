@@ -2,7 +2,7 @@ from flask import render_template, url_for, request, redirect, flash, Blueprint
 from flask_login import login_required, current_user
 from .forms import AddPostForm, AddPublicPostCommentForm
 from ..models import User, PublicPost, PublicPostComment
-from ..main_utils import generate_id, defaults
+from ..main_utils import generate_id, defaults, aside_dict
 from .. import db
 
 # referece: https://flask.palletsprojects.com/en/2.2.x/blueprints/#registering-blueprints
@@ -11,14 +11,10 @@ socials = Blueprint('socials', __name__, template_folder='templates',  url_prefi
 @socials.route("")
 @login_required
 def social_home():
-    module_list, subscribed_modules, non_taking_modules = defaults(current_user)
-
     return render_template(
         'social/social_home.html',
         title='Socail Home',
-        module_list = module_list,
-        subscribed_modules = subscribed_modules,
-        non_taking_modules = non_taking_modules
+        my_aside_dict = aside_dict(current_user)
     )
 
 # @socials.route("posts")
@@ -51,8 +47,6 @@ def social_home():
 @socials.route("/posts")
 @login_required
 def social_post():
-    module_list, subscribed_modules, non_taking_modules = defaults(current_user)
-
     # reference to my past code: https://github.com/Durigy/neighbourfy-v2/blob/main/main/routes.py [accessed: 1 April 2023]
     post_page = request.args.get('post_page', 1, type = int)
     posts = PublicPost.query \
@@ -62,9 +56,7 @@ def social_post():
     return render_template(
         'social/post/social_post_list.html',
         title = "Posts",
-        module_list = module_list,
-        subscribed_modules = subscribed_modules,
-        non_taking_modules = non_taking_modules,
+        my_aside_dict = aside_dict(current_user),
         posts = posts
     )
 
@@ -72,8 +64,6 @@ def social_post():
 @login_required
 def social_post_single(post_id):
     post = PublicPost.query.get_or_404(post_id)
-
-    module_list, subscribed_modules, non_taking_modules = defaults(current_user)
 
     form = AddPublicPostCommentForm()
 
@@ -116,9 +106,7 @@ def social_post_single(post_id):
     return render_template(
         'social/post/social_post_single.html',
         title = "Post",
-        module_list = module_list,
-        subscribed_modules = subscribed_modules,
-        non_taking_modules = non_taking_modules,
+        my_aside_dict = aside_dict(current_user),
         post = post,
         comments = comments,
         post_id = post_id,
@@ -128,8 +116,6 @@ def social_post_single(post_id):
 @socials.route("/posts/add", methods = ["GET", "POST"])
 @login_required
 def social_post_add():
-    module_list, subscribed_modules, non_taking_modules = defaults(current_user)
-
     form = AddPostForm()
 
     if form.validate_on_submit() and request.method == "POST":
@@ -152,9 +138,7 @@ def social_post_add():
     return render_template(
         'social/post/social_post_add.html',
         title = "Add Post",
-        module_list = module_list,
-        subscribed_modules = subscribed_modules,
-        non_taking_modules = non_taking_modules,
+        my_aside_dict = aside_dict(current_user),
         form = form
     )
 
@@ -174,25 +158,17 @@ def social_post_add():
 @socials.route("messages")
 @login_required
 def social_message():
-    module_list, subscribed_modules, non_taking_modules = defaults(current_user)
-
     return render_template(
         'social/social_message.html',
         title='Socail Messages',
-        module_list = module_list,
-        subscribed_modules = subscribed_modules,
-        non_taking_modules = non_taking_modules
+        my_aside_dict = aside_dict(current_user)
     )
 
 @socials.route("/messages/<thread_id>")
 @login_required
 def social_message_single(thread_id):
-    module_list, subscribed_modules, non_taking_modules = defaults(current_user)
-
     return render_template(
         'social/social_message_thread.html',
         title='Socail Messages',
-        module_list = module_list,
-        subscribed_modules = subscribed_modules,
-        non_taking_modules = non_taking_modules
+        my_aside_dict = aside_dict(current_user)
     )

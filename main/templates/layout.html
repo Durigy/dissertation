@@ -21,7 +21,7 @@
         {% include 'includes/header/header.html' %}
 
         <div class="d-flex">
-            {% if current_user.is_authenticated and subscribed_modules %}
+            {% if current_user.is_authenticated and my_aside_dict %}
             <div class="d-none d-lg-block">
                 {% include 'includes/aside.html' %}
 
@@ -31,9 +31,10 @@
             <div class="scrollarea" style="max-height: 93vh; width: 100%">
                 <div class="container" style="min-height: 81vh;">
                     {% include 'includes/flash_msg.html' %}
-                {% block content %}
-                    <!-- page content gets added here -->
-                {% endblock content %}
+                    
+                    {% block content %}
+                        <!-- page content gets added here -->
+                    {% endblock content %}
                 </div>
 
             {% include 'includes/footer.html' %}                

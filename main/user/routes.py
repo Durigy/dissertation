@@ -7,7 +7,7 @@ from flask import render_template, url_for, request, redirect, flash, Blueprint
 from flask_login import login_user, logout_user, login_required, current_user
 from .forms import LoginForm, RegistrationForm, UpdateAccountForm
 from ..models import User
-from ..main_utils import generate_id
+from ..main_utils import generate_id, aside_dict
 
 
 users = Blueprint('users', __name__, template_folder='templates')
@@ -108,5 +108,6 @@ def account():
     return render_template(
         'user/account.html',
         title='Account',
-        form=form
+        form=form,
+        my_aside_dict = aside_dict(current_user)
     )

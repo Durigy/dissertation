@@ -1,0 +1,25 @@
+{% extends "social/social_layout.html" %}
+{% block social %}
+
+{% from "helpers/cards.html" import card %}
+
+<div class="d-flex flex-wrap p-2">
+    <div class="col">
+        <h1>Social messages</h1>
+    </div>
+    <div class="">
+        <a href="#" class="btn btn-secondary">New Message</a>
+    </div>
+</div>
+<br>
+<div>
+        {% for i in range(10) %}
+        {% set num = i + 1 %}
+        {% set temp = 'Message from Friend ' + num | string %}
+        {{ card(title = temp, link = '#', link_text = 'View Message', width = 98) }}
+        {% endfor %} 
+</div>
+
+<br>
+    
+{% endblock social %}

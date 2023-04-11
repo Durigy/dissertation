@@ -23,6 +23,26 @@ user_role_link = db.Table(
 #     db.Column('university', db.String(20), db.ForeignKey('university.id'), nullable = False)
 # )
 
+# Document Message link
+# """
+# Links an image to university
+# """
+# image_user_link = db.Table(
+#     'image_user_link',
+#     db.Column('user', db.String(20), db.ForeignKey('user.id'), nullable = False),
+#     db.Column('university', db.String(20), db.ForeignKey('university.id'), nullable = False)
+# )
+
+# Image Message link
+# """
+# Links an image to university
+# """
+# image_user_link = db.Table(
+#     'image_user_link',
+#     db.Column('user', db.String(20), db.ForeignKey('user.id'), nullable = False),
+#     db.Column('university', db.String(20), db.ForeignKey('university.id'), nullable = False)
+# )
+
 
 """ > Example Table: 
 > Resource: https://docs.sqlalchemy.org/en/14/core/type_basics.html
@@ -73,8 +93,7 @@ class User(UserMixin, db.Model):
     module_question = db.relationship('ModuleQuestion', backref = 'user', lazy = True, foreign_keys = 'ModuleQuestion.user_id')
     module_question_comment = db.relationship('ModuleQuestionComment', backref = 'user', lazy = True, foreign_keys = 'ModuleQuestionComment.user_id')
     # module_note = db.relationship('ModuleNote', backref = 'user', lazy = True, foreign_keys = 'ModuleNote.user_id')
-    # module_file = db.relationship('ModuleFile', backref = 'user', lazy = True, foreign_keys = 'ModuleFile.user_id')
-    # module_file = db.relationship('ModuleSubscription', backref = 'user', lazy = True, foreign_keys = 'ModuleSubscription.user_id')
+    module_subscription = db.relationship('ModuleSubscription', backref = 'user', lazy = True, foreign_keys = 'ModuleSubscription.user_id')
     # public_profile = db.relationship('PublicProfile', backref = 'user', lazy = True, foreign_keys = 'PublicProfile.user_id')
     public_post = db.relationship('PublicPost', backref = 'user', lazy = True, foreign_keys = 'PublicPost.user_id')
     public_post_comment = db.relationship('PublicPostComment', backref = 'user', lazy = True, foreign_keys = 'PublicPostComment.user_id')
@@ -82,6 +101,7 @@ class User(UserMixin, db.Model):
     # message = db.relationship('Message', backref = 'user', lazy = True, foreign_keys = 'Message.user_id')
     # image = db.relationship('Image', backref = 'user', lazy = True, foreign_keys = 'Image.user_id')
     # document = db.relationship('Document', backref = 'user', lazy = True, foreign_keys = 'Document.user_id')
+    module_resource = db.relationship('ModuleResource', backref = 'user', lazy = True, foreign_keys = 'ModuleResource.user_id')
     
 
 @login_manager.user_loader
@@ -233,14 +253,15 @@ class Module(db.Model):
     # module_lecture = db.relationship('ModuleLecture', backref = 'module', lazy = True, foreign_keys = 'ModuleLecture.module_id')
     # module_lecture_vote = db.relationship('ModuleLectureVote', backref = 'module', lazy = True, foreign_keys = 'ModuleLectureVote.module_id')
     # module_note = db.relationship('ModuleNote', backref = 'module', lazy = True, foreign_keys = 'ModuleNote.module_id')
-    # module_file = db.relationship('ModuleFile', backref = 'module', lazy = True, foreign_keys = 'ModuleFile.module_id')
+    module_resource = db.relationship('ModuleResource', backref = 'module', lazy = True, foreign_keys = 'ModuleResource.module_id')
     module_subscription = db.relationship('ModuleSubscription', backref = 'module', lazy = True, foreign_keys = 'ModuleSubscription.module_id')
 
 class ModuleSubscription(db.Model):
     # Datebase Columns 
     id = db.Column(db.String(20), primary_key = True) # Must be randomly generated -> default = secrets.token_hex(10)
     date_added = db.Column(db.DateTime, nullable = False, default = datetime.utcnow)
-    # nickname = db.Column(db.String(50), nullable = True)
+    # nickname = db.Column(db.String(20), nullable = True)
+    # order = db.Column(db.Integer, nullable = True)
 
     # Links (ForeignKeys)
     user_id = db.Column(db.String(20), db.ForeignKey('user.id'), nullable = False)
@@ -312,6 +333,7 @@ class ModuleQuestion(db.Model):
     # Links (ForeignKeys) #
     user_id = db.Column(db.String(20), db.ForeignKey('user.id'), nullable = False)
     module_id = db.Column(db.String(20), db.ForeignKey('module.id'), nullable = False)
+    answer_comment_id = db.Column(db.String(20), db.ForeignKey('module_question_comment.id'), nullable = True)
 
     # Relationships #
     module_question_edit = db.relationship('ModuleQuestionEdit', backref = 'module_question', lazy = True, foreign_keys = 'ModuleQuestionEdit.module_question_id')
@@ -349,6 +371,7 @@ class ModuleQuestionComment(db.Model):
     # Relationships #
     # reference for using remote_side: https://docs.sqlalchemy.org/en/20/orm/relationship_api.html#sqlalchemy.orm.relationship.params.remote_side [accessed: 30 March 2023]
     module_question_comment = db.relationship('ModuleQuestionComment', backref = 'parent_comment', lazy = True, remote_side = id, foreign_keys = 'ModuleQuestionComment.parent_comment_id')
+    # module_question = db.relationship('ModuleQuestion', backref = 'answer_comment', lazy = True, foreign_keys = 'ModuleQuestion.answer_comment_id')
     
 
 
@@ -369,19 +392,21 @@ class ModuleQuestionComment(db.Model):
 #     # Add Here
     
 
-# class ModuleFile(db.Model):
-#     # Datebase Columns 
-#     id = db.Column(db.String(20), primary_key = True, default = secrets.token_hex(10))
-#     name = db.Column(db.String(240), nullable = True)
-#     description = db.Column(db.Text, nullable = True)
-#     date_created = db.Column(db.DateTime, nullable = False, default = datetime.utcnow)
+class ModuleResource(db.Model):
+    # Datebase Columns 
+    id = db.Column(db.String(20), primary_key = True, default = secrets.token_hex(10))
+    date = db.Column(db.DateTime, nullable = False, default = datetime.utcnow)
+    
 
-#     # Links (ForeignKeys) #
-#     user_id = db.Column(db.String(20), db.ForeignKey('user.id'), nullable = False)
-#     module_id = db.Column(db.String(20), db.ForeignKey('module.id'), nullable = False)
+    # Links (ForeignKeys) #
+    user_id = db.Column(db.String(20), db.ForeignKey('user.id'), nullable = False)
+    module_id = db.Column(db.String(20), db.ForeignKey('module.id'), nullable = False)
+    image_id = db.Column(db.String(20), db.ForeignKey('image.id'), nullable = True)
+    document_id = db.Column(db.String(20), db.ForeignKey('document.id'), nullable = True)
+    # url_id = db.Column(db.String(20), db.ForeignKey('u_r_l.id'), nullable = True)
 
-#     # Relationships #
-#     # Add Here
+    # Relationships #
+    # Add Here
     
 
 
@@ -414,6 +439,9 @@ class PublicPost(db.Model):
 
     # Links (ForeignKeys) #
     user_id = db.Column(db.String(20), db.ForeignKey('user.id'), nullable = False)
+    university_id = db.Column(db.String(20), db.ForeignKey('university.id'), nullable = True)
+    university_school_id = db.Column(db.String(20), db.ForeignKey('university_school.id'), nullable = True)
+    university_year_id = db.Column(db.String(20), db.ForeignKey('university_year.id'), nullable = True)
 
     # Relationships #
 
@@ -466,25 +494,43 @@ class PublicPostComment(db.Model):
 
 
 # System
-# class Image(db.Model):
-#     """
-#     To store image information
-#     """
-#     # Datebase Columns 
-#     id = db.Column(db.String(20), primary_key = True, default = secrets.token_hex(10))
-#     title = db.Column(db.String(240), nullable = True)
-#     description = db.Column(db.Text, nullable = True)
-#     date_added = db.Column(db.DateTime, nullable = False, default = datetime.utcnow)
+class Image(db.Model):
+    """
+    To store image information
+    """
+    # Datebase Columns 
+    id = db.Column(db.String(20), primary_key = True, default = secrets.token_hex(10))
+    title = db.Column(db.String(240), nullable = True)
+    description = db.Column(db.Text, nullable = True)
+    date = db.Column(db.DateTime, nullable = False, default = datetime.utcnow)
 
 
-#     # Links (ForeignKeys) #
-#     user_id = db.Column(db.String(20), db.ForeignKey('user.id'), nullable = False)
+    # Links (ForeignKeys) #
+    user_id = db.Column(db.String(20), db.ForeignKey('user.id'), nullable = False)
 
-#     # Relationships #
-#     # university = db.relationship('University', backref = 'image', lazy = True, foreign_keys = 'University.logo_image_id')
+    # Relationships #
+    # university = db.relationship('University', backref = 'image', lazy = True, foreign_keys = 'University.logo_image_id')
+    module_resource = db.relationship('ModuleResource', backref = 'image', lazy = True, foreign_keys = 'ModuleResource.image_id')
     
 
-# class Document(db.Model):
+class Document(db.Model):
+    """
+    To store document information
+    """
+    # Datebase Columns 
+    id = db.Column(db.String(20), primary_key = True, default = secrets.token_hex(10))
+    title = db.Column(db.String(240), nullable = True)
+    description = db.Column(db.Text, nullable = True)
+    date = db.Column(db.DateTime, nullable = False, default = datetime.utcnow)
+
+
+    # Links (ForeignKeys) #
+    user_id = db.Column(db.String(20), db.ForeignKey('user.id'), nullable = False)
+
+    # Relationships #
+    module_resource = db.relationship('ModuleResource', backref = 'document', lazy = True, foreign_keys = 'ModuleResource.document_id')
+    
+# class URL(db.Model):
 #     """
 #     To store document information
 #     """
@@ -492,13 +538,13 @@ class PublicPostComment(db.Model):
 #     id = db.Column(db.String(20), primary_key = True, default = secrets.token_hex(10))
 #     title = db.Column(db.String(240), nullable = True)
 #     description = db.Column(db.Text, nullable = True)
-#     date_added = db.Column(db.DateTime, nullable = False, default = datetime.utcnow)
+#     date = db.Column(db.DateTime, nullable = False, default = datetime.utcnow)
 
 
 #     # Links (ForeignKeys) #
 #     user_id = db.Column(db.String(20), db.ForeignKey('user.id'), nullable = False)
 
 #     # Relationships #
-#     # Add Here
-    
+#     module_resource = db.relationship('ModuleResource', backref = 'document', lazy = True, foreign_keys = 'ModuleResource.document_id')
+     
     

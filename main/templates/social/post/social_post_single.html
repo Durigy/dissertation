@@ -13,7 +13,7 @@
 {% endif %}
 
 <br><br>
-<hr>
+<hr class="text-muted">
 
 {% if comments.pages > 0 %}
 <div class="d-flex flex-wrap p-2">
@@ -99,7 +99,7 @@
 
 <br><br><br>
 
-{{ blue_tile(title = 'Couldn\'t find what you were looking for?', description = ' Why not ask a post? You never know, who might have the answer you\'re looking for', link = url_for('socials.social_post_add'), link_text = 'I have a post') }}
+{{ blue_tile(title = 'Have something on your mind?', description = 'Create a post for others to see', link = url_for('socials.social_post_add'), link_text = 'Create Post') }}
 
 <br><br><br>
 

@@ -1,0 +1,145 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="centre">
+    <h1>Resource</h1>
+</div>
+
+<div>
+    <form method="POST" action="" enctype="multipart/form-data">
+        {{ form.hidden_tag() }}
+        <div>
+            <p class="form-label">Select a Module *</p>
+            <select name="module" id="module" class="form-select" required>
+                <option value="">Select a Module</option>
+                {% if my_aside_dict %}
+                {% for module in my_aside_dict.subscribed_modules %}
+                    <option value="{{ module.module.id }}" {% if module.module.id == module_id %} selected {% endif %}>{{ module.module.code }} - {{ module.module.name }}</option>
+                {% endfor %}
+                {% else %}
+                Error with module selection
+                {% endif %}
+            </select>
+        </div>
+
+        <br>
+
+        <div>
+            {{ form.title.label( class="form-label" ) }}
+        
+            <br>
+
+            {{ form.title( class="form-control" ) }}
+            
+            {% if form.title.errors %}
+                <div>
+                    {% for error in form.title.errors %}
+                        <span style="color: red;">{{ error }}</span>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <br>
+        
+        <div>
+            {{ form.description.label( class="form-label" ) }}
+        
+            <br>
+            
+            {{ form.description( class="form-control", rows="6" ) }}
+            
+            {% if form.description.errors %}
+                <div>
+                    {% for error in form.description.errors %}
+                        <span style="color: red;">{{ error }}</span>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <br>
+
+
+        <p class="form-label">Select a Resource type *</p>
+        <select name="resource-type" id="resource-type" class="form-select" required>
+            <option value="">Select a Resource type</option>
+            <option value="URL">URL</option>
+            <option value="FILE">Image or Document</option>
+        </select>
+
+        
+        <div id="url-div" style="display:none">
+            <br>
+
+            {{ form.url.label( class="form-label" ) }}
+        
+            <br>
+            
+            {{ form.url( class="form-control" ) }}
+            
+            {% if form.url.errors %}
+                <div>
+                    {% for error in form.url.errors %}
+                        <span style="color: red;">{{ error }}</span>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+        
+        <div id="file-div" style="display:none">
+            <br>
+
+            {{ form.file.label( class="form-label" ) }}
+        
+            <br>
+            
+            {{ form.file( class="form-control" ) }}
+            
+            {% if form.file.errors %}
+                <div>
+                    {% for error in form.file.errors %}
+                        <span style="color: red;">{{ error }}</span>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <br>
+
+        <div>
+            {{ form.submit( class='btn btn-dark' ) }}
+        </div>
+        <br>
+    </form>
+</div>
+
+<br>
+
+<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+
+{# reference: https://stackoverflow.com/a/7507471 #}
+<script type="text/javascript">
+    /* $("div#url-div").hide();
+    $("div#file-div").hide();
+    */
+
+    $("select#resource-type").change( function () {
+        let value = $(this).val();
+        if (value == 'URL') {
+            $("div#url-div").show();
+            $("div#file-div").hide();
+            $("#url").prop('required',true);
+            $("#file").prop('required',false);
+        } else if (value == 'FILE') {
+            $("div#url-div").hide();
+            $("div#file-div").show();
+            $("#file").prop('required',true);
+            $("#url").prop('required',false);
+        } else {
+            $("div#url-div").hide();
+            $("div#file-div").hide();
+        }
+    });
+
+</script>
+{% endblock content %}

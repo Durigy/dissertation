@@ -2,11 +2,11 @@
     reference:
     - https://getbootstrap.com/docs/5.0/examples/ [date accessed: 26 March 2023]
 #}
-<aside>
-    <div class="d-flex flex-column flex-shrink-0 p-3 bg-light" style="width: 300px;">
+<aside class="hidden-scroll">
+    <div class="d-flex flex-column flex-shrink-0 p-3 bg-light" style="width: 250px;">
         <ul class="nav nav-pills flex-column mb-auto">
             <h5>Modules</h5>
-            <div class="scrollarea" style="max-height: 25vh;">
+            <div class="scrollarea" style="height: 25vh;">
                 {% if my_aside_dict %}
                 {% for module in my_aside_dict.subscribed_modules %}
                 <div class="mb-2">
@@ -28,7 +28,7 @@
             
             <hr>
             <h5>Chats</h5>
-            <div class="scrollarea" style="max-height: 25vh;">
+            <div class="scrollarea" style="height: 25vh;">
                 {% for i in range(20) %}
                 A chat group here
                 <br>
@@ -39,12 +39,24 @@
             <hr>
 
             <h5>Questions</h5>
-            <div class="scrollarea" style="max-height: 25vh;">
-                {% for i in range(20) %}
-                A recent post
-                <br>
-                <br>
+            <div class="scrollarea" style="height: 25vh;">
+                {% if my_aside_dict %}
+                {% for question in my_aside_dict.questions %}
+                <div class="mb-2">
+                    {% set question_name = question.module.code + ' - ' + question.title %}
+                    <a href="{{ url_for('modules.module_question', question_id = question.id) }}">{{ question_name|truncate(30, True) }}</a>
+                </div>
                 {% endfor %}
+
+                {% else %}
+
+                Not subed to any modules
+
+                <br>
+                
+                <a href="{{ url_for('modules.module_selection') }}" class="btn btn-secondary">Pick one now</a>
+
+                {% endif %}
             </div>
         </ul>
 

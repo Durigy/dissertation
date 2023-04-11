@@ -16,6 +16,8 @@ database_uri = 'mysql+pymysql://<- DB Username ->:<- DB Password ->@<- DB domain
 debug_setting = True # for local deveplement server only
 remember_cookie_duration = timedelta(days=1) # change duration for your own needs
 sqlalchemy_track_modifications = False
+upload_folder = '/path/to/the/uploads'
+allowed_extensions = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
 
 """
 
@@ -25,14 +27,25 @@ SQLALCHEMY_DATABASE_URI = ''
 DEBUG = False
 REMEMBER_COOKIE_DURATION = timedelta(days=1) # Still will result in the cookies, for a logeding user, will expire after 1 day
 SQLALCHEMY_TRACK_MODIFICATIONS = False
+UPLOAD_FOLDER = ''
+# UPLOAD_FOLDER = os.path.join(os.path.abspath(os.path.dirname(__file__)),'static/uploads')
+ALLOWED_EXTENSIONS = '' #{'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
+IMAGE_EXTENSIONS = ''
+DOCUMENT_EXTENSIONS = ''
+
 
 if os.path.exists('main/config.py'):
-    from .config import secret_key, database_uri, debug_setting, remember_cookie_duration, sqlalchemy_track_modifications
+    from .config import secret_key, database_uri, debug_setting, remember_cookie_duration, sqlalchemy_track_modifications, upload_folder, allowed_extensions, image_extensions, document_extensions
     SECRET_KEY = secret_key
     SQLALCHEMY_DATABASE_URI = database_uri
     DEBUG = debug_setting
     REMEMBER_COOKIE_DURATION = remember_cookie_duration
     SQLALCHEMY_TRACK_MODIFICATIONS = sqlalchemy_track_modifications
+    UPLOAD_FOLDER = os.path.join(os.path.abspath(os.path.dirname(__file__)), upload_folder)
+    IMAGE_EXTENSIONS = image_extensions
+    DOCUMENT_EXTENSIONS = document_extensions
+    ALLOWED_EXTENSIONS = allowed_extensions
+
 
 app = Flask(__name__)
 
@@ -52,6 +65,10 @@ app.config['REMEMBER_COOKIE_DURATION'] = timedelta(days = os.environ.get("REMEMB
 
 # sqlalchemy_modifications_setting
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = os.environ.get("SQLALCHEMY_TRACK_MODIFICATIONS") if os.environ.get("SQLALCHEMY_TRACK_MODIFICATIONS") else SQLALCHEMY_TRACK_MODIFICATIONS
+
+# upload_folder_setting
+app.config['UPLOAD_FOLDER'] = os.environ.get("UPLOAD_FOLDER") if os.environ.get("UPLOAD_FOLDER") else UPLOAD_FOLDER
+
 
 # Database setup with login featues 
 db = SQLAlchemy(app)

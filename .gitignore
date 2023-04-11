@@ -132,3 +132,7 @@ S
 # config file
 config.py
 ./config.py
+
+# uploads
+/main/static/uploads/img/*
+/main/static/uploads/docs/*

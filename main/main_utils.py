@@ -1,5 +1,6 @@
 import secrets
 from .models import Module, ModuleQuestion, ModuleSubscription
+from . import ALLOWED_EXTENSIONS
 
 # reference to using addict: https://youtu.be/y7fZJDIU8V8?t=347 [accessed: 3 Apr 2023]
 from addict import Dict
@@ -47,11 +48,19 @@ def defaults(current_user):
     )
 
 def aside_dict(current_user):
-    subscribed_modules = ModuleSubscription.query.filter_by(user_id = current_user.id).join(Module).order_by(Module.name).all()
+    subscribed_modules = ModuleSubscription.query.filter_by(user_id = current_user.id).join(Module).order_by(Module.code).limit(10)
    
-    questions = ModuleQuestion.query.filter_by(module_id = ModuleSubscription.module_id).order_by(ModuleQuestion.date.desc()).limit(10)
+    questions = ModuleQuestion.query.filter(ModuleSubscription.user_id == current_user.id) \
+            .filter_by(module_id = ModuleSubscription.module_id).order_by(ModuleQuestion.date.desc()).limit(10)
     
     return Dict({
         'subscribed_modules': subscribed_modules,
         'questions': questions
     })
+
+# taken from: https://flask.palletsprojects.com/en/2.2.x/patterns/fileuploads/#a-gentle-introduction
+def allowed_file(filename):
+    """
+    filename: incoming file name
+    """
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS

@@ -9,7 +9,7 @@
             <h1>{{ question.title }}</h1>
         </div>
         
-        {% if question.solved == False %}
+        {% if question.solved == False and current_user == question.user %}
         <div class="col text-end">
             <a href="{{ url_for('modules.module_question_solved', question_id = question_id) }}" class="btn btn-danger">Mark as Solved</a>
         </div>
@@ -21,7 +21,7 @@
 {% endif %}
 
 <br><br>
-<hr>
+<hr class="text-muted">
 
 {% if comments.pages > 0 %}
 <div class="d-flex flex-wrap p-2">
@@ -85,6 +85,7 @@
 {% endif %}
 
 <br>
+{# if the question has not been solved #}
 {% if question.solved == False %}
 <div>
     <form method="POST" action="">
@@ -107,12 +108,11 @@
 </div>
 
 <br><br><br>
-{% else %}
+
+{% endif %}
 
 {{ blue_tile(title = 'Couldn\'t find what you were looking for?', description = ' Why not ask a question? You never know, who might have the answer you\'re looking for', link = url_for('modules.module_question_add'), link_text = 'I have a Question') }}
 
 <br><br><br>
-
-{% endif %}
 
 {% endblock module %}

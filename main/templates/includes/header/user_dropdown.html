@@ -8,23 +8,23 @@
                 <i class="fa-solid fa-user-large"></i>  Account
             </a>
         </li>
-        <li>
+        <!-- <li>
             <a class="dropdown-item" href="#">
                 <i class="fa-solid fa-note-sticky"></i>  Add a Note
             </a>
-        </li>
+        </li> -->
         <li>
             <a class="dropdown-item" href="{{ url_for('modules.module_question_add') }}">
                 <i class="fa-solid fa-question"></i>  Ask a Question
             </a>
         </li>
         <li>
-            <a class="dropdown-item" href="#">
+            <a class="dropdown-item" href="{{ url_for('socials.social_post_add') }}">
                 <i class="fa-solid fa-plus"></i>  Post Something
             </a>
         </li>
         <li>
-            <a class="dropdown-item" href="#">
+            <a class="dropdown-item" href="{{ url_for('socials.social_message') }}">
                 <i class="fa-regular fa-comments"></i>  Message a Friend
             </a>
         </li>

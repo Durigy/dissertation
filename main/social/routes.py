@@ -159,7 +159,7 @@ def social_post_add():
 @login_required
 def social_message():
     return render_template(
-        'social/social_message.html',
+        'social/social_message_list.html',
         title='Socail Messages',
         my_aside_dict = aside_dict(current_user)
     )

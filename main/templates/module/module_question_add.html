@@ -9,11 +9,15 @@
         {{ form.hidden_tag() }}
         <div>
             <p class="form-label">Select a Module *</p>
-            <select name="module" id="module" required>
+            <select name="module" id="module" required class="form-select">
                 <option value="">Select a Module</option>
-                {% for module in subscribed_modules %}
-                    <option value="{{ module.module.id }}" {% if module.module.id == selected_module_id %} selected {% endif %}>{{ module.module.code }} - {{ module.module.name }}</option>
+                {% if my_aside_dict %}
+                {% for module in my_aside_dict.subscribed_modules %}
+                    <option value="{{ module.module.id }}" {% if module.module.id == module_id %} selected {% endif %}>{{ module.module.code }} - {{ module.module.name }}</option>
                 {% endfor %}
+                {% else %}
+                Error with module selection
+                {% endif %}
             </select>
         </div>
 

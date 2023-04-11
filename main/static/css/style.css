@@ -165,8 +165,51 @@ aside {
     overflow-x: auto;
     overflow-y: hidden;
     margin-top: -15px;
-  }
-  
-  .scrollarea {
+}
+
+.scrollarea {
     overflow-y: auto;
-  } 
+}
+
+
+::-webkit-scrollbar {
+    width: 1rem;
+}
+
+/* ::-webkit-scrollbar-track {
+    background: lightgray;
+    border-radius: 100vh;
+} */
+
+::-webkit-scrollbar-thumb {
+    background: grey;
+    /* border: .2rem solid lightgray ; */
+    border: .2rem solid rgba(255,255,255,1);
+    border-radius: 100vh;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgb(87, 87, 87);
+}
+
+
+body::-webkit-scrollbar {
+    display: none;
+}
+
+.hidden-scroll .scrollarea {
+    overflow: hidden;
+}
+
+.hidden-scroll .scrollarea:hover {
+    overflow-y: scroll;
+}
+
+
+.hidden-scroll .scrollarea::-webkit-scrollbar {
+    width: .75rem;
+}
+
+/* aside .scrollarea::-webkit-scrollbar-thumb {
+    border: .125rem solid lightgray;
+} */

@@ -1,32 +1,114 @@
 {% extends "module/module_layout.html" %}
 {% block module %}
 
-<div class="d-flex flex-wrap p-2">
+{% from "helpers/cards.html" import card %}
+
+{# <div class="d-flex flex-wrap p-2">
     <div class="col-3 pe-4">
         <h3>Lecture Today</h3>
     </div>
     <div class="">
-        <a href="#" class="btn btn-secondary">See more lectures</a>
+        <strong>Comming Soon</strong>
+        <!-- <a href="#" class="btn btn-secondary">See more lectures</a> -->
     </div>
 </div>
 
-<hr>
+
+<br>
+<br>
+<hr class="text-muted">
+<br> #}
+
+<br>
+
+<!-- module questions -->
 
 <div class="d-flex flex-wrap p-2">
-    <div class="col-3 pe-4">
+    <div class="col pe-4">
         <h3>Questions</h3>
     </div>
     <div class="">
-        <a href="{{ url_for('modules.module_question_add', selected_module = module.id) }}" class="btn btn-secondary">Post a Question</a>
+        <a href="{{ url_for('modules.module_question_add', module_id = module.id) }}" class="btn btn-secondary">Post a Question</a>
     </div>
 </div>
 
-<\ all posts will appeare here - paginated \>
+<!-- <\ all posts will appeare here - paginated \> -->
 
-<hr>
+{% if questions.pages > 0 %}
+<div class="d-flex flex-wrap p-2">
+    {% for question in questions.items %}
+    {% if question.solved == True %}
+    {% set temp = question.title|truncate(40, True) + ' - ' + question.module.code + ' - Solved' %}
+    {% else %}
+    {% set temp = question.title|truncate(40, True) + ' - ' + question.module.code %}
+    {% endif %}
+    {# reference: https://stackoverflow.com/questions/36458482/how-to-not-render-a-entire-string-with-jinja2 [accessed: 26 Mar 2023] #}
+    {{ card(
+        title = temp,
+        description = question.description|truncate(300, True) if question.description else None,
+        link = url_for('modules.module_question_single', question_id = question.id),
+        link_text = 'See More',
+        width = 100
+    ) }}
+    {% endfor %}
+</div>
+
+{% if questions.pages > 1 %}
+{# reference to my past code for pagination: https://github.com/Durigy/neighbourfy-v2/blob/main/main/templates/user/account.html #}
+<!-- Pagination Links-->
+
+<div aria-label="Question Page Navigation">
+    <ul class="pagination">
+        <li class="page-item">
+            <a href="{{ url_for('modules.module_single', module_id = module_id, question_page = questions.prev_num) }}" {% if questions.page == 1 %} style="pointer-events: none; cursor: default;" class = "page-link text-secondary"{% else %} class="page-link" {% endif %}>
+                Previous
+            </a>
+        </li>
+
+        {% for page_num in questions.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+        {% if page_num %}
+        
+        <li class="page-item">
+            <a class="page-link {% if page_num == questions.page %} text-danger {% endif %}" href="{{url_for('modules.module_single', module_id = module_id, question_page = page_num)}}">
+                {{page_num}}
+            </a>
+        </li>
+        
+        {% else %}
+        
+        <li class="page-item">
+            <a class="page-link text-secondary" href="" style="pointer-events: none; cursor: default;">
+                . . .
+            </a>
+        </li>
+        
+        {% endif %}
+        {% endfor %}
+
+        <li class="page-item">
+            <a href="{{ url_for('modules.module_single', module_id = module_id, question_page = questions.next_num) }}" {% if questions.page == questions.pages %} style="pointer-events: none; cursor: default;" class = "page-link text-secondary"{% else %} class="page-link" {% endif %}>
+                Next
+            </a>
+        </li>
+    </ul>
+</div>
+{% endif %}
+
+{% else %}
+<div>
+    There are no questions for this module yet
+</div>
+{% endif %}
+
+
+<br>
+<hr class="text-muted">
+<br>
+
+<!-- module chat -->
 
 <div class="d-flex flex-wrap p-2">
-    <div class="col-3 pe-4">
+    <div class="col pe-4">
         <h3>Module Chat</h3>
     </div>
     <div class="">
@@ -36,14 +118,19 @@
 
 The live chat for this Module
 
-<hr>
+<br>
+<br>
+<hr class="text-muted">
+<br>
+
+<!-- module resources -->
 
 <div class="d-flex flex-wrap p-2">
-    <div class="col-3 pe-4">
+    <div class="col pe-4">
         <h3>Resources</h3>
     </div>
     <div class="">
-        <a href="#" class="btn btn-secondary">Add a resource</a>
+        <a href="{{ url_for('modules.module_resource_add', module_id = module.id) }}" class="btn btn-secondary">Add a resource</a>
     </div>
 </div>
 
@@ -56,8 +143,90 @@ This is for resources such as:
 
 <br>
 
-<hr>
+<!-- <\ all resources will appeare here - paginated \> -->
+{% if resources %}
+{% if resources.pages > 0 %}
+<div class="d-flex flex-wrap p-2">
+    {% for resource in resources.items %}
+    
+    {# image #}
+    {% if resource.image %}
+    {% set image_name = 'uploads/img/' + resource.image_id +'.png' %}
+    {{ card(
+        title = resource.image.title|truncate(40, True),
+        description = resource.image.description|truncate(300, True) if resource.image.description else None,
+        img_source = url_for('static', filename = image_name),
+        link = url_for('modules.module_image_view', module_resource_id = resource.id),
+        link_text = 'View',
+        width = 49
+    ) }}
 
+    {# document #}
+    {% else %}
+    {{ card(
+        title = resource.document.title|truncate(40, True),
+        description = resource.document.description|truncate(300, True) if resource.document.description else None,
+        img_source = url_for('static', filename = 'images/file-lines-regular.svg'),
+        img_icon = true,
+        link = '#',
+        link_text = 'Download',
+        width = 48
+    ) }}
+    {% endif %}
+    {% endfor %}
+</div>
+
+{% if resources.pages > 1 %}
+{# reference to my past code for pagination: https://github.com/Durigy/neighbourfy-v2/blob/main/main/templates/user/account.html #}
+<!-- Pagination Links-->
+
+<div aria-label="Resource Page Navigation">
+    <ul class="pagination">
+        <li class="page-item">
+            <a href="{{ url_for('modules.module_single', module_id = module_id, resource_page = resources.prev_num) }}" {% if resources.page == 1 %} style="pointer-events: none; cursor: default;" class = "page-link text-secondary"{% else %} class="page-link" {% endif %}>
+                Previous
+            </a>
+        </li>
+
+        {% for page_num in resources.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+        {% if page_num %}
+        
+        <li class="page-item">
+            <a class="page-link {% if page_num == resources.page %} text-danger {% endif %}" href="{{url_for('modules.module_single', module_id = module_id, resource_page = page_num)}}">
+                {{page_num}}
+            </a>
+        </li>
+        
+        {% else %}
+        
+        <li class="page-item">
+            <a class="page-link text-secondary" href="" style="pointer-events: none; cursor: default;">
+                . . .
+            </a>
+        </li>
+        
+        {% endif %}
+        {% endfor %}
+
+        <li class="page-item">
+            <a href="{{ url_for('modules.module_single', module_id = module_id, resource_page = resources.next_num) }}" {% if resources.page == resources.pages %} style="pointer-events: none; cursor: default;" class = "page-link text-secondary"{% else %} class="page-link" {% endif %}>
+                Next
+            </a>
+        </li>
+    </ul>
+</div>
+{% endif %}
+{% endif %}
+
+{% else %}
+<div>
+    <em>There are no resources for this module yet</em>
+</div>
+{% endif %}
+
+<br>
+<br>
+<hr class="text-muted">
 <br>
 
 <h3>About the module</h3>

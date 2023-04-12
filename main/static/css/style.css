@@ -171,7 +171,7 @@ aside {
     overflow-y: auto;
 }
 
-
+/* reference for custom scrollbar: https://youtu.be/lvKK2fs6h4I */
 ::-webkit-scrollbar {
     width: 1rem;
 }

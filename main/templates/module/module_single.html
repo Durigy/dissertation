@@ -133,15 +133,15 @@ The live chat for this Module
         <a href="{{ url_for('modules.module_resource_add', module_id = module.id) }}" class="btn btn-secondary">Add a resource</a>
     </div>
 </div>
-
+<!-- 
 This is for resources such as:
 <ul>
     <li>images</li>
     <li>docs (words, pdf, etc)</li>
     <li>videos (lectures, youtube, etc)</li>
-</ul>
+</ul> -->
 
-<br>
+<!-- <br> -->
 
 <!-- <\ all resources will appeare here - paginated \> -->
 {% if resources %}
@@ -151,11 +151,13 @@ This is for resources such as:
     
     {# image #}
     {% if resource.image %}
-    {% set image_name = 'uploads/img/' + resource.image_id +'.png' %}
+    {#% set image_name = 'uploads/img/' + resource.image_id +'.png' %#}
+    {% set image_name = img_url + resource.image.imagekit_id %}
+
     {{ card(
         title = resource.image.title|truncate(40, True),
         description = resource.image.description|truncate(300, True) if resource.image.description else None,
-        img_source = url_for('static', filename = image_name),
+        img_source = image_name,
         link = url_for('modules.module_image_view', module_resource_id = resource.id),
         link_text = 'View',
         width = 49
@@ -168,8 +170,8 @@ This is for resources such as:
         description = resource.document.description|truncate(300, True) if resource.document.description else None,
         img_source = url_for('static', filename = 'images/file-lines-regular.svg'),
         img_icon = true,
-        link = '#',
-        link_text = 'Download',
+        link = url_for('modules.module_document_view', module_resource_id = resource.id),
+        link_text = 'View',
         width = 48
     ) }}
     {% endif %}

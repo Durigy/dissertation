@@ -1,5 +1,7 @@
 from flask import render_template, url_for, request, redirect, flash, Blueprint
 from flask_login import login_user, logout_user, login_required, current_user
+
+from .. import IMAGEKIT_URL_ENDPOINT
 # from .forms import 
 from ..models import ModuleQuestion, ModuleResource, ModuleSubscription, User
 from ..main_utils import generate_id, defaults, aside_dict
@@ -40,7 +42,9 @@ def student_home():
         my_aside_dict = aside_dict(current_user),
         user_questions = user_questions,
         resources = resources,
-        latest_question = latest_question
+        latest_question = latest_question,
+        img_url = IMAGEKIT_URL_ENDPOINT + '/module-resource-image/',
+        doc_url = IMAGEKIT_URL_ENDPOINT + '/module-resource-document/'
     )
 
 @students.route("/notes")

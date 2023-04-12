@@ -84,32 +84,33 @@
     
     {# image #}
     {% if resource.image %}
-    {% set image_name = 'uploads/img/' + resource.image_id +'.png' %}
-    {% set image_title = resource.module.code + ' - ' + resource.image.title|truncate(40, True) %}
+    {#% set image_name = 'uploads/img/' + resource.image_id +'.png' %#}
+    {% set image_name = img_url + resource.image.imagekit_id %}
+
     {{ card(
-        title = image_title,
+        title = resource.image.title|truncate(40, True),
         description = resource.image.description|truncate(300, True) if resource.image.description else None,
-        img_source = url_for('static', filename = image_name),
+        img_source = image_name,
         link = url_for('modules.module_image_view', module_resource_id = resource.id),
         link_text = 'View',
-        width = 48
+        width = 49
     ) }}
 
     {# document #}
     {% else %}
-    {% set doc_title = resource.module.code + ' - ' + resource.document.title|truncate(40, True) %}
     {{ card(
-        title = doc_title,
+        title = resource.document.title|truncate(40, True),
         description = resource.document.description|truncate(300, True) if resource.document.description else None,
         img_source = url_for('static', filename = 'images/file-lines-regular.svg'),
         img_icon = true,
-        link = '#',
-        link_text = 'Download',
-        width = 49
+        link = url_for('modules.module_document_view', module_resource_id = resource.id),
+        link_text = 'View',
+        width = 48
     ) }}
     {% endif %}
     {% endfor %}
 </div>
+
 
 {% if resources.pages > 1 %}
 {# reference to my past code for pagination: https://github.com/Durigy/neighbourfy-v2/blob/main/main/templates/user/account.html #}

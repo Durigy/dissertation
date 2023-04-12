@@ -503,6 +503,8 @@ class Image(db.Model):
     title = db.Column(db.String(240), nullable = True)
     description = db.Column(db.Text, nullable = True)
     date = db.Column(db.DateTime, nullable = False, default = datetime.utcnow)
+    imagekit_id = db.Column(db.String(300), nullable = True)
+    file_type = db.Column(db.String(20), nullable = True)
 
 
     # Links (ForeignKeys) #
@@ -522,6 +524,8 @@ class Document(db.Model):
     title = db.Column(db.String(240), nullable = True)
     description = db.Column(db.Text, nullable = True)
     date = db.Column(db.DateTime, nullable = False, default = datetime.utcnow)
+    imagekit_id = db.Column(db.String(300), nullable = True)
+    file_type = db.Column(db.String(20), nullable = True)
 
 
     # Links (ForeignKeys) #

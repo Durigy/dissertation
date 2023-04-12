@@ -9,20 +9,22 @@
             <a href="{{ url_for('modules.module_single', module_id = module.id) }}"> <i class="fa-solid fa-arrow-left"></i> Back to module</a>
         </div>
         <div class="col-9">
-            <h2>{{ module_image.title }}</h2>
+            <h2>{{ module_document.title }}</h2>
         </div>
     </div>
 
-    {% set image_name = img_url + module_image.imagekit_id %}
+    {% set document_name = doc_url + module_document.imagekit_id %}
     
     <div class="text-center" style="overflow: hidden;">
-        <img src="{{ image_name }}" class="card-img-top p-3" alt="{{ img_alt }}" style="max-height:800px; max-width 100%; height: auto;">
+        <!-- <img src="{{ document_name }}" class="card-img-top p-3" alt="{{ img_alt }}" style="max-height:800px; max-width 100%; height: auto;"> -->
+        <!-- <iframe src="{{ document_name }}" frameborder="0" width="100%"></iframe> -->
+        <object data="{{ document_name }}" type="application/pdf" width="100%" height="800px"></object>
     </div>
 
     <br>
-    {% if module_image.description %}
+    {% if module_document.description %}
     <h3>Description:</h3>
-    {{ module_image.description }}
+    {{ module_document.description }}
     {% endif %}
 </div>
 

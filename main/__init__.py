@@ -28,14 +28,20 @@ DEBUG = False
 REMEMBER_COOKIE_DURATION = timedelta(days=1) # Still will result in the cookies, for a logeding user, will expire after 1 day
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 UPLOAD_FOLDER = ''
-# UPLOAD_FOLDER = os.path.join(os.path.abspath(os.path.dirname(__file__)),'static/uploads')
 ALLOWED_EXTENSIONS = '' #{'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
 IMAGE_EXTENSIONS = ''
 DOCUMENT_EXTENSIONS = ''
+MAX_CONTENT_LENGTH = ''
+
+# image kit
+IMAGEKIT_PRIVATE_KEY = ''
+IMAGEKIT_PUBLIC_KEY = ''
+IMAGEKIT_URL_ENDPOINT = ''
+
 
 
 if os.path.exists('main/config.py'):
-    from .config import secret_key, database_uri, debug_setting, remember_cookie_duration, sqlalchemy_track_modifications, upload_folder, allowed_extensions, image_extensions, document_extensions
+    from .config import secret_key, database_uri, debug_setting, remember_cookie_duration, sqlalchemy_track_modifications, upload_folder, allowed_extensions, image_extensions, document_extensions, imagekit_private_key, imagekit_public_key, imagekit_url_endpoint, max_content_length
     SECRET_KEY = secret_key
     SQLALCHEMY_DATABASE_URI = database_uri
     DEBUG = debug_setting
@@ -45,6 +51,12 @@ if os.path.exists('main/config.py'):
     IMAGE_EXTENSIONS = image_extensions
     DOCUMENT_EXTENSIONS = document_extensions
     ALLOWED_EXTENSIONS = allowed_extensions
+    MAX_CONTENT_LENGTH = max_content_length # reference: https://flask.palletsprojects.com/en/1.1.x/patterns/fileuploads/
+
+    # image kit
+    IMAGEKIT_PRIVATE_KEY = imagekit_private_key
+    IMAGEKIT_PUBLIC_KEY = imagekit_public_key
+    IMAGEKIT_URL_ENDPOINT = imagekit_url_endpoint
 
 
 app = Flask(__name__)
@@ -66,6 +78,9 @@ app.config['REMEMBER_COOKIE_DURATION'] = timedelta(days = os.environ.get("REMEMB
 # sqlalchemy_modifications_setting
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = os.environ.get("SQLALCHEMY_TRACK_MODIFICATIONS") if os.environ.get("SQLALCHEMY_TRACK_MODIFICATIONS") else SQLALCHEMY_TRACK_MODIFICATIONS
 
+# sqlalchemy_modifications_setting
+app.config['MAX_CONTENT_LENGTH'] = os.environ.get("MAX_CONTENT_LENGTH") if os.environ.get("MAX_CONTENT_LENGTH") else MAX_CONTENT_LENGTH
+
 # upload_folder_setting
 app.config['UPLOAD_FOLDER'] = os.environ.get("UPLOAD_FOLDER") if os.environ.get("UPLOAD_FOLDER") else UPLOAD_FOLDER
 
@@ -80,6 +95,14 @@ migrate = Migrate(app, db)
 
 bcrypt = Bcrypt(app)
 
+# Image Kit SDK initialization
+from imagekitio import ImageKit
+
+imagekit = ImageKit(
+    private_key = IMAGEKIT_PRIVATE_KEY,
+    public_key = IMAGEKIT_PUBLIC_KEY,
+    url_endpoint = IMAGEKIT_URL_ENDPOINT
+)
 
 
 ## Reference for blueprints: https://flask.palletsprojects.com/en/2.2.x/blueprints/
@@ -97,5 +120,3 @@ app.register_blueprint(students)
 app.register_blueprint(modules)
 app.register_blueprint(socials)
 # app.register_blueprint(system)
-
-# from . import routes # This is nolonger needed as everything now uses blueprints

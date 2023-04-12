@@ -3,12 +3,12 @@
 {% macro card(img_source = none, img_alt = none, img_icon = false, title = none, description = none, link = none, link_text = none, link_streached = true, link_new_tab = false, link_2 = none, link_text_2 = none, link_streached_2 = false, link_2_new_tab = false, width = 47) %}
 <div class="card m-1 d-none d-md-none d-lg-block" style="width: {{ width }}%;">
     {% if img_source %}
-    <div style="height:400px;" class="text-center">
-        <img src="{{ img_source }}" class="card-img-top p-3" alt="{{ img_alt }}" 
+    <div style="height:400px; overflow:hidden; border-radius: 10px;" class="text-center m-3">
+        <img src="{{ img_source }}?tr=w-500,h-400" class="card-img-top" alt="{{ img_alt }}" 
         {% if img_icon == true %}
         style="max-width:100%; max-height:300px; width: auto; height: auto; margin: 50px 0 50px 0;"
         {% else %}
-        style="max-width:100%; max-height:400px; width: auto; height: auto;"
+        style="max-height:400px; width: auto; height: auto; border-radius: 10px;"
         {% endif %}
         >
     </div>
@@ -42,12 +42,12 @@
 <!-- mobile only -->
 <div class="card m-1 d-block d-md-block d-lg-none" style="width: 100%;">
     {% if img_source %}
-    <div class="text-center">
-        <img src="{{ img_source }}" class="card-img-top p-3" alt="{{ img_alt }}" 
+    <div class="text-center m-3" >
+        <img src="{{ img_source }}" class="card-img-top" alt="{{ img_alt }}" 
         {% if img_icon == true %}
         style="max-width:100%; max-height:150px; width: auto; height: auto;"
         {% else %}
-        style="max-width:100%; max-height:400px; width: auto; height: auto;"
+        style="max-width:100%; max-height:400px; width: auto; height: auto; border-radius: 7px;"
         {% endif %}
         >
     </div>

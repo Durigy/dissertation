@@ -1,5 +1,5 @@
 import secrets
-from .models import Module, ModuleQuestion, ModuleSubscription
+from .models import Message, MessageThread, Module, ModuleQuestion, ModuleSubscription
 from . import ALLOWED_EXTENSIONS
 
 # reference to using addict: https://youtu.be/y7fZJDIU8V8?t=347 [accessed: 3 Apr 2023]
@@ -48,14 +48,20 @@ def defaults(current_user):
     )
 
 def aside_dict(current_user):
-    subscribed_modules = ModuleSubscription.query.filter_by(user_id = current_user.id).join(Module).order_by(Module.code).limit(10)
+    subscribed_modules = ModuleSubscription.query.filter_by(user_id = current_user.id).join(Module).order_by(Module.code).limit(10).all()
    
     questions = ModuleQuestion.query.filter(ModuleSubscription.user_id == current_user.id) \
-            .filter_by(module_id = ModuleSubscription.module_id).order_by(ModuleQuestion.date.desc()).limit(10)
+            .filter_by(module_id = ModuleSubscription.module_id).filter_by(solved = False) \
+            .filter(ModuleQuestion.user != current_user).filter_by(solved = False) \
+            .order_by(ModuleQuestion.date.desc()).limit(10).all()
     
+    message_threads = MessageThread.query.filter(MessageThread.following_user.contains(current_user)).order_by(MessageThread.date_last_message.desc()).all()
+    
+    # print(message_threads)
     return Dict({
         'subscribed_modules': subscribed_modules,
-        'questions': questions
+        'questions': questions,
+        'message_threads': message_threads
     })
 
 # taken from: https://flask.palletsprojects.com/en/2.2.x/patterns/fileuploads/#a-gentle-introduction

@@ -2,82 +2,102 @@
     reference:
     - https://getbootstrap.com/docs/5.0/examples/ [date accessed: 26 March 2023]
 #}
-<aside class="hidden-scroll">
-    <div class="d-flex flex-column flex-shrink-0 p-3 bg-light" style="width: 250px;">
-        <ul class="nav nav-pills flex-column mb-auto">
-            <h5>Modules</h5>
-            <div class="scrollarea" style="height: 25vh;">
-                {% if my_aside_dict %}
-                {% for module in my_aside_dict.subscribed_modules %}
-                <div class="mb-2">
-                    {% set mod_name = module.module.code + ' - ' + module.module.name %}
-                    <a href="{{ url_for('modules.module_single', module_id=module.module.id) }}">{{ mod_name|truncate(30, True) }}</a>
-                </div>
-                {% endfor %}
-
-                {% else %}
-
-                Not subed to any modules
-
-                <br>
-                
-                <a href="{{ url_for('modules.module_selection') }}" class="btn btn-secondary">Pick one now</a>
-
-                {% endif %}
+<aside class="hidden-scroll d-flex flex-column flex-shrink-0 p-3 bg-light" style="width: 270px; height: 95vh;">
+    <ul class="nav nav-pills flex-column mb-auto">
+        <h5>Modules</h5>
+        <div class="scrollarea" style="max-height: 25vh;">
+            {% if my_aside_dict.subscribed_modules %}
+            {% for module in my_aside_dict.subscribed_modules %}
+            <div class="mb-2">
+                {% set mod_name = module.module.code + ' - ' + module.module.name %}
+                <a class="aside-text-links" href="{{ url_for('modules.module_single', module_id=module.module.id) }}">{{ mod_name|truncate(30, True) }}</a>
             </div>
+            {% endfor %}
+
+            {% else %}
+
+            <em>Not subed to any modules</em>
+
+            <br>
+            <br>
             
-            <hr>
-            <h5>Chats</h5>
-            <div class="scrollarea" style="height: 25vh;">
-                {% for i in range(20) %}
-                A chat group here
-                <br>
-                <br>
-                {% endfor %}
-            </div>
+            <a href="{{ url_for('modules.module_selection') }}" class="btn btn-secondary">Pick one now</a>
 
-            <hr>
-
-            <h5>Questions</h5>
-            <div class="scrollarea" style="height: 25vh;">
-                {% if my_aside_dict %}
-                {% for question in my_aside_dict.questions %}
-                <div class="mb-2">
-                    {% set question_name = question.module.code + ' - ' + question.title %}
-                    <a href="{{ url_for('modules.module_question', question_id = question.id) }}">{{ question_name|truncate(30, True) }}</a>
-                </div>
-                {% endfor %}
-
-                {% else %}
-
-                Not subed to any modules
-
-                <br>
-                
-                <a href="{{ url_for('modules.module_selection') }}" class="btn btn-secondary">Pick one now</a>
-
-                {% endif %}
-            </div>
-        </ul>
-
-        {#
-        <hr>
-        
-        <div class="dropdown">
-            <a href="#" class="d-flex align-items-center link-dark text-decoration-none dropdown-toggle" id="dropdownUser2" data-bs-toggle="dropdown" aria-expanded="false">
-                <img src="https://github.com/mdo.png" alt="" width="32" height="32" class="rounded-circle me-2">
-                <strong>mdo</strong>
-            </a>
-            <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdownUser2">
-                <li><a class="dropdown-item" href="#">New project...</a></li>
-                <li><a class="dropdown-item" href="#">Settings</a></li>
-                <li><a class="dropdown-item" href="#">Profile</a></li>
-                <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item" href="#">Sign out</a></li>
-            </ul>
+            {% endif %}
         </div>
-        #}
+        
+        <hr>
+        <h5>Chats</h5>
+        <div class="scrollarea" style="max-height: 25vh;">
+            {% if my_aside_dict.message_threads %}
+            {% for thread in my_aside_dict.message_threads %}
+            <div class="mb-2">
+                <span data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="MSGs:{{ thread.message_count }} | PEEPs: {{ thread.member_count }}" style="cursor: default;">
+                    <a class="aside-text-links" href="{{ url_for('socials.social_message_single', message_thread_id = thread.id) }}">{{ thread.name }}</a>
+                </span>
+            </div>
+            {% endfor %}
+            {% else %}
+
+            <em>You are not in any chats yet</em>
+
+            <br>
+            <br>
+            
+            <a href="{{ url_for('socials.social_user_list') }}" class="btn btn-secondary">Message Someone</a>
+
+            {% endif %}
+        </div>
+
+        <hr>
+
+        <h5>Questions</h5>
+        <div class="scrollarea" style="max-height: 25vh;">
+            {% if my_aside_dict.questions %}
+            {% for question in my_aside_dict.questions %}
+            <div class="mb-2">
+                {% set question_name = question.module.code + ' - ' + question.title %}
+                <span data-bs-toggle="tooltip" data-bs-title="{{ question.date.strftime('%I:%M, %d %b %Y') }}" style="cursor: default;">
+                    <a class="aside-text-links" href="{{ url_for('modules.module_question_single', question_id = question.id) }}">{{ question_name|truncate(30, True) }}</a>
+                </span>
+            </div>
+            {% endfor %}
+
+            {% else %}
+
+            <em>Sub to a module to see questions</em>
+
+            <br>
+            <br>
+            
+            <a href="{{ url_for('modules.module_selection') }}" class="btn btn-secondary">Pick one now</a>
+
+            {% endif %}
+        </div>
+    </ul>
+
+    {#
+    <hr>
+    
+    <div class="dropdown">
+        <a href="#" class="d-flex align-items-center link-dark text-decoration-none dropdown-toggle" id="dropdownUser2" data-bs-toggle="dropdown" aria-expanded="false">
+            <img src="https://github.com/mdo.png" alt="" width="32" height="32" class="rounded-circle me-2">
+            <strong>mdo</strong>
+        </a>
+        <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdownUser2">
+            <li><a class="dropdown-item" href="#">New project...</a></li>
+            <li><a class="dropdown-item" href="#">Settings</a></li>
+            <li><a class="dropdown-item" href="#">Profile</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="#">Sign out</a></li>
+        </ul>
     </div>
+    #}
+
+    <script>
+        let tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+        let tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    </script>
 </aside>
 
 

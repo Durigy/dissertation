@@ -41,6 +41,8 @@
     const thread_id = '{{ message_thread_id }}'
     const message_url = "{{ url_for('socials.social_get_messages', message_thread_id = message_thread_id) }}"
     const other_user_id = '{{ other_user_id }}'
+    
+    let is_on_load = true;
 
     let next_page = 1
     let total_pages = 2
@@ -180,7 +182,6 @@
     }
 
     function get_messages() {
-        is_on_load = false;
 
         fetch(`${message_url}?message_page=${next_page}`).then((response) => {
             if(response.status !== 200) {
@@ -198,7 +199,7 @@
                             <span id="bottom-message-spacer" class="p-1"></span>`
                         )
 
-                        $('#no-messages-here').remove()
+                        is_on_load = true
         }
 
                     $('#load-more').remove()
@@ -239,18 +240,16 @@
                         addBtn()
                     }
 
-
                     next_page += 1
-
 
                     const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
                     const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
                     
-                    let new_scroll_height = messageBox.scrollHeight
 
                     //console.log(current_scroll_height)
                     // console.log(new_scroll_height)
 
+                    console.log(next_page)
 
                     if (next_page < 3) {
                         scrollDown()
@@ -259,7 +258,7 @@
                 
                         messageBox.scrollTop = new_scroll_height-current_scroll_height - 62
                     }
-            
+
                     // scrollDownTo(random_string)
                 }
             });

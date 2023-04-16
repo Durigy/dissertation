@@ -1,7 +1,7 @@
-from flask import render_template, url_for, request, redirect, flash, Blueprint
+from flask import jsonify, render_template, url_for, request, redirect, flash, Blueprint
 from flask_login import login_required, current_user
 from .forms import AddPostForm, AddPublicPostCommentForm
-from ..models import User, PublicPost, PublicPostComment
+from ..models import Message, Module, User, PublicPost, PublicPostComment, MessageThread
 from ..main_utils import generate_id, defaults, aside_dict
 from .. import db
 
@@ -77,25 +77,30 @@ def social_post_single(post_id):
         .paginate(page = comment_page, per_page = items_per_page)
 
     if form.validate_on_submit() and request.method == "POST":
-        message = PublicPostComment(
+        comment = PublicPostComment(
             id = generate_id(PublicPostComment),
             message = form.message.data,
             user_id = current_user.id,
             public_post_id = post_id
         )
 
-        db.session.add(message)
+        db.session.add(comment)
+
+        comment_count = post.comment_count
+
+        post.comment_count += 1
+
         db.session.commit()
 
         flash('Your Comment has been posted')
 
         # this checks how may items are on the last page. 
-        comments_2 = PublicPostComment.query \
-            .filter_by(public_post_id = PublicPost.id) \
-            .order_by(PublicPostComment.date) \
-            .paginate(page = comments.pages, per_page = items_per_page)
-
-        my_page = comments.pages
+        # comments_2 = PublicPostComment.query \
+        #     .filter_by(public_post_id = PublicPost.id) \
+        #     .order_by(PublicPostComment.date) \
+        #     .paginate(page = comments.pages, per_page = items_per_page)
+        
+        my_page = comments.pages if comment_count > 0 else 1
         
         # if there are 'items_per_page' number of items, then a new page will be created, so go to the new last page
         if len(comments.items) == items_per_page:
@@ -155,20 +160,123 @@ def social_post_add():
 #                          #
 ############################
 
+from sqlalchemy import func
 @socials.route("messages")
 @login_required
 def social_message():
+    count_by_thread_id = db.session.query(Message, func.count(Message.message_thread_id)) \
+                       .group_by(Message.message_thread_id) \
+                       .all()
+    
+    count_by_thread_id_dict = {message_thread_id.message_thread_id: count for message_thread_id, count in count_by_thread_id}
+    # print(count_by_thread_id_dict)
+    
     return render_template(
         'social/social_message_list.html',
         title='Socail Messages',
         my_aside_dict = aside_dict(current_user)
     )
 
-@socials.route("/messages/<thread_id>")
+@socials.route("/messages/<message_thread_id>")
 @login_required
-def social_message_single(thread_id):
+def social_message_single(message_thread_id):
+    other_user_id = request.args.get('user_id')
+
+    if other_user_id:
+        thread = MessageThread.query.filter_by(id = message_thread_id).scalar()
+    else:
+        thread = MessageThread.query.get_or_404(message_thread_id)
+
     return render_template(
         'social/social_message_thread.html',
         title='Socail Messages',
-        my_aside_dict = aside_dict(current_user)
+        my_aside_dict = aside_dict(current_user),
+        use_web_socket = True,
+        socket_room = message_thread_id ,
+        message_thread_id = message_thread_id,
+        thread = thread,
+        other_user_id = other_user_id
+    )
+
+@socials.route("/messages/new-thread/<user_id>")
+@login_required
+def social_message_thread_new(user_id):
+    user = User.query.get_or_404(user_id)
+    
+    thread_id = generate_id(MessageThread)
+
+    return redirect(url_for('socials.social_message_single', message_thread_id = thread_id, user_id = user_id))
+
+
+
+@socials.route("/user-list")
+@login_required
+def social_user_list():
+    users = User.query.filter(User.id != current_user.id).all()
+
+    return render_template(
+        'social/social_user_list.html',
+        title='Socail Messages',
+        my_aside_dict = aside_dict(current_user),
+        users = users
+    )
+
+@socials.route("/messages/remove-thread/<thread_id>")
+@login_required
+def social_message_thread_remove(thread_id):
+    # user = User.query.get_or_404(user_id)
+    thread = MessageThread.query.filter_by(id = thread_id).first()
+
+    for user in thread.following_user:
+        user.in_thread.remove(thread)
+
+
+    # current_user.in_thread.remove(thread)
+    # user.in_thread.remove(thread)
+
+    print(thread)
+
+    
+    db.session.delete(thread)
+
+    db.session.commit()
+
+    return redirect(url_for('socials.social_user_list'))
+
+
+
+############################
+#                          #
+#        Ajax Stuff        #
+#                          #
+############################
+
+@socials.route("/get-messages/<message_thread_id>", methods=['GET'])
+def social_get_messages(message_thread_id):
+
+    message_thread = MessageThread.query.get_or_404(message_thread_id)
+
+    message_page = request.args.get('message_page', 1, type = int)
+
+    # print(message_page)
+
+    messages = Message.query \
+        .filter_by(message_thread_id = message_thread_id) \
+        .order_by(Message.date_sent.desc()) \
+        .paginate(page = message_page, per_page = 40)
+
+    # if len(messages) > 0:
+    response_messages = [{
+        'next_page': message_page + 1 if message_page < messages.pages else messages.pages + 1,
+        'total_pages': messages.pages
+        }] +[{
+            'user': message.user.username,
+            'message': message.body,
+            'datetime': str(message.date_sent.strftime('%I:%M, %d %b %Y')),
+            'message_id': message.id
+        } for message in messages.items
+    ]
+
+    return jsonify(
+        response_messages
     )

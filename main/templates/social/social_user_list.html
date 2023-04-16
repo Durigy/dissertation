@@ -1,0 +1,18 @@
+{% extends "social/social_layout.html" %}
+{% block social %}
+<h1>Select a user to message</h1>
+<!-- <div>
+    <form class="d-flex" role="search">
+            <input type="text" placeholder="Message" name="message" id="message-field" aria-label="message input box" class="form-control rounded me-2" required>
+            <button type="button" name="send" id="send-btn" onclick="sendMessage()" aria-label="submit message" class=""><i class="fa-solid fa-paper-plane"></i></i></button>
+    </form>
+</div> -->
+
+<div id="users_list">
+    {% for user in users %}
+    <div class="single-user pb-2">
+        {{ user.username }}: <a href="{{ url_for('socials.social_message_thread_new', user_id = user.id) }}">Message</a>
+    </div>
+    {% endfor %}
+</div>
+{% endblock social %}

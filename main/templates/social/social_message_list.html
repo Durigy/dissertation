@@ -8,15 +8,17 @@
         <h1>Social messages</h1>
     </div>
     <div class="">
-        <a href="#" class="btn btn-secondary">New Message</a>
+        <a href="{{ url_for('socials.social_user_list') }}" class="btn btn-secondary">New Message</a>
     </div>
 </div>
+
 <br>
 <div>
-        {% for i in range(10) %}
-        {% set num = i + 1 %}
-        {% set temp = 'Message from Friend ' + num | string %}
-        {{ card(title = temp, link = '#', link_text = 'View Message', width = 98) }}
+        {#% for i in range(10) %#}
+        {% for thread in my_aside_dict.message_threads %}
+        {#% set num = i + 1 %#}
+        {% set temp = 'Members: ' + thread.member_count | string + ' | Messages: ' + thread.message_count | string  %}
+        {{ card(title = thread.name, link = url_for('socials.social_message_single', message_thread_id = thread.id), link_text = 'View Message', description = temp, width = 98) }}
         {% endfor %} 
 </div>
 

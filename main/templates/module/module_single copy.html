@@ -342,6 +342,8 @@ Infomation from: <a href="https://data.cardiff.ac.uk/legacy/grails/module/{{ mod
 
     let message_id_list = []
 
+    let last_id = ''
+
     socket.on('connect', () => {
         socket.emit('room-connect', {
             'user': `${user_id}`,
@@ -475,7 +477,7 @@ Infomation from: <a href="https://data.cardiff.ac.uk/legacy/grails/module/{{ mod
     }
 
     function get_messages() {
-        fetch(`${message_url}?message_page=${next_page}`).then((response) => {
+        fetch(`${message_url}?message_page=${next_page}&last_id=${last_id}`).then((response) => {
             if(response.status !== 200) {
                 // console.log('something wrong')
             }
@@ -510,15 +512,18 @@ Infomation from: <a href="https://data.cardiff.ac.uk/legacy/grails/module/{{ mod
                     
                     for (let i = data.length -1 ; i > 0 ; i--) {
                         let the_data = data[i]
-                        if(!message_id_list.includes(the_data.message_id)){
-                            message_id_list.unshift(the_data.message_id)
+                        
+                        //if(!message_id_list.includes(the_data.message_id)){
+                          //  message_id_list.unshift(the_data.message_id)
 
                             if(the_data.user == username) {
                                 displayUserMessage(the_data, random_string) 
                             } else if(the_data.user != username) {
                                 displayOtherUserMessage(the_data, random_string)
                             }
-                        }
+                            last_id = the_data.message_id
+                            console.log(last_id)
+                        // }
 
                     }
                     

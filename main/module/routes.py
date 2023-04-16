@@ -1,7 +1,7 @@
-from flask import render_template, url_for, request, redirect, flash, Blueprint
+from flask import render_template, url_for, request, redirect, flash, Blueprint, make_response, jsonify
 from flask_login import login_required, current_user
 from .forms import AddModuleForm, AddModuleQuestionForm, AddModuleQuestionCommentForm, AddModuleResourceForm
-from ..models import User, Module, ModuleReview, ModuleSubscription, ModuleQuestion, ModuleQuestionComment, Image, Document, ModuleResource
+from ..models import User, Module, ModuleReview, ModuleSubscription, ModuleQuestion, ModuleQuestionComment, Image, Document, ModuleResource, MessageThread, Message
 from ..main_utils import generate_id, defaults, aside_dict, allowed_file
 from .. import db, app, IMAGE_EXTENSIONS, DOCUMENT_EXTENSIONS, imagekit, IMAGEKIT_URL_ENDPOINT
 import os
@@ -29,6 +29,8 @@ def module_all():
 def module_single(module_id):
     module = Module.query.get_or_404(module_id)
 
+    print(module.thread.following_user)
+
     # module questions
     question_page = request.args.get('question_page', 1, type = int)
     
@@ -44,6 +46,14 @@ def module_single(module_id):
         .filter_by(module_id = module_id) \
         .order_by(ModuleResource.date.desc()) \
         .paginate(page = resource_page, per_page = 4)
+    
+
+    # message_page = request.args.get('message_page', 1, type = int)
+    
+    # messages = Message.query \
+    #     .filter_by(message_thread_id = module.message_thread_id) \
+    #     .order_by(Message.date_sent) \
+    #     .paginate(page = message_page, per_page = 3)
 
     return render_template(
         'module/module_single.html',
@@ -54,7 +64,10 @@ def module_single(module_id):
         module_id = module_id,
         resources = resources,
         img_url = IMAGEKIT_URL_ENDPOINT + '/module-resource-image/',
-        doc_url = IMAGEKIT_URL_ENDPOINT + '/module-resource-document/'
+        doc_url = IMAGEKIT_URL_ENDPOINT + '/module-resource-document/',
+        use_web_socket = True,
+        socket_room = module.message_thread_id # ,
+        # messages = messages
     )
 
 @modules.route("/image/<module_resource_id>")
@@ -165,19 +178,24 @@ def module_question_single(question_id):
         .paginate(page = comment_page, per_page = items_per_page)
 
     if form.validate_on_submit() and request.method == "POST":
-        message = ModuleQuestionComment(
+        comment = ModuleQuestionComment(
             id = generate_id(ModuleQuestionComment),
             message = form.message.data,
             user_id = current_user.id,
             module_question_id = question_id
         )
 
-        db.session.add(message)
+        db.session.add(comment)
+
+        comment_count = question.comment_count
+
+        question.comment_count += 1
+
         db.session.commit()
 
         flash('Your Comment has been posted')
-
-        my_page = comments.pages
+        
+        my_page = comments.pages if comment_count > 0 else 1
         
         # if there are 'items_per_page' number of items, then a new page will be created, so go to the new last page
         if len(comments.items) == items_per_page:
@@ -313,6 +331,9 @@ def module_add_sub(module_id):
             module_id = module_id
         )
 
+        current_user.in_thread.append(module.thread)
+        module.thread.member_count += 1
+
         db.session.add(add_module)
         db.session.commit()
 
@@ -328,6 +349,12 @@ def module_add_sub(module_id):
 @login_required
 def module_remove_sub(module_id):
     module = ModuleSubscription.query.filter_by(user_id=current_user.id, module_id=module_id).first()
+
+    if module.module.thread in current_user.in_thread: current_user.in_thread.remove(module.module.thread)    
+
+    # current_user.in_thread.remove(module.module.thread)
+
+    module.module.thread.member_count -= 1
 
     db.session.delete(module)
     db.session.commit()
@@ -375,8 +402,8 @@ def module_resource_add():
 
                         with open(temp_dir + '/' + filename, mode="rb") as temp:
                             filestr = base64.b64encode(temp.read())
-                        print(temp_dir)
-                        print(temp_dir + '/' + filename)
+                        # print(temp_dir)
+                        # print(temp_dir + '/' + filename)
 
                     upload = imagekit.upload_file(
                         file = filestr,
@@ -479,13 +506,22 @@ def module_add():
     form = AddModuleForm()
 
     if form.validate_on_submit() and request.method == "POST":
+        thread_id = generate_id(MessageThread)
+
+        message_thread = MessageThread(
+            id = thread_id,
+            name = f'{form.code.data} - {form.name.data}'
+        )
+        
         module = Module(
             id = generate_id(Module),
             name = form.name.data,
             code = form.code.data,
-            description = form.description.data if len(form.description.data) > 0 else None
+            description = form.description.data if len(form.description.data) > 0 else None,
+            message_thread_id = thread_id
         )
 
+        db.session.add(message_thread)
         db.session.add(module)
         db.session.commit()
 
@@ -499,3 +535,48 @@ def module_add():
         form = form,
         my_aside_dict = aside_dict(current_user)
     )
+
+
+############################
+#                          #
+#        Ajax Stuff        #
+#                          #
+############################
+
+@modules.route("/get-messages/<module_id>", methods=['GET'])
+def module_get_messages(module_id):
+
+    module = Module.query.get_or_404(module_id)
+
+    message_page = request.args.get('message_page', 1, type = int)
+
+    # print(message_page)
+
+    messages = Message.query \
+        .filter_by(message_thread_id = module.message_thread_id) \
+        .order_by(Message.date_sent.desc()) \
+        .paginate(page = message_page, per_page = 40)
+
+    # if len(messages) > 0:
+    response_messages = [{
+        'next_page': message_page + 1 if message_page < messages.pages else messages.pages + 1,
+        'total_pages': messages.pages
+        }] +[{
+            'user': message.user.username,
+            'message': message.body,
+            'datetime': str(message.date_sent.strftime('%I:%M, %d %b %Y')),
+            'message_id': message.id
+        } for message in messages.items
+    ]
+
+    return jsonify(
+        response_messages
+    )
+
+    # else:
+    #     return jsonify({
+    #         'user': 'server',
+    #         'message': 'no messages'
+    #         'datetime': str(message.date_sent.strftime('%I:%M, %d %b %Y'))
+    #     })
+

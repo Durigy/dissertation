@@ -8,11 +8,28 @@
     <h1>{{ post.title }}</h1>
 </div>
 
+
 {% if post.description %}
-{{ post.description }}
+<div style="white-space:pre; overflow:hidden" class="text-wrap text-break">
+    {{ post.description }}
+</div>
+{% else %}
+<br><br>
 {% endif %}
 
-<br><br>
+<div class="d-flex flex-wrap p-2">
+    <div class="col">
+        {% if current_user == post.user %}
+        <span>Posted by: </span> YOU
+        {% else %}
+        <span>Posted by: </span> {{ post.user.username }}
+        {% endif %}
+    </div>
+    <div class="">
+        <span>Date posted: </span> {{ post.date.strftime('%I:%M, %d %b %Y') }}
+    </div>
+</div>
+
 <hr class="text-muted">
 
 {% if comments.pages > 0 %}

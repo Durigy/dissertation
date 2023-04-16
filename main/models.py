@@ -15,33 +15,40 @@ user_role_link = db.Table(
 )
 
 # """
-# Links an image to university
+# Links an university to one or more image
 # """
-# image_user_link = db.Table(
-#     'image_user_link',
-#     db.Column('user', db.String(20), db.ForeignKey('user.id'), nullable = False),
+# image_university_link = db.Table(
+#     'image_university_link',
+#     db.Column('image', db.String(20), db.ForeignKey('image.id'), nullable = False),
 #     db.Column('university', db.String(20), db.ForeignKey('university.id'), nullable = False)
 # )
 
-# Document Message link
 # """
-# Links an image to university
+# Links an Document to one or more Message
 # """
-# image_user_link = db.Table(
-#     'image_user_link',
+# document_user_link = db.Table(
+#     'document_user_link',
 #     db.Column('user', db.String(20), db.ForeignKey('user.id'), nullable = False),
-#     db.Column('university', db.String(20), db.ForeignKey('university.id'), nullable = False)
+#     db.Column('document', db.String(20), db.ForeignKey('document.id'), nullable = False)
 # )
 
-# Image Message link
 # """
-# Links an image to university
+# Links an Image to one or more Message
 # """
 # image_user_link = db.Table(
 #     'image_user_link',
 #     db.Column('user', db.String(20), db.ForeignKey('user.id'), nullable = False),
-#     db.Column('university', db.String(20), db.ForeignKey('university.id'), nullable = False)
+#     db.Column('image', db.String(20), db.ForeignKey('image.id'), nullable = False)
 # )
+
+"""
+Links a user to one or more message_thread
+"""
+user_message_thread_link = db.Table(
+    'user_message_thread_link',
+    db.Column('user', db.String(20), db.ForeignKey('user.id'), nullable = False),
+    db.Column('message_thread', db.String(20), db.ForeignKey('message_thread.id'), nullable = False)
+)
 
 
 """ > Example Table: 
@@ -97,11 +104,14 @@ class User(UserMixin, db.Model):
     # public_profile = db.relationship('PublicProfile', backref = 'user', lazy = True, foreign_keys = 'PublicProfile.user_id')
     public_post = db.relationship('PublicPost', backref = 'user', lazy = True, foreign_keys = 'PublicPost.user_id')
     public_post_comment = db.relationship('PublicPostComment', backref = 'user', lazy = True, foreign_keys = 'PublicPostComment.user_id')
-    # message_thread_owner = db.relationship('MessageThread', backref = 'user', lazy = True, foreign_keys = 'MessageThread.user_id')
-    # message = db.relationship('Message', backref = 'user', lazy = True, foreign_keys = 'Message.user_id')
+    message_thread_owner = db.relationship('MessageThread', backref = 'user', lazy = True, foreign_keys = 'MessageThread.user_id')
+    message = db.relationship('Message', backref = 'user', lazy = True, foreign_keys = 'Message.user_id')
     # image = db.relationship('Image', backref = 'user', lazy = True, foreign_keys = 'Image.user_id')
     # document = db.relationship('Document', backref = 'user', lazy = True, foreign_keys = 'Document.user_id')
     module_resource = db.relationship('ModuleResource', backref = 'user', lazy = True, foreign_keys = 'ModuleResource.user_id')
+
+    # M2M Relationships #
+    in_thread = db.relationship('MessageThread', backref = 'following_user', secondary = user_message_thread_link)
     
 
 @login_manager.user_loader
@@ -246,6 +256,7 @@ class Module(db.Model):
     university_id = db.Column(db.String(20), db.ForeignKey('university.id'), nullable = True)
     university_school_id = db.Column(db.String(20), db.ForeignKey('university_school.id'), nullable = True)
     university_year_id = db.Column(db.String(20), db.ForeignKey('university_year.id'), nullable = True)
+    message_thread_id = db.Column(db.String(20), db.ForeignKey('message_thread.id'), nullable = True)
 
     # Relationships #
     module_question = db.relationship('ModuleQuestion', backref = 'module', lazy = True, foreign_keys = 'ModuleQuestion.module_id')
@@ -463,33 +474,36 @@ class PublicPostComment(db.Model):
     public_post_comment = db.relationship('PublicPostComment', backref = 'parent_comment', lazy = True, remote_side = id, foreign_keys = 'PublicPostComment.parent_comment_id')
     
 
-# class MessageThread(db.Model):
-#     # Datebase Columns 
-#     id = db.Column(db.String(20), primary_key = True, default = secrets.token_hex(10))
-#     name = db.Column(db.String(240), nullable = True)
-#     date_created = db.Column(db.DateTime, nullable = False, default = datetime.utcnow)
-#     date_last_message = db.Column(db.DateTime, nullable = True)
-#     member_count = db.Column(db.Integer, nullable = False, default = 0)
-#     message_count = db.Column(db.Integer, nullable = False, default_count= 0# Links (ForeignKeys) #
-#     user_id = db.Column(db.String(20), db.ForeignKey('user.id'), nullable = False)
+class MessageThread(db.Model):
+    # Datebase Columns 
+    id = db.Column(db.String(20), primary_key = True, default = secrets.token_hex(10))
+    name = db.Column(db.String(240), nullable = True)
+    date = db.Column(db.DateTime, nullable = False, default = datetime.utcnow)
+    date_last_message = db.Column(db.DateTime, nullable = True, default = datetime.utcnow)
+    member_count = db.Column(db.Integer, nullable = False, default = 0)
+    message_count = db.Column(db.Integer, nullable = False, default = 0) 
+    
+    # Links (ForeignKeys) #
+    user_id = db.Column(db.String(20), db.ForeignKey('user.id'), nullable = True)
 
-#     # Relationships #
-#     # message = db.relationship('Message', backref = 'thread', lazy = True, foreign_keys = 'Message.message_thread_id')
+    # Relationships #
+    message = db.relationship('Message', backref = 'thread', lazy = True, foreign_keys = 'Message.message_thread_id')
+    module = db.relationship('Module', backref = 'thread', lazy = True, foreign_keys = 'Module.message_thread_id')
 
 
-# class Message(db.Model):
-#     # Datebase Columns 
-#     id = db.Column(db.String(20), primary_key = True, default = secrets.token_hex(10))
-#     body = db.Column(db.Text, nullable = False)
-#     date_sent = db.Column(db.DateTime, nullable = False, default = datetime.utcnow)
-#     date_edited = db.Column(db.DateTime, nullable = True)
+class Message(db.Model):
+    # Datebase Columns 
+    id = db.Column(db.String(20), primary_key = True, default = secrets.token_hex(10))
+    body = db.Column(db.Text, nullable = False)
+    date_sent = db.Column(db.DateTime, nullable = False, default = datetime.utcnow)
+    date_edited = db.Column(db.DateTime, nullable = True)
 
-#     # Links (ForeignKeys) #
-#     user_id = db.Column(db.String(20), db.ForeignKey('user.id'), nullable = False)
-#     message_thread_id = db.Column(db.String(20), db.ForeignKey('message_thread.id'), nullable = False)
+    # Links (ForeignKeys) #
+    user_id = db.Column(db.String(20), db.ForeignKey('user.id'), nullable = False)
+    message_thread_id = db.Column(db.String(20), db.ForeignKey('message_thread.id'), nullable = False)
 
-#     # Relationships #
-#     # Add Here
+    # Relationships #
+    # Add Here
     
 
 

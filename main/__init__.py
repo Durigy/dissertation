@@ -4,6 +4,7 @@ from flask_login import LoginManager
 from flask_migrate import Migrate
 from flask_bcrypt import Bcrypt
 from datetime import timedelta
+from flask_socketio import SocketIO
 import os
 
 
@@ -104,6 +105,8 @@ imagekit = ImageKit(
     url_endpoint = IMAGEKIT_URL_ENDPOINT
 )
 
+# socketio setup
+socketio = SocketIO(app)
 
 ## Reference for blueprints: https://flask.palletsprojects.com/en/2.2.x/blueprints/
 # import blueprint

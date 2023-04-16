@@ -40,8 +40,9 @@ IMAGEKIT_PUBLIC_KEY = ''
 IMAGEKIT_URL_ENDPOINT = ''
 
 
+# from .config import config_exists
 
-if os.path.exists('main/config.py'):
+try:
     from .config import secret_key, database_uri, debug_setting, remember_cookie_duration, sqlalchemy_track_modifications, upload_folder, allowed_extensions, image_extensions, document_extensions, imagekit_private_key, imagekit_public_key, imagekit_url_endpoint, max_content_length
     SECRET_KEY = secret_key
     SQLALCHEMY_DATABASE_URI = database_uri
@@ -59,6 +60,9 @@ if os.path.exists('main/config.py'):
     IMAGEKIT_PUBLIC_KEY = imagekit_public_key
     IMAGEKIT_URL_ENDPOINT = imagekit_url_endpoint
 
+except ImportError:
+    pass
+
 
 app = Flask(__name__)
 
@@ -68,7 +72,11 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = os.environ.get("SECRET_KEY") if os.environ.get("SECRET_KEY") else SECRET_KEY
 
 # database_setting
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("SQLALCHEMY_DATABASE_URI") if os.environ.get("SQLALCHEMY_DATABASE_URI") else SQLALCHEMY_DATABASE_URI
+if os.environ.get("SQLALCHEMY_DATABASE_URI"):
+    # reference to variables: https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/rds-external-defaultvpc.html [accessed: 16 April, 2023]
+    app.config['SQLALCHEMY_DATABASE_URI'] = f'mysql+pymysql://{os.environ.get("RDS_USERNAME")}:{os.environ.get("RDS_PASSWORD")}@{os.environ.get("RDS_HOSTNAME")}:{os.environ.get("RDS_PORT")}/{os.environ.get("RDS_DB_NAME")}'
+else:
+    app.config['SQLALCHEMY_DATABASE_URI'] = SQLALCHEMY_DATABASE_URI
 
 # debug_setting
 app.config['DEBUG'] = os.environ.get("DEBUG") if os.environ.get("DEBUG") else DEBUG
@@ -83,7 +91,26 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = os.environ.get("SQLALCHEMY_TRACK_
 app.config['MAX_CONTENT_LENGTH'] = os.environ.get("MAX_CONTENT_LENGTH") if os.environ.get("MAX_CONTENT_LENGTH") else MAX_CONTENT_LENGTH
 
 # upload_folder_setting
-app.config['UPLOAD_FOLDER'] = os.environ.get("UPLOAD_FOLDER") if os.environ.get("UPLOAD_FOLDER") else UPLOAD_FOLDER
+# app.config['UPLOAD_FOLDER'] = os.environ.get("UPLOAD_FOLDER") if os.environ.get("UPLOAD_FOLDER") else UPLOAD_FOLDER
+
+# 
+app.config['IMAGEKIT_PRIVATE_KEY'] = os.environ.get("IMAGEKIT_PRIVATE_KEY") if os.environ.get("IMAGEKIT_PRIVATE_KEY") else IMAGEKIT_PRIVATE_KEY
+
+# 
+app.config['IMAGEKIT_PUBLIC_KEY'] = os.environ.get("IMAGEKIT_PUBLIC_KEY") if os.environ.get("IMAGEKIT_PUBLIC_KEY") else IMAGEKIT_PUBLIC_KEY
+
+# 
+app.config['IMAGEKIT_URL_ENDPOINT'] = os.environ.get("IMAGEKIT_URL_ENDPOINT") if os.environ.get("IMAGEKIT_URL_ENDPOINT") else IMAGEKIT_URL_ENDPOINT
+
+# 
+app.config['IMAGE_EXTENSIONS'] = os.environ.get("IMAGE_EXTENSIONS") if os.environ.get("IMAGE_EXTENSIONS") else IMAGE_EXTENSIONS
+
+# 
+app.config['DOCUMENT_EXTENSIONS'] = os.environ.get("DOCUMENT_EXTENSIONS") if os.environ.get("DOCUMENT_EXTENSIONS") else DOCUMENT_EXTENSIONS
+
+# 
+app.config['ALLOWED_EXTENSIONS'] = app.config['IMAGE_EXTENSIONS'] + app.config['DOCUMENT_EXTENSIONS']
+
 
 
 # Database setup with login featues 

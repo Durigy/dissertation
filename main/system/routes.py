@@ -18,12 +18,13 @@ import html
 
 # # this is only to be used on the production server for forcing the site to use https over http
 # # reference: https://stackoverflow.com/questions/32237379/python-flask-redirect-to-https-from-http
-# @app.before_request
-# def before_request():
-#     if not request.is_secure:
-#         url = request.url.replace('http://', 'https://', 1)
-#         code = 301
-#         return redirect(url, code=code)
+if app.config['DEBUG'] == False:
+    @app.before_request
+    def before_request():
+        if not request.is_secure:
+            url = request.url.replace('http://', 'https://', 1)
+            code = 301
+            return redirect(url, code=code)
 
 @app.errorhandler(404)
 def page_not_found(e):

@@ -180,7 +180,7 @@
     }
 
     function get_messages() {
-        is_on_load = false;
+        // is_on_load = false;
 
         fetch(`${message_url}?message_page=${next_page}`).then((response) => {
             if(response.status !== 200) {

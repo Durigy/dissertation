@@ -352,12 +352,17 @@ Infomation from: <a href="https://data.cardiff.ac.uk/legacy/grails/module/{{ mod
             
         get_messages()
 
-        scrollDown()
+        // scrollDown()
         // }
     });
 
     socket.on('message', (data) => {
         if ($('#no-messages-here')) {
+            message_spacers = $('#no-messages-here').before(
+               `<span id="top-message-spacer" class="p-1"></span>
+               <span id="bottom-message-spacer" class="p-1"></span>`
+           )
+
             $('#no-messages-here').remove()
         }
 
@@ -390,6 +395,7 @@ Infomation from: <a href="https://data.cardiff.ac.uk/legacy/grails/module/{{ mod
                 'room': `${thread_id}`,
                 'message': message_val.val()
             });
+            
             message_val.val('')
 
             if(!messageBox.classList.contains('active')) {

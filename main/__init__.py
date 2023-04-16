@@ -30,8 +30,8 @@ REMEMBER_COOKIE_DURATION = timedelta(days=1) # Still will result in the cookies,
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 UPLOAD_FOLDER = ''
 ALLOWED_EXTENSIONS = '' #{'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
-IMAGE_EXTENSIONS = ''
-DOCUMENT_EXTENSIONS = ''
+IMAGE_EXTENSIONS = ['png', 'jpg', 'jpeg', 'gif']
+DOCUMENT_EXTENSIONS = ['pdf']
 MAX_CONTENT_LENGTH = ''
 
 # image kit

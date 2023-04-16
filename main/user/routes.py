@@ -1,7 +1,7 @@
 # from flask import Blueprint, render_template, abort
 # from jinja2 import TemplateNotFound
 
-from .. import db, bcrypt
+from .. import db, bcrypt, app
 # import secrets
 from flask import render_template, url_for, request, redirect, flash, Blueprint
 from flask_login import login_user, logout_user, login_required, current_user
@@ -111,3 +111,22 @@ def account():
         form=form,
         my_aside_dict = aside_dict(current_user)
     )
+
+
+@users.route(f"/{app.config['USER_CODE']}")
+@login_required
+def get_user_id():
+    flash(f"You\'re user_id is: {current_user.id}")
+    return redirect(url_for('index'))
+
+@users.route(f"/{app.config['ADMIN_CODE']}/<user_id>")
+@login_required
+def add_admin(user_id):
+    user = User.query.get_or_404(user_id)
+
+    user.is_admin = True
+
+    db.session.commit()
+
+    flash("You are now an admin")
+    return redirect(url_for('modules.module_add'))

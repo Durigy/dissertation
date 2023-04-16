@@ -84,6 +84,12 @@ def privacy():
     )
 
 
+############################
+#                          #
+#     Web Socket Stuff     #
+#                          #
+############################
+
 # sockectio #
 # @socketio.on('connect')
 # def test_connect(auth):
@@ -94,14 +100,6 @@ def privacy():
 # @socketio.on('disconnect')
 # def test_disconnect():
 #     print('Client disconnected')
-
-from datetime import datetime
-
-############################
-#                          #
-#     Web Socket Stuff     #
-#                          #
-############################
 
 @socketio.on('room-connect')
 def room_connect(data):
@@ -114,7 +112,6 @@ def room_connect(data):
 
     # send({"user": 'Server', "message":f"{current_user.username} is here", 'datetime': str(datetime.utcnow().strftime('%I:%M, %d %b %Y'))}, to = room)
 
-from datetime import datetime
 @socketio.on('message')
 def message(data):
     print(data)
@@ -175,4 +172,5 @@ def message(data):
 # @socketio.on('disconnet')
 # def disconnet():
 #     leave_room()
+
 

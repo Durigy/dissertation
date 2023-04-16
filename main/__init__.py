@@ -7,22 +7,6 @@ from datetime import timedelta
 from flask_socketio import SocketIO
 import os
 
-
-""" > Move to config.py file for local development
-
-from datetime import timedelta
-secret_key = '<- add secret key here ->'
-database_uri = 'mysql+pymysql://<- DB Username ->:<- DB Password ->@<- DB domain or IP (localhost normally) ->/<- DB Name ->'
-# database_uri = 'mysql+pymysql://root@localhost/<- DB Name ->' # normal settings for local mySQL DB
-debug_setting = True # for local deveplement server only
-remember_cookie_duration = timedelta(days=1) # change duration for your own needs
-sqlalchemy_track_modifications = False
-upload_folder = '/path/to/the/uploads'
-allowed_extensions = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
-
-"""
-
-
 SECRET_KEY = ''
 SQLALCHEMY_DATABASE_URI = ''
 DEBUG = False
@@ -39,11 +23,15 @@ IMAGEKIT_PRIVATE_KEY = ''
 IMAGEKIT_PUBLIC_KEY = ''
 IMAGEKIT_URL_ENDPOINT = ''
 
+# user roles
+USER_CODE = ''
+ADMIN_CODE = ''
+
 
 # from .config import config_exists
 
 try:
-    from .config import secret_key, database_uri, debug_setting, remember_cookie_duration, sqlalchemy_track_modifications, image_extensions, document_extensions, imagekit_private_key, imagekit_public_key, imagekit_url_endpoint, max_content_length # allowed_extensions, upload_folder
+    from .config import secret_key, database_uri, debug_setting, remember_cookie_duration, sqlalchemy_track_modifications, image_extensions, document_extensions, imagekit_private_key, imagekit_public_key, imagekit_url_endpoint, max_content_length, user_code, admin_code # allowed_extensions, upload_folder
     SECRET_KEY = secret_key
     SQLALCHEMY_DATABASE_URI = database_uri
     DEBUG = debug_setting
@@ -59,6 +47,10 @@ try:
     IMAGEKIT_PRIVATE_KEY = imagekit_private_key
     IMAGEKIT_PUBLIC_KEY = imagekit_public_key
     IMAGEKIT_URL_ENDPOINT = imagekit_url_endpoint
+
+    # user roles
+    USER_CODE = user_code
+    ADMIN_CODE = admin_code
 
 except ImportError:
     pass
@@ -81,6 +73,10 @@ MAX_CONTENT_LENGTH = os.environ.get("MAX_CONTENT_LENGTH") if os.environ.get("MAX
 IMAGEKIT_PRIVATE_KEY = os.environ.get("IMAGEKIT_PRIVATE_KEY") if os.environ.get("IMAGEKIT_PRIVATE_KEY") else IMAGEKIT_PRIVATE_KEY
 IMAGEKIT_PUBLIC_KEY = os.environ.get("IMAGEKIT_PUBLIC_KEY") if os.environ.get("IMAGEKIT_PUBLIC_KEY") else IMAGEKIT_PUBLIC_KEY
 IMAGEKIT_URL_ENDPOINT = os.environ.get("IMAGEKIT_URL_ENDPOINT") if os.environ.get("IMAGEKIT_URL_ENDPOINT") else IMAGEKIT_URL_ENDPOINT
+
+# user roles
+USER_CODE = os.environ.get("USER_CODE") if os.environ.get("USER_CODE") else USER_CODE
+ADMIN_CODE = os.environ.get("ADMIN_CODE") if os.environ.get("ADMIN_CODE") else ADMIN_CODE
 
 
 app = Flask(__name__)
@@ -126,7 +122,11 @@ app.config['DOCUMENT_EXTENSIONS'] = DOCUMENT_EXTENSIONS
 # 
 app.config['ALLOWED_EXTENSIONS'] = IMAGE_EXTENSIONS + DOCUMENT_EXTENSIONS
 
-# print(app.config['ALLOWED_EXTENSIONS'])
+# 
+app.config['USER_CODE'] = USER_CODE
+
+# 
+app.config['ADMIN_CODE'] = ADMIN_CODE
 
 
 

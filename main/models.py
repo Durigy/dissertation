@@ -5,14 +5,14 @@ import secrets
 
 
 # many to many tables #
-"""
-Links a user to one or more roles
-"""
-user_role_link = db.Table(
-    'user_role_link',
-    db.Column('user', db.String(20), db.ForeignKey('user.id'), nullable = False),
-    db.Column('user_role', db.String(20), db.ForeignKey('user_role.id'), nullable = False)
-)
+# """
+# Links a user to one or more roles
+# """
+# user_role_link = db.Table(
+#     'user_role_link',
+#     db.Column('user', db.String(20), db.ForeignKey('user.id'), nullable = False),
+#     db.Column('user_role', db.String(20), db.ForeignKey('user_role.id'), nullable = False)
+# )
 
 # """
 # Links an university to one or more image
@@ -83,6 +83,7 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(120), unique = True, nullable = False)
     password = db.Column(db.String(128), nullable = False)
     join_date = db.Column(db.DateTime, nullable = True, default = datetime.utcnow)
+    is_admin = db.Column(db.Boolean, nullable = False, default = False)
 
     # Links (ForeignKeys) #
     university_id = db.Column(db.String(20), db.ForeignKey('university.id'), nullable = True)

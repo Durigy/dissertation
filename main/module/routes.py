@@ -505,6 +505,10 @@ def module_resource_add():
 @modules.route("/add", methods=['GET', 'POST'])
 @login_required
 def module_add():
+    if not current_user.is_admin:
+        flash("You don\'t have access to that")
+        return redirect(url_for('index'))
+
     form = AddModuleForm()
 
     if form.validate_on_submit() and request.method == "POST":

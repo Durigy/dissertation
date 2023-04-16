@@ -5,9 +5,7 @@ from flask_migrate import Migrate
 from flask_bcrypt import Bcrypt
 from datetime import timedelta
 from flask_socketio import SocketIO
-from imagekitio import ImageKit
 import os
-
 
 
 SECRET_KEY = ''
@@ -93,9 +91,7 @@ ADMIN_CODE = os.environ.get("ADMIN_CODE") if os.environ.get("ADMIN_CODE") else A
 # print(f'ADMIN_CODE: {ADMIN_CODE}')
 # print(f'USER_CODE: {USER_CODE}')
 
-
 app = Flask(__name__)
-
 
 # Note: Environment variables override the config.py file
 
@@ -157,15 +153,16 @@ migrate = Migrate(app, db)
 bcrypt = Bcrypt(app)
 
 # Image Kit SDK initialization
+imagekit = ''
 
-imagekit = ImageKit(
-    private_key = IMAGEKIT_PRIVATE_KEY,
-    public_key = IMAGEKIT_PUBLIC_KEY,
-    url_endpoint = IMAGEKIT_URL_ENDPOINT
-)
+# imagekit = ImageKit(
+#     private_key = 'IMAGEKIT_PRIVATE_KEY',
+#     public_key = 'IMAGEKIT_PUBLIC_KEY',
+#     url_endpoint = 'IMAGEKIT_URL_ENDPOINT'
+# )
 
 # socketio setup
-socketio = SocketIO(app)
+socketio = SocketIO() # (app)
 
 ## Reference for blueprints: https://flask.palletsprojects.com/en/2.2.x/blueprints/
 # import blueprint

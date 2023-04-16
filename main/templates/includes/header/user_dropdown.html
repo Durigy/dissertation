@@ -28,11 +28,16 @@
                 <i class="fa-regular fa-comments"></i>  Message a Friend
             </a>
         </li>
-        <li>
+        <!-- <li>
             <span class="p-1"></span>
-        </li>
+        </li> -->
         <li>
             <hr class="dropdown-divider">
+        </li>
+        <li>
+            <a class="dropdown-item" href="{{ url_for('privacy') }}">
+                Privacy
+            </a>
         </li>
         <li>
             <a class="dropdown-item logout-btn" href="{{ url_for('users.logout') }}">

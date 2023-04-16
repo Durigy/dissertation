@@ -18,18 +18,28 @@
     </head>
 
     <body>
+        {% if current_user.is_authenticated and use_web_socket %}
+        <!-- Socketio 4.6.1 -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.6.1/socket.io.js" integrity="sha512-xbQU0+iHqhVt7VIXi6vBJKPh3IQBF5B84sSHdjKiSccyX/1ZI7Vnkt2/8y8uruj63/DVmCxfUNohPNruthTEQA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        {% endif %}
+        
+        <!-- Bootstrap-Javascript 5.2.3 -->
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js" integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V" crossorigin="anonymous"></script>
+
+
         {% include 'includes/header/header.html' %}
 
-        <div class="d-flex">
+        <div class="d-flex" style="height: 95vh;">
             {% if current_user.is_authenticated and my_aside_dict %}
             <div class="d-none d-lg-block">
                 {% include 'includes/aside.html' %}
-
             </div>
             {% endif %}
             
-            <div class="scrollarea hidden-scroll" style="max-height: 93vh; width: 100%">
-                <div class="container" style="min-height: 81vh;">
+            <div class="scrollarea hidden-scroll" style="max-height: 95vh; width: 100%">
+                <div class="container" style="min-height: 85vh; padding-top: max(4vh, 30px)">
+                    <div class="spacing"></div>
                     {% include 'includes/flash_msg.html' %}
                     
                     {% block content %}
@@ -41,9 +51,7 @@
             </div>
         </div>
 
-
-        <!-- Bootstrap 5.2.3 Javascript -->
-        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js" integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V" crossorigin="anonymous"></script>
+        <!-- jQuery 3.6.4 -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js" integrity="sha512-pumBsjNRGGqkPzKHndZMaAG+bir374sORyzM3uulLV14lN5LyykqNk8eEeUlUkB3U0M4FApyaHraT65ihJhDpQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     </body>
 </html>

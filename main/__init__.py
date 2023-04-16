@@ -7,8 +7,6 @@ from datetime import timedelta
 from flask_socketio import SocketIO
 import os
 
-print('hello')
-
 
 SECRET_KEY = ''
 SQLALCHEMY_DATABASE_URI = ''
@@ -33,33 +31,33 @@ ADMIN_CODE = ''
 
 # from .config import config_exists
 
-try:
-    from .config import secret_key, database_uri, debug_setting, remember_cookie_duration, sqlalchemy_track_modifications, image_extensions, document_extensions, imagekit_private_key, imagekit_public_key, imagekit_url_endpoint, max_content_length, user_code, admin_code # allowed_extensions, upload_folder
-    SECRET_KEY = secret_key
-    SQLALCHEMY_DATABASE_URI = database_uri
-    DEBUG = debug_setting
-    REMEMBER_COOKIE_DURATION = remember_cookie_duration
-    SQLALCHEMY_TRACK_MODIFICATIONS = sqlalchemy_track_modifications
-    # UPLOAD_FOLDER = os.path.join(os.path.abspath(os.path.dirname(__file__)), upload_folder)
-    IMAGE_EXTENSIONS = image_extensions
-    DOCUMENT_EXTENSIONS = document_extensions
-    # ALLOWED_EXTENSIONS = allowed_extensions
-    MAX_CONTENT_LENGTH = max_content_length # reference: https://flask.palletsprojects.com/en/1.1.x/patterns/fileuploads/
+# try:
+#     from .config import secret_key, database_uri, debug_setting, remember_cookie_duration, sqlalchemy_track_modifications, image_extensions, document_extensions, imagekit_private_key, imagekit_public_key, imagekit_url_endpoint, max_content_length, user_code, admin_code # allowed_extensions, upload_folder
+#     SECRET_KEY = secret_key
+#     SQLALCHEMY_DATABASE_URI = database_uri
+#     DEBUG = debug_setting
+#     REMEMBER_COOKIE_DURATION = remember_cookie_duration
+#     SQLALCHEMY_TRACK_MODIFICATIONS = sqlalchemy_track_modifications
+#     # UPLOAD_FOLDER = os.path.join(os.path.abspath(os.path.dirname(__file__)), upload_folder)
+#     IMAGE_EXTENSIONS = image_extensions
+#     DOCUMENT_EXTENSIONS = document_extensions
+#     # ALLOWED_EXTENSIONS = allowed_extensions
+#     MAX_CONTENT_LENGTH = max_content_length # reference: https://flask.palletsprojects.com/en/1.1.x/patterns/fileuploads/
 
-    # image kit
-    IMAGEKIT_PRIVATE_KEY = imagekit_private_key
-    IMAGEKIT_PUBLIC_KEY = imagekit_public_key
-    IMAGEKIT_URL_ENDPOINT = imagekit_url_endpoint
+#     # image kit
+#     IMAGEKIT_PRIVATE_KEY = imagekit_private_key
+#     IMAGEKIT_PUBLIC_KEY = imagekit_public_key
+#     IMAGEKIT_URL_ENDPOINT = imagekit_url_endpoint
 
-    # user roles
-    USER_CODE = user_code
-    ADMIN_CODE = admin_code
+#     # user roles
+#     USER_CODE = user_code
+#     ADMIN_CODE = admin_code
 
-except ImportError:
-    pass
+# except ImportError:
+#     pass
+
 
 SECRET_KEY = os.environ.get("SECRET_KEY") if os.environ.get("SECRET_KEY") else SECRET_KEY
-
 
 # if os.environ.get("RDS_USERNAME"):
 #     # reference to variables: https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/rds-external-defaultvpc.html [accessed: 16 April, 2023]
@@ -87,8 +85,11 @@ USER_CODE = os.getenv("USER_CODE") if os.environ.get("USER_CODE") else USER_CODE
 ADMIN_CODE = os.environ.get("ADMIN_CODE") if os.environ.get("ADMIN_CODE") else ADMIN_CODE
 
 
-print(USER_CODE)
-print(ADMIN_CODE)
+print(f'IMAGEKIT_PRIVATE_KEY: {IMAGEKIT_PRIVATE_KEY}')
+print(f'IMAGEKIT_PUBLIC_KEY: {IMAGEKIT_PUBLIC_KEY}')
+print(f'IMAGEKIT_URL_ENDPOINT: {IMAGEKIT_URL_ENDPOINT}')
+print(f'ADMIN_CODE: {ADMIN_CODE}')
+print(f'USER_CODE: {USER_CODE}')
 
 app = Flask(__name__)
 

@@ -22,7 +22,7 @@ MAX_CONTENT_LENGTH = ''
 # image kit
 IMAGEKIT_PRIVATE_KEY = ''
 IMAGEKIT_PUBLIC_KEY = ''
-IMAGEKIT_URL_ENDPOINT = ''
+IMAGEKIT_URL_ENDPOINT = 'https://ik.imagekit.io/p6la6tqvk'
 
 # user roles
 USER_CODE = ''
@@ -155,11 +155,11 @@ bcrypt = Bcrypt(app)
 # Image Kit SDK initialization
 from imagekitio import ImageKit
 
-imagekit = ImageKit(
-    private_key = 'IMAGEKIT_PRIVATE_KEY',
-    public_key = 'IMAGEKIT_PUBLIC_KEY',
-    url_endpoint = 'IMAGEKIT_URL_ENDPOINT'
-)
+# imagekit = ImageKit(
+#     private_key = 'IMAGEKIT_PRIVATE_KEY',
+#     public_key = 'IMAGEKIT_PUBLIC_KEY',
+#     url_endpoint = 'IMAGEKIT_URL_ENDPOINT'
+# )
 
 # socketio setup
 socketio = SocketIO(app)

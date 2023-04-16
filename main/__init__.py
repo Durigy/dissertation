@@ -156,9 +156,9 @@ bcrypt = Bcrypt(app)
 from imagekitio import ImageKit
 
 imagekit = ImageKit(
-    private_key = IMAGEKIT_PRIVATE_KEY,
-    public_key = IMAGEKIT_PUBLIC_KEY,
-    url_endpoint = IMAGEKIT_URL_ENDPOINT
+    private_key = 'IMAGEKIT_PRIVATE_KEY',
+    public_key = 'IMAGEKIT_PUBLIC_KEY',
+    url_endpoint = 'IMAGEKIT_URL_ENDPOINT'
 )
 
 # socketio setup

@@ -153,7 +153,7 @@ migrate = Migrate(app, db)
 bcrypt = Bcrypt(app)
 
 # Image Kit SDK initialization
-from imagekitio import ImageKit
+imagekit = ''
 
 # imagekit = ImageKit(
 #     private_key = 'IMAGEKIT_PRIVATE_KEY',

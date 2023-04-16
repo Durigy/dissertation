@@ -384,7 +384,9 @@ def module_resource_add():
         file = form.file.data
 
         if file:
+            # print('almost here')
             if allowed_file(file.filename):
+                # print('here')
                 module_file_id = generate_id(ModuleResource)
                 
                 file_type = file.filename.rsplit('.', 1)[1].lower()

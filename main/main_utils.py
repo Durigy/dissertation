@@ -1,6 +1,6 @@
 import secrets
 from .models import Message, MessageThread, Module, ModuleQuestion, ModuleSubscription
-from . import ALLOWED_EXTENSIONS
+from . import ALLOWED_EXTENSIONS, app
 
 # reference to using addict: https://youtu.be/y7fZJDIU8V8?t=347 [accessed: 3 Apr 2023]
 from addict import Dict
@@ -69,4 +69,4 @@ def allowed_file(filename):
     """
     filename: incoming file name
     """
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']

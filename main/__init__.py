@@ -43,16 +43,16 @@ IMAGEKIT_URL_ENDPOINT = ''
 # from .config import config_exists
 
 try:
-    from .config import secret_key, database_uri, debug_setting, remember_cookie_duration, sqlalchemy_track_modifications, upload_folder, allowed_extensions, image_extensions, document_extensions, imagekit_private_key, imagekit_public_key, imagekit_url_endpoint, max_content_length
+    from .config import secret_key, database_uri, debug_setting, remember_cookie_duration, sqlalchemy_track_modifications, image_extensions, document_extensions, imagekit_private_key, imagekit_public_key, imagekit_url_endpoint, max_content_length # allowed_extensions, upload_folder
     SECRET_KEY = secret_key
     SQLALCHEMY_DATABASE_URI = database_uri
     DEBUG = debug_setting
     REMEMBER_COOKIE_DURATION = remember_cookie_duration
     SQLALCHEMY_TRACK_MODIFICATIONS = sqlalchemy_track_modifications
-    UPLOAD_FOLDER = os.path.join(os.path.abspath(os.path.dirname(__file__)), upload_folder)
+    # UPLOAD_FOLDER = os.path.join(os.path.abspath(os.path.dirname(__file__)), upload_folder)
     IMAGE_EXTENSIONS = image_extensions
     DOCUMENT_EXTENSIONS = document_extensions
-    ALLOWED_EXTENSIONS = allowed_extensions
+    # ALLOWED_EXTENSIONS = allowed_extensions
     MAX_CONTENT_LENGTH = max_content_length # reference: https://flask.palletsprojects.com/en/1.1.x/patterns/fileuploads/
 
     # image kit
@@ -63,53 +63,71 @@ try:
 except ImportError:
     pass
 
+SECRET_KEY = os.environ.get("SECRET_KEY") if os.environ.get("SECRET_KEY") else SECRET_KEY
+
+if os.environ.get("SQLALCHEMY_DATABASE_URI"):
+    # reference to variables: https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/rds-external-defaultvpc.html [accessed: 16 April, 2023]
+    SQLALCHEMY_DATABASE_URI= f'mysql+pymysql://{os.environ.get("RDS_USERNAME")}:{os.environ.get("RDS_PASSWORD")}@{os.environ.get("RDS_HOSTNAME")}:{os.environ.get("RDS_PORT")}/{os.environ.get("RDS_DB_NAME")}'
+
+DEBUG = os.environ.get("DEBUG") if os.environ.get("DEBUG") else DEBUG
+REMEMBER_COOKIE_DURATION = timedelta(days = os.environ.get("REMEMBER_COOKIE_DURATION")) if os.environ.get("REMEMBER_COOKIE_DURATION") else REMEMBER_COOKIE_DURATION
+SQLALCHEMY_TRACK_MODIFICATIONS = os.environ.get("SQLALCHEMY_TRACK_MODIFICATIONS") if os.environ.get("SQLALCHEMY_TRACK_MODIFICATIONS") else SQLALCHEMY_TRACK_MODIFICATIONS
+# UPLOAD_FOLDER = 
+# ALLOWED_EXTENSIONS = '' #{'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
+IMAGE_EXTENSIONS = os.environ.get("IMAGE_EXTENSIONS") if os.environ.get("IMAGE_EXTENSIONS") else IMAGE_EXTENSIONS
+DOCUMENT_EXTENSIONS = os.environ.get("DOCUMENT_EXTENSIONS") if os.environ.get("DOCUMENT_EXTENSIONS") else DOCUMENT_EXTENSIONS
+MAX_CONTENT_LENGTH = os.environ.get("MAX_CONTENT_LENGTH") if os.environ.get("MAX_CONTENT_LENGTH") else MAX_CONTENT_LENGTH
+
+# image kit
+IMAGEKIT_PRIVATE_KEY = os.environ.get("IMAGEKIT_PRIVATE_KEY") if os.environ.get("IMAGEKIT_PRIVATE_KEY") else IMAGEKIT_PRIVATE_KEY
+IMAGEKIT_PUBLIC_KEY = os.environ.get("IMAGEKIT_PUBLIC_KEY") if os.environ.get("IMAGEKIT_PUBLIC_KEY") else IMAGEKIT_PUBLIC_KEY
+IMAGEKIT_URL_ENDPOINT = os.environ.get("IMAGEKIT_URL_ENDPOINT") if os.environ.get("IMAGEKIT_URL_ENDPOINT") else IMAGEKIT_URL_ENDPOINT
+
 
 app = Flask(__name__)
 
 # Note: Environment variables override the config.py file
 
 # secret_key_setting
-app.config['SECRET_KEY'] = os.environ.get("SECRET_KEY") if os.environ.get("SECRET_KEY") else SECRET_KEY
+app.config['SECRET_KEY'] = SECRET_KEY
 
 # database_setting
-if os.environ.get("SQLALCHEMY_DATABASE_URI"):
-    # reference to variables: https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/rds-external-defaultvpc.html [accessed: 16 April, 2023]
-    app.config['SQLALCHEMY_DATABASE_URI'] = f'mysql+pymysql://{os.environ.get("RDS_USERNAME")}:{os.environ.get("RDS_PASSWORD")}@{os.environ.get("RDS_HOSTNAME")}:{os.environ.get("RDS_PORT")}/{os.environ.get("RDS_DB_NAME")}'
-else:
-    app.config['SQLALCHEMY_DATABASE_URI'] = SQLALCHEMY_DATABASE_URI
+app.config['SQLALCHEMY_DATABASE_URI'] = SQLALCHEMY_DATABASE_URI
 
 # debug_setting
-app.config['DEBUG'] = os.environ.get("DEBUG") if os.environ.get("DEBUG") else DEBUG
+app.config['DEBUG'] = DEBUG
 
 # remember_me_cookie_setting
-app.config['REMEMBER_COOKIE_DURATION'] = timedelta(days = os.environ.get("REMEMBER_COOKIE_DURATION")) if os.environ.get("REMEMBER_COOKIE_DURATION") else REMEMBER_COOKIE_DURATION
+app.config['REMEMBER_COOKIE_DURATION'] = REMEMBER_COOKIE_DURATION
 
 # sqlalchemy_modifications_setting
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = os.environ.get("SQLALCHEMY_TRACK_MODIFICATIONS") if os.environ.get("SQLALCHEMY_TRACK_MODIFICATIONS") else SQLALCHEMY_TRACK_MODIFICATIONS
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = SQLALCHEMY_TRACK_MODIFICATIONS
 
 # sqlalchemy_modifications_setting
-app.config['MAX_CONTENT_LENGTH'] = os.environ.get("MAX_CONTENT_LENGTH") if os.environ.get("MAX_CONTENT_LENGTH") else MAX_CONTENT_LENGTH
+app.config['MAX_CONTENT_LENGTH'] = MAX_CONTENT_LENGTH
 
 # upload_folder_setting
 # app.config['UPLOAD_FOLDER'] = os.environ.get("UPLOAD_FOLDER") if os.environ.get("UPLOAD_FOLDER") else UPLOAD_FOLDER
 
 # 
-app.config['IMAGEKIT_PRIVATE_KEY'] = os.environ.get("IMAGEKIT_PRIVATE_KEY") if os.environ.get("IMAGEKIT_PRIVATE_KEY") else IMAGEKIT_PRIVATE_KEY
+app.config['IMAGEKIT_PRIVATE_KEY'] = IMAGEKIT_PRIVATE_KEY
 
 # 
-app.config['IMAGEKIT_PUBLIC_KEY'] = os.environ.get("IMAGEKIT_PUBLIC_KEY") if os.environ.get("IMAGEKIT_PUBLIC_KEY") else IMAGEKIT_PUBLIC_KEY
+app.config['IMAGEKIT_PUBLIC_KEY'] = IMAGEKIT_PUBLIC_KEY
 
 # 
-app.config['IMAGEKIT_URL_ENDPOINT'] = os.environ.get("IMAGEKIT_URL_ENDPOINT") if os.environ.get("IMAGEKIT_URL_ENDPOINT") else IMAGEKIT_URL_ENDPOINT
+app.config['IMAGEKIT_URL_ENDPOINT'] = IMAGEKIT_URL_ENDPOINT
 
 # 
-app.config['IMAGE_EXTENSIONS'] = os.environ.get("IMAGE_EXTENSIONS") if os.environ.get("IMAGE_EXTENSIONS") else IMAGE_EXTENSIONS
+app.config['IMAGE_EXTENSIONS'] = IMAGE_EXTENSIONS
 
 # 
-app.config['DOCUMENT_EXTENSIONS'] = os.environ.get("DOCUMENT_EXTENSIONS") if os.environ.get("DOCUMENT_EXTENSIONS") else DOCUMENT_EXTENSIONS
+app.config['DOCUMENT_EXTENSIONS'] = DOCUMENT_EXTENSIONS
 
 # 
-app.config['ALLOWED_EXTENSIONS'] = app.config['IMAGE_EXTENSIONS'] + app.config['DOCUMENT_EXTENSIONS']
+app.config['ALLOWED_EXTENSIONS'] = IMAGE_EXTENSIONS + DOCUMENT_EXTENSIONS
+
+print(app.config['ALLOWED_EXTENSIONS'])
 
 
 

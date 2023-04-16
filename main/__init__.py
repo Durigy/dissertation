@@ -55,6 +55,7 @@ try:
 except ImportError:
     pass
 
+SECRET_KEY = os.environ.get("SECRET_KEY") if os.environ.get("SECRET_KEY") else SECRET_KEY
 
 if os.environ.get("RDS_USERNAME"):
     # reference to variables: https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/rds-external-defaultvpc.html [accessed: 16 April, 2023]

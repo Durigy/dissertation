@@ -48,6 +48,9 @@ def module_single(module_id):
         .paginate(page = resource_page, per_page = 4)
     
 
+    following_module = True if ModuleSubscription.query.filter_by(module_id=module_id).filter_by(user_id=current_user.id).first() else False
+    
+
     # message_page = request.args.get('message_page', 1, type = int)
     
     # messages = Message.query \
@@ -66,7 +69,8 @@ def module_single(module_id):
         img_url = IMAGEKIT_URL_ENDPOINT + '/module-resource-image/',
         doc_url = IMAGEKIT_URL_ENDPOINT + '/module-resource-document/',
         use_web_socket = True,
-        socket_room = module.message_thread_id # ,
+        socket_room = module.message_thread_id,
+        following_module = following_module # ,
         # messages = messages
     )
 
@@ -338,6 +342,9 @@ def module_add_sub(module_id):
         db.session.commit()
 
         flash('Now Subed to the Module')
+
+        if request.referrer:
+            return redirect(request.referrer)
 
         return redirect(url_for('modules.module_selection'))
     

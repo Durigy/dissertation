@@ -69,7 +69,7 @@ if os.environ.get("RDS_USERNAME"):
     SQLALCHEMY_DATABASE_URI= f'mysql+pymysql://{os.environ.get("RDS_USERNAME")}:{os.environ.get("RDS_PASSWORD")}@{os.environ.get("RDS_HOSTNAME")}:{os.environ.get("RDS_PORT")}/{os.environ.get("RDS_DB_NAME")}'
 
 DEBUG = os.environ.get("DEBUG") if os.environ.get("DEBUG") else DEBUG
-REMEMBER_COOKIE_DURATION = timedelta(days = int(os.environ.get("REMEMBER_COOKIE_DURATION"))) if os.environ.get("REMEMBER_COOKIE_DURATION") else REMEMBER_COOKIE_DURATION
+REMEMBER_COOKIE_DURATION = timedelta(days = 1) # int(os.environ.get("REMEMBER_COOKIE_DURATION"))) if os.environ.get("REMEMBER_COOKIE_DURATION") else REMEMBER_COOKIE_DURATION
 SQLALCHEMY_TRACK_MODIFICATIONS = os.environ.get("SQLALCHEMY_TRACK_MODIFICATIONS") if os.environ.get("SQLALCHEMY_TRACK_MODIFICATIONS") else SQLALCHEMY_TRACK_MODIFICATIONS
 # UPLOAD_FOLDER = 
 # ALLOWED_EXTENSIONS = '' #{'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}

@@ -5,7 +5,9 @@ from flask_migrate import Migrate
 from flask_bcrypt import Bcrypt
 from datetime import timedelta
 from flask_socketio import SocketIO
+from imagekitio import ImageKit
 import os
+
 
 
 SECRET_KEY = ''
@@ -31,30 +33,30 @@ ADMIN_CODE = ''
 
 # from .config import config_exists
 
-# try:
-#     from .config import secret_key, database_uri, debug_setting, remember_cookie_duration, sqlalchemy_track_modifications, image_extensions, document_extensions, imagekit_private_key, imagekit_public_key, imagekit_url_endpoint, max_content_length, user_code, admin_code # allowed_extensions, upload_folder
-#     SECRET_KEY = secret_key
-#     SQLALCHEMY_DATABASE_URI = database_uri
-#     DEBUG = debug_setting
-#     REMEMBER_COOKIE_DURATION = remember_cookie_duration
-#     SQLALCHEMY_TRACK_MODIFICATIONS = sqlalchemy_track_modifications
-#     # UPLOAD_FOLDER = os.path.join(os.path.abspath(os.path.dirname(__file__)), upload_folder)
-#     IMAGE_EXTENSIONS = image_extensions
-#     DOCUMENT_EXTENSIONS = document_extensions
-#     # ALLOWED_EXTENSIONS = allowed_extensions
-#     MAX_CONTENT_LENGTH = max_content_length # reference: https://flask.palletsprojects.com/en/1.1.x/patterns/fileuploads/
+try:
+    from .config import secret_key, database_uri, debug_setting, remember_cookie_duration, sqlalchemy_track_modifications, image_extensions, document_extensions, imagekit_private_key, imagekit_public_key, imagekit_url_endpoint, max_content_length, user_code, admin_code # allowed_extensions, upload_folder
+    SECRET_KEY = secret_key
+    SQLALCHEMY_DATABASE_URI = database_uri
+    DEBUG = debug_setting
+    REMEMBER_COOKIE_DURATION = remember_cookie_duration
+    SQLALCHEMY_TRACK_MODIFICATIONS = sqlalchemy_track_modifications
+    # UPLOAD_FOLDER = os.path.join(os.path.abspath(os.path.dirname(__file__)), upload_folder)
+    IMAGE_EXTENSIONS = image_extensions
+    DOCUMENT_EXTENSIONS = document_extensions
+    # ALLOWED_EXTENSIONS = allowed_extensions
+    MAX_CONTENT_LENGTH = max_content_length # reference: https://flask.palletsprojects.com/en/1.1.x/patterns/fileuploads/
 
-#     # image kit
-#     IMAGEKIT_PRIVATE_KEY = imagekit_private_key
-#     IMAGEKIT_PUBLIC_KEY = imagekit_public_key
-#     IMAGEKIT_URL_ENDPOINT = imagekit_url_endpoint
+    # image kit
+    IMAGEKIT_PRIVATE_KEY = imagekit_private_key
+    IMAGEKIT_PUBLIC_KEY = imagekit_public_key
+    IMAGEKIT_URL_ENDPOINT = imagekit_url_endpoint
 
-#     # user roles
-#     USER_CODE = user_code
-#     ADMIN_CODE = admin_code
+    # user roles
+    USER_CODE = user_code
+    ADMIN_CODE = admin_code
 
-# except ImportError:
-#     pass
+except ImportError:
+    pass
 
 
 SECRET_KEY = os.environ.get("SECRET_KEY") if os.environ.get("SECRET_KEY") else SECRET_KEY
@@ -73,7 +75,7 @@ IMAGE_EXTENSIONS = os.environ.get("IMAGE_EXTENSIONS") if os.environ.get("IMAGE_E
 DOCUMENT_EXTENSIONS = os.environ.get("DOCUMENT_EXTENSIONS") if os.environ.get("DOCUMENT_EXTENSIONS") else DOCUMENT_EXTENSIONS
 MAX_CONTENT_LENGTH = os.environ.get("MAX_CONTENT_LENGTH") if os.environ.get("MAX_CONTENT_LENGTH") else MAX_CONTENT_LENGTH
 
-print(MAX_CONTENT_LENGTH)
+# print(MAX_CONTENT_LENGTH)
 
 # image kit
 IMAGEKIT_PRIVATE_KEY = os.environ.get("IMAGEKIT_PRIVATE_KEY") if os.environ.get("IMAGEKIT_PRIVATE_KEY") else IMAGEKIT_PRIVATE_KEY
@@ -85,13 +87,15 @@ USER_CODE = os.getenv("USER_CODE") if os.environ.get("USER_CODE") else USER_CODE
 ADMIN_CODE = os.environ.get("ADMIN_CODE") if os.environ.get("ADMIN_CODE") else ADMIN_CODE
 
 
-print(f'IMAGEKIT_PRIVATE_KEY: {IMAGEKIT_PRIVATE_KEY}')
-print(f'IMAGEKIT_PUBLIC_KEY: {IMAGEKIT_PUBLIC_KEY}')
-print(f'IMAGEKIT_URL_ENDPOINT: {IMAGEKIT_URL_ENDPOINT}')
-print(f'ADMIN_CODE: {ADMIN_CODE}')
-print(f'USER_CODE: {USER_CODE}')
+# print(f'IMAGEKIT_PRIVATE_KEY: {IMAGEKIT_PRIVATE_KEY}')
+# print(f'IMAGEKIT_PUBLIC_KEY: {IMAGEKIT_PUBLIC_KEY}')
+# print(f'IMAGEKIT_URL_ENDPOINT: {IMAGEKIT_URL_ENDPOINT}')
+# print(f'ADMIN_CODE: {ADMIN_CODE}')
+# print(f'USER_CODE: {USER_CODE}')
+
 
 app = Flask(__name__)
+
 
 # Note: Environment variables override the config.py file
 
@@ -153,13 +157,12 @@ migrate = Migrate(app, db)
 bcrypt = Bcrypt(app)
 
 # Image Kit SDK initialization
-imagekit = ''
 
-# imagekit = ImageKit(
-#     private_key = 'IMAGEKIT_PRIVATE_KEY',
-#     public_key = 'IMAGEKIT_PUBLIC_KEY',
-#     url_endpoint = 'IMAGEKIT_URL_ENDPOINT'
-# )
+imagekit = ImageKit(
+    private_key = IMAGEKIT_PRIVATE_KEY,
+    public_key = IMAGEKIT_PUBLIC_KEY,
+    url_endpoint = IMAGEKIT_URL_ENDPOINT
+)
 
 # socketio setup
 socketio = SocketIO(app)

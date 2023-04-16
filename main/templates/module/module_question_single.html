@@ -9,18 +9,39 @@
             <h1>{{ question.title }}</h1>
         </div>
         
-        {% if question.solved == False and current_user == question.user %}
+        {% if question.solved == False %} 
+        {% if current_user == question.user %}
         <div class="col text-end">
             <a href="{{ url_for('modules.module_question_solved', question_id = question_id) }}" class="btn btn-danger">Mark as Solved</a>
         </div>
         {% endif %}
+        {% else %}
+        <h3 class="text-danger">* Solved *</h3>
+        {% endif %}
 </div>
 
 {% if question.description %}
-{{ question.description }}
+<!-- reference: https://stackoverflow.com/a/62547787 -->
+<div style="white-space:pre; overflow:hidden" class="text-wrap text-break">
+    {{ question.description }}
+</div>
+{% else %}
+<br><br>
 {% endif %}
 
-<br><br>
+<div class="d-flex flex-wrap p-2">
+    <div class="col">
+        {% if current_user == question.user %}
+        <span>Posted by: </span> YOU
+        {% else %}
+        <span>Posted by: </span> {{ question.user.username }}
+        {% endif %}
+    </div>
+    <div class="">
+        <span>Date posted: </span> {{ question.date.strftime('%I:%M, %d %b %Y') }}
+    </div>
+</div>
+
 <hr class="text-muted">
 
 {% if comments.pages > 0 %}
@@ -80,7 +101,7 @@
 
 {% else %}
 <div>
-    There are no questions for any of your modules yet
+    There are no Comments here yet
 </div>
 {% endif %}
 

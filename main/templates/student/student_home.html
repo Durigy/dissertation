@@ -17,6 +17,7 @@
         <a href="{{ url_for('modules.module_question_add') }}" class="btn btn-secondary">I have a Question</a>
     </div>
 </div>
+{% if latest_question %}
 <div class="d-flex flex-wrap p-2">
 {% set temp = latest_question.title|truncate(40, True) + ' - ' + latest_question.module.code %}
 {{ card(
@@ -27,6 +28,10 @@
     width = 100
 ) }}
 </div>
+{% else %}
+<em>No questions to show yet</em>
+<br>
+{% endif %}
 
 <br>
 <a href="{{ url_for('modules.module_question') }}" class="btn btn-secondary">See All Questions</a>
@@ -46,16 +51,21 @@
         <a href="{{ url_for('modules.module_question_add') }}" class="btn btn-secondary">Post Something</a>
     </div>
 </div>
+{% if latest_post %}
 <div class="d-flex flex-wrap p-2">
-{% set temp = latest_question.title|truncate(40, True) + ' - ' + latest_question.module.code %}
+{% set temp = latest_post.title|truncate(40, True) %}
 {{ card(
     title = temp,
-    description = latest_question.description|truncate(300, True) if latest_question.description else None,
-    link = url_for('modules.module_question_single', question_id = latest_question.id),
+    description = latest_post.description|truncate(300, True) if latest_post.description else None,
+    link = url_for('socials.social_post_single', post_id = latest_post.id),
     link_text = 'See More',
     width = 100
 ) }}
 </div>
+{% else %}
+<em>No one else has posted anything yet</em>
+<br>
+{% endif %}
 
 <br>
 <a href="{{ url_for('modules.module_question') }}" class="btn btn-secondary">See All Posts</a>
@@ -152,7 +162,6 @@
     </ul>
 </div>
 {% endif %}
-{% endif %}
 
 {% else %}
 <div>
@@ -160,25 +169,11 @@
 </div>
 {% endif %}
 
-<br>
-<br>
-
-<hr class="text-muted">
-
-<br>
-
-<h3>My Notes</h3>
-<em>Comming Soon</em>
-<!-- There are no notes here yet
-
-<br>
-<br>
-
-<a href="" class="btn btn-secondary">Make a Note</a> -->
-
-
-
-<br>
+{% else %}
+<div>
+    <em>There are no resources for the module you follow yet</em>
+</div>
+{% endif %}
 <br>
 
 <hr class="text-muted">
@@ -190,6 +185,7 @@
     <h3>My Questions</h3>
 </div>
 
+{% if user_questions %}
 {% if user_questions.pages > 0 %}
 <div class="d-flex flex-wrap p-2">
     {% for user_question in user_questions.items %}
@@ -216,7 +212,7 @@
 <div aria-label="Question Page Navigation">
     <ul class="pagination">
         <li class="page-item">
-            <a href="{{ url_for('modules.module_question', question_page = questions.page, user_question_page = user_questions.prev_num) }}" {% if user_questions.page == 1 %} style="pointer-events: none; cursor: default;" class = "page-link text-secondary"{% else %} class="page-link" {% endif %}>
+            <a href="{{ url_for('modules.module_question', question_page = user_questions.page, user_question_page = user_questions.prev_num) }}" {% if user_questions.page == 1 %} style="pointer-events: none; cursor: default;" class = "page-link text-secondary"{% else %} class="page-link" {% endif %}>
                 Previous
             </a>
         </li>
@@ -225,7 +221,7 @@
         {% if page_num %}
         
         <li class="page-item">
-            <a class="page-link {% if page_num == user_questions.page %} text-danger {% endif %}" href="{{url_for('modules.module_question', question_page = questions.page, user_question_page = page_num) }}">
+            <a class="page-link {% if page_num == user_questions.page %} text-danger {% endif %}" href="{{url_for('modules.module_question', question_page = user_questions.page, user_question_page = page_num) }}">
                 {{page_num}}
             </a>
         </li>
@@ -242,7 +238,7 @@
         {% endfor %}
 
         <li class="page-item">
-            <a href="{{ url_for('modules.module_question', question_page = questions.page, user_question_page = user_questions.next_num) }}" {% if user_questions.page == user_questions.pages %} style="pointer-events: none; cursor: default;" class = "page-link text-secondary"{% else %} class="page-link" {% endif %}>
+            <a href="{{ url_for('modules.module_question', question_page = user_questions.page, user_question_page = user_questions.next_num) }}" {% if user_questions.page == user_questions.pages %} style="pointer-events: none; cursor: default;" class = "page-link text-secondary"{% else %} class="page-link" {% endif %}>
                 Next
             </a>
         </li>
@@ -252,7 +248,13 @@
 
 {% else %}
 <div>
-    You haven't asked any questions yet
+    <em>You haven't asked any questions yet</em>
+</div>
+{% endif %}
+
+{% else %}
+<div>
+    <em>You haven't asked any questions yet</em>
 </div>
 {% endif %}
 

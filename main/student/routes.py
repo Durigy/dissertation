@@ -1,9 +1,9 @@
-from flask import render_template, url_for, request, redirect, flash, Blueprint
+from flask import render_template, session, url_for, request, redirect, flash, Blueprint
 from flask_login import login_user, logout_user, login_required, current_user
 
 from .. import IMAGEKIT_URL_ENDPOINT
 # from .forms import 
-from ..models import ModuleQuestion, ModuleResource, ModuleSubscription, User
+from ..models import ModuleQuestion, ModuleResource, ModuleSubscription, PublicPost, User
 from ..main_utils import generate_id, defaults, aside_dict
 
 # referece: https://flask.palletsprojects.com/en/2.2.x/blueprints/#registering-blueprints
@@ -36,6 +36,11 @@ def student_home():
         .order_by(ModuleQuestion.date.desc()) \
         .first()
     
+    latest_post = PublicPost.query \
+        .filter(PublicPost.user_id != current_user.id) \
+        .order_by(PublicPost.date.desc()) \
+        .first()
+    
     return render_template(
         'student/student_home.html',
         title='Home',
@@ -43,6 +48,7 @@ def student_home():
         user_questions = user_questions,
         resources = resources,
         latest_question = latest_question,
+        latest_post = latest_post,
         img_url = IMAGEKIT_URL_ENDPOINT + '/module-resource-image/',
         doc_url = IMAGEKIT_URL_ENDPOINT + '/module-resource-document/'
     )

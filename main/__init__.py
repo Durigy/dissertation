@@ -58,32 +58,32 @@ except ImportError:
     pass
 
 
-# SECRET_KEY = os.environ.get("SECRET_KEY") if os.environ.get("SECRET_KEY") else SECRET_KEY
+SECRET_KEY = os.environ.get("SECRET_KEY") if os.environ.get("SECRET_KEY") else SECRET_KEY
 
 # if os.environ.get("RDS_USERNAME"):
 #     # reference to variables: https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/rds-external-defaultvpc.html [accessed: 16 April, 2023]
 #     SQLALCHEMY_DATABASE_URI= f'mysql+pymysql://{os.environ.get("RDS_USERNAME")}:{os.environ.get("RDS_PASSWORD")}@{os.environ.get("RDS_HOSTNAME")}:{os.environ.get("RDS_PORT")}/{os.environ.get("RDS_DB_NAME")}'
 
-# SQLALCHEMY_DATABASE_URI = os.environ.get("SQLALCHEMY_DATABASE_URI") if os.environ.get("SQLALCHEMY_DATABASE_URI") else SQLALCHEMY_DATABASE_URI
-# DEBUG = os.environ.get("DEBUG") if os.environ.get("DEBUG") else DEBUG
-# REMEMBER_COOKIE_DURATION = timedelta(days = 1) # int(os.environ.get("REMEMBER_COOKIE_DURATION"))) if os.environ.get("REMEMBER_COOKIE_DURATION") else REMEMBER_COOKIE_DURATION
-# SQLALCHEMY_TRACK_MODIFICATIONS = os.environ.get("SQLALCHEMY_TRACK_MODIFICATIONS") if os.environ.get("SQLALCHEMY_TRACK_MODIFICATIONS") else SQLALCHEMY_TRACK_MODIFICATIONS
-# # UPLOAD_FOLDER = 
-# # ALLOWED_EXTENSIONS = '' #{'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
+SQLALCHEMY_DATABASE_URI = os.environ.get("SQLALCHEMY_DATABASE_URI") if os.environ.get("SQLALCHEMY_DATABASE_URI") else SQLALCHEMY_DATABASE_URI
+DEBUG = os.environ.get("DEBUG") if os.environ.get("DEBUG") else DEBUG
+REMEMBER_COOKIE_DURATION = timedelta(days = 1) # int(os.environ.get("REMEMBER_COOKIE_DURATION"))) if os.environ.get("REMEMBER_COOKIE_DURATION") else REMEMBER_COOKIE_DURATION
+SQLALCHEMY_TRACK_MODIFICATIONS = os.environ.get("SQLALCHEMY_TRACK_MODIFICATIONS") if os.environ.get("SQLALCHEMY_TRACK_MODIFICATIONS") else SQLALCHEMY_TRACK_MODIFICATIONS
+# UPLOAD_FOLDER = 
+# ALLOWED_EXTENSIONS = '' #{'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
 # IMAGE_EXTENSIONS = os.environ.get("IMAGE_EXTENSIONS") if os.environ.get("IMAGE_EXTENSIONS") else IMAGE_EXTENSIONS
 # DOCUMENT_EXTENSIONS = os.environ.get("DOCUMENT_EXTENSIONS") if os.environ.get("DOCUMENT_EXTENSIONS") else DOCUMENT_EXTENSIONS
-# # MAX_CONTENT_LENGTH = os.environ.get("MAX_CONTENT_LENGTH") if os.environ.get("MAX_CONTENT_LENGTH") else MAX_CONTENT_LENGTH
+# MAX_CONTENT_LENGTH = os.environ.get("MAX_CONTENT_LENGTH") if os.environ.get("MAX_CONTENT_LENGTH") else MAX_CONTENT_LENGTH
 
-# # print(MAX_CONTENT_LENGTH)
+# print(MAX_CONTENT_LENGTH)
 
-# # image kit
-# IMAGEKIT_PRIVATE_KEY = os.environ.get("IMAGEKIT_PRIVATE_KEY") if os.environ.get("IMAGEKIT_PRIVATE_KEY") else IMAGEKIT_PRIVATE_KEY
-# IMAGEKIT_PUBLIC_KEY = os.environ.get("IMAGEKIT_PUBLIC_KEY") if os.environ.get("IMAGEKIT_PUBLIC_KEY") else IMAGEKIT_PUBLIC_KEY
-# IMAGEKIT_URL_ENDPOINT = os.environ.get("IMAGEKIT_URL_ENDPOINT") if os.environ.get("IMAGEKIT_URL_ENDPOINT") else IMAGEKIT_URL_ENDPOINT
+# image kit
+IMAGEKIT_PRIVATE_KEY = os.environ.get("IMAGEKIT_PRIVATE_KEY") if os.environ.get("IMAGEKIT_PRIVATE_KEY") else IMAGEKIT_PRIVATE_KEY
+IMAGEKIT_PUBLIC_KEY = os.environ.get("IMAGEKIT_PUBLIC_KEY") if os.environ.get("IMAGEKIT_PUBLIC_KEY") else IMAGEKIT_PUBLIC_KEY
+IMAGEKIT_URL_ENDPOINT = os.environ.get("IMAGEKIT_URL_ENDPOINT") if os.environ.get("IMAGEKIT_URL_ENDPOINT") else IMAGEKIT_URL_ENDPOINT
 
-# # user roles
-# USER_CODE = os.getenv("USER_CODE") if os.environ.get("USER_CODE") else USER_CODE
-# ADMIN_CODE = os.environ.get("ADMIN_CODE") if os.environ.get("ADMIN_CODE") else ADMIN_CODE
+# user roles
+USER_CODE = os.getenv("USER_CODE") if os.environ.get("USER_CODE") else USER_CODE
+ADMIN_CODE = os.environ.get("ADMIN_CODE") if os.environ.get("ADMIN_CODE") else ADMIN_CODE
 
 
 # print(f'IMAGEKIT_PRIVATE_KEY: {IMAGEKIT_PRIVATE_KEY}')

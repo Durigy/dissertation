@@ -29,7 +29,7 @@ def module_all():
 def module_single(module_id):
     module = Module.query.get_or_404(module_id)
 
-    print(module.thread.following_user)
+    # print(module.thread.following_user)
 
     # module questions
     question_page = request.args.get('question_page', 1, type = int)

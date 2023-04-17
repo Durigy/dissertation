@@ -114,13 +114,13 @@ def room_connect(data):
 
 @socketio.on('message')
 def message(data):
-    print(data)
+    # print(data)
     room = data.get('room')
     new_message = html.escape(data.get('message'))
     user_id = data.get('other_user_id') if data.get('other_user_id') else ''
     # print(new_message)
 
-    print(MessageThread.query.filter_by(id = room).scalar())
+    # print(MessageThread.query.filter_by(id = room).scalar())
 
     if MessageThread.query.filter_by(id = room).scalar() == None:
         user = User.query.filter_by(id = user_id).first()

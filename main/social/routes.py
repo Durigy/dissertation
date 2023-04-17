@@ -234,7 +234,7 @@ def social_message_thread_remove(thread_id):
     # current_user.in_thread.remove(thread)
     # user.in_thread.remove(thread)
 
-    print(thread)
+    # print(thread)
 
     
     db.session.delete(thread)

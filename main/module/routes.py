@@ -3,7 +3,7 @@ from flask_login import login_required, current_user
 from .forms import AddModuleForm, AddModuleQuestionForm, AddModuleQuestionCommentForm, AddModuleResourceForm
 from ..models import User, Module, ModuleReview, ModuleSubscription, ModuleQuestion, ModuleQuestionComment, Image, Document, ModuleResource, MessageThread, Message
 from ..main_utils import generate_id, defaults, aside_dict, allowed_file
-from .. import db, app, IMAGE_EXTENSIONS, DOCUMENT_EXTENSIONS, imagekit, IMAGEKIT_URL_ENDPOINT
+from .. import db, app, IMAGE_EXTENSIONS, DOCUMENT_EXTENSIONS, IMAGEKIT_URL_ENDPOINT, imagekit
 import os
 import base64
 from tempfile import TemporaryDirectory
@@ -414,30 +414,30 @@ def module_resource_add():
                         # print(temp_dir)
                         # print(temp_dir + '/' + filename)
 
-                    # upload = imagekit.upload_file(
-                    #     file = filestr,
-                    #     file_name = filename,
-                    #     options=UploadFileRequestOptions(
-                    #         folder='/module-resource-image/',
-                    #         is_private_file=False,
-                    #     )
-                    # )
+                    upload = imagekit.upload_file(
+                        file = filestr,
+                        file_name = filename,
+                        options=UploadFileRequestOptions(
+                            folder='/module-resource-image/',
+                            is_private_file=False,
+                        )
+                    )
 
-                    # file_table = Image(
-                    #     id = image_id,
-                    #     title = form.title.data,
-                    #     description = form.description.data if len(form.description.data) > 0 else None,
-                    #     user_id = current_user.id,
-                    #     imagekit_id = upload.name,
-                    #     file_type = file_type
-                    # )
+                    file_table = Image(
+                        id = image_id,
+                        title = form.title.data,
+                        description = form.description.data if len(form.description.data) > 0 else None,
+                        user_id = current_user.id,
+                        imagekit_id = upload.name,
+                        file_type = file_type
+                    )
 
-                    # module_resource = ModuleResource(
-                    #     id = module_file_id,
-                    #     user_id = current_user.id,
-                    #     module_id = module_id,
-                    #     image_id = image_id
-                    # )
+                    module_resource = ModuleResource(
+                        id = module_file_id,
+                        user_id = current_user.id,
+                        module_id = module_id,
+                        image_id = image_id
+                    )
 
                 else:
                     document_id = generate_id(Document)
@@ -455,36 +455,36 @@ def module_resource_add():
                         with open(temp_dir + '/' + filename, mode="rb") as temp:
                             filestr = base64.b64encode(temp.read())
 
-                    # upload = imagekit.upload_file(
-                    #     file = filestr,
-                    #     file_name = filename,
-                    #     options=UploadFileRequestOptions(
-                    #         folder='/module-resource-document/',
-                    #         is_private_file=False,
-                    #     )
-                    # )
+                    upload = imagekit.upload_file(
+                        file = filestr,
+                        file_name = filename,
+                        options=UploadFileRequestOptions(
+                            folder='/module-resource-document/',
+                            is_private_file=False,
+                        )
+                    )
 
-                    # file_table = Document(
-                    #     id = document_id,
-                    #     title = form.title.data,
-                    #     description = form.description.data if len(form.description.data) > 0 else None,
-                    #     user_id = current_user.id,
-                    #     imagekit_id = upload.name,
-                    #     file_type = file_type
-                    # )
+                    file_table = Document(
+                        id = document_id,
+                        title = form.title.data,
+                        description = form.description.data if len(form.description.data) > 0 else None,
+                        user_id = current_user.id,
+                        imagekit_id = upload.name,
+                        file_type = file_type
+                    )
 
-                    # module_resource = ModuleResource(
-                    #     id = module_file_id,
-                    #     user_id = current_user.id,
-                    #     module_id = module_id,
-                    #     document_id = document_id
-                    # )
+                    module_resource = ModuleResource(
+                        id = module_file_id,
+                        user_id = current_user.id,
+                        module_id = module_id,
+                        document_id = document_id
+                    )
 
 
-                # db.session.add(file_table)
-                # db.session.add(module_resource)
+                db.session.add(file_table)
+                db.session.add(module_resource)
 
-                # db.session.commit()
+                db.session.commit()
 
                 if module_id:
                     return redirect(url_for('modules.module_single', module_id = module_id))

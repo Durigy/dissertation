@@ -5,6 +5,7 @@ from flask_migrate import Migrate
 from flask_bcrypt import Bcrypt
 from datetime import timedelta
 from flask_socketio import SocketIO
+from imagekitio import ImageKit
 import os
 
 
@@ -14,15 +15,15 @@ DEBUG = False
 REMEMBER_COOKIE_DURATION = timedelta(days=1) # Still will result in the cookies, for a logeding user, will expire after 1 day
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 UPLOAD_FOLDER = ''
-ALLOWED_EXTENSIONS = '' #{'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
 IMAGE_EXTENSIONS = ['png', 'jpg', 'jpeg', 'gif']
 DOCUMENT_EXTENSIONS = ['pdf']
-MAX_CONTENT_LENGTH = ''
+ALLOWED_EXTENSIONS = IMAGE_EXTENSIONS + DOCUMENT_EXTENSIONS #{'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
+MAX_CONTENT_LENGTH = 5242880 # 5 MB
 
 # image kit
 IMAGEKIT_PRIVATE_KEY = ''
 IMAGEKIT_PUBLIC_KEY = ''
-IMAGEKIT_URL_ENDPOINT = 'https://ik.imagekit.io/p6la6tqvk'
+IMAGEKIT_URL_ENDPOINT = '' # 'https://ik.imagekit.io/p6la6tqvk'
 
 # user roles
 USER_CODE = ''
@@ -57,32 +58,32 @@ except ImportError:
     pass
 
 
-SECRET_KEY = os.environ.get("SECRET_KEY") if os.environ.get("SECRET_KEY") else SECRET_KEY
+# SECRET_KEY = os.environ.get("SECRET_KEY") if os.environ.get("SECRET_KEY") else SECRET_KEY
 
 # if os.environ.get("RDS_USERNAME"):
 #     # reference to variables: https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/rds-external-defaultvpc.html [accessed: 16 April, 2023]
 #     SQLALCHEMY_DATABASE_URI= f'mysql+pymysql://{os.environ.get("RDS_USERNAME")}:{os.environ.get("RDS_PASSWORD")}@{os.environ.get("RDS_HOSTNAME")}:{os.environ.get("RDS_PORT")}/{os.environ.get("RDS_DB_NAME")}'
 
-SQLALCHEMY_DATABASE_URI = os.environ.get("SQLALCHEMY_DATABASE_URI") if os.environ.get("SQLALCHEMY_DATABASE_URI") else SQLALCHEMY_DATABASE_URI
-DEBUG = os.environ.get("DEBUG") if os.environ.get("DEBUG") else DEBUG
-REMEMBER_COOKIE_DURATION = timedelta(days = 1) # int(os.environ.get("REMEMBER_COOKIE_DURATION"))) if os.environ.get("REMEMBER_COOKIE_DURATION") else REMEMBER_COOKIE_DURATION
-SQLALCHEMY_TRACK_MODIFICATIONS = os.environ.get("SQLALCHEMY_TRACK_MODIFICATIONS") if os.environ.get("SQLALCHEMY_TRACK_MODIFICATIONS") else SQLALCHEMY_TRACK_MODIFICATIONS
-# UPLOAD_FOLDER = 
-# ALLOWED_EXTENSIONS = '' #{'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
-IMAGE_EXTENSIONS = os.environ.get("IMAGE_EXTENSIONS") if os.environ.get("IMAGE_EXTENSIONS") else IMAGE_EXTENSIONS
-DOCUMENT_EXTENSIONS = os.environ.get("DOCUMENT_EXTENSIONS") if os.environ.get("DOCUMENT_EXTENSIONS") else DOCUMENT_EXTENSIONS
-MAX_CONTENT_LENGTH = os.environ.get("MAX_CONTENT_LENGTH") if os.environ.get("MAX_CONTENT_LENGTH") else MAX_CONTENT_LENGTH
+# SQLALCHEMY_DATABASE_URI = os.environ.get("SQLALCHEMY_DATABASE_URI") if os.environ.get("SQLALCHEMY_DATABASE_URI") else SQLALCHEMY_DATABASE_URI
+# DEBUG = os.environ.get("DEBUG") if os.environ.get("DEBUG") else DEBUG
+# REMEMBER_COOKIE_DURATION = timedelta(days = 1) # int(os.environ.get("REMEMBER_COOKIE_DURATION"))) if os.environ.get("REMEMBER_COOKIE_DURATION") else REMEMBER_COOKIE_DURATION
+# SQLALCHEMY_TRACK_MODIFICATIONS = os.environ.get("SQLALCHEMY_TRACK_MODIFICATIONS") if os.environ.get("SQLALCHEMY_TRACK_MODIFICATIONS") else SQLALCHEMY_TRACK_MODIFICATIONS
+# # UPLOAD_FOLDER = 
+# # ALLOWED_EXTENSIONS = '' #{'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
+# IMAGE_EXTENSIONS = os.environ.get("IMAGE_EXTENSIONS") if os.environ.get("IMAGE_EXTENSIONS") else IMAGE_EXTENSIONS
+# DOCUMENT_EXTENSIONS = os.environ.get("DOCUMENT_EXTENSIONS") if os.environ.get("DOCUMENT_EXTENSIONS") else DOCUMENT_EXTENSIONS
+# # MAX_CONTENT_LENGTH = os.environ.get("MAX_CONTENT_LENGTH") if os.environ.get("MAX_CONTENT_LENGTH") else MAX_CONTENT_LENGTH
 
-# print(MAX_CONTENT_LENGTH)
+# # print(MAX_CONTENT_LENGTH)
 
-# image kit
-IMAGEKIT_PRIVATE_KEY = os.environ.get("IMAGEKIT_PRIVATE_KEY") if os.environ.get("IMAGEKIT_PRIVATE_KEY") else IMAGEKIT_PRIVATE_KEY
-IMAGEKIT_PUBLIC_KEY = os.environ.get("IMAGEKIT_PUBLIC_KEY") if os.environ.get("IMAGEKIT_PUBLIC_KEY") else IMAGEKIT_PUBLIC_KEY
-IMAGEKIT_URL_ENDPOINT = os.environ.get("IMAGEKIT_URL_ENDPOINT") if os.environ.get("IMAGEKIT_URL_ENDPOINT") else IMAGEKIT_URL_ENDPOINT
+# # image kit
+# IMAGEKIT_PRIVATE_KEY = os.environ.get("IMAGEKIT_PRIVATE_KEY") if os.environ.get("IMAGEKIT_PRIVATE_KEY") else IMAGEKIT_PRIVATE_KEY
+# IMAGEKIT_PUBLIC_KEY = os.environ.get("IMAGEKIT_PUBLIC_KEY") if os.environ.get("IMAGEKIT_PUBLIC_KEY") else IMAGEKIT_PUBLIC_KEY
+# IMAGEKIT_URL_ENDPOINT = os.environ.get("IMAGEKIT_URL_ENDPOINT") if os.environ.get("IMAGEKIT_URL_ENDPOINT") else IMAGEKIT_URL_ENDPOINT
 
-# user roles
-USER_CODE = os.getenv("USER_CODE") if os.environ.get("USER_CODE") else USER_CODE
-ADMIN_CODE = os.environ.get("ADMIN_CODE") if os.environ.get("ADMIN_CODE") else ADMIN_CODE
+# # user roles
+# USER_CODE = os.getenv("USER_CODE") if os.environ.get("USER_CODE") else USER_CODE
+# ADMIN_CODE = os.environ.get("ADMIN_CODE") if os.environ.get("ADMIN_CODE") else ADMIN_CODE
 
 
 # print(f'IMAGEKIT_PRIVATE_KEY: {IMAGEKIT_PRIVATE_KEY}')
@@ -153,16 +154,16 @@ migrate = Migrate(app, db)
 bcrypt = Bcrypt(app)
 
 # Image Kit SDK initialization
-imagekit = ''
+# imagekit = ''
 
-# imagekit = ImageKit(
-#     private_key = 'IMAGEKIT_PRIVATE_KEY',
-#     public_key = 'IMAGEKIT_PUBLIC_KEY',
-#     url_endpoint = 'IMAGEKIT_URL_ENDPOINT'
-# )
+imagekit = ImageKit(
+    private_key = IMAGEKIT_PRIVATE_KEY,
+    public_key = IMAGEKIT_PUBLIC_KEY,
+    url_endpoint = IMAGEKIT_URL_ENDPOINT
+)
 
 # socketio setup
-socketio = SocketIO() # (app)
+socketio = SocketIO(app)
 
 ## Reference for blueprints: https://flask.palletsprojects.com/en/2.2.x/blueprints/
 # import blueprint

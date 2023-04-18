@@ -29,7 +29,7 @@ def student_home():
         .paginate(page = user_question_page, per_page = 3)
     
 
-    latest_question = ModuleQuestion.query \
+    latest_question = ModuleQuestion.query.join(ModuleSubscription) \
         .filter(ModuleSubscription.user_id == current_user.id) \
         .filter(ModuleQuestion.user_id != current_user.id) \
         .filter_by(solved = False) \

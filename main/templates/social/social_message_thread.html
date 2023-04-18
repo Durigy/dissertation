@@ -46,246 +46,244 @@
     let total_pages = 2
 
     let message_id_list = []
+    
+    socket.connect()
 
-    // A $( document ).ready() block.
-    $( document ).ready(function() {
-
-        socket.on('connect', () => {
-            socket.emit('room-connect', {
-                'user': `${user_id}`,
-                'room': `${thread_id}`
-            });
-                
-            get_messages()
+    socket.on('connect', () => {
+        socket.emit('room-connect', {
+            'user': `${user_id}`,
+            'room': `${thread_id}`
         });
-
-        socket.on('message', (data) => {
-            // console.log(data)
-
-            if ($('#no-messages-here')) {
-                message_spacers = $('#no-messages-here').before(
-                    `<span id="top-message-spacer" class="p-1"></span>
-                    <span id="bottom-message-spacer" class="p-1"></span>`
-                )
-
-                $('#no-messages-here').remove()
-            }
-
-            if(data.user == username) {
-                displayNewUserMessage(data)
-            } else {
-                displayNewOtherUserMessage(data)
-            }
-
-
-            tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
-            tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
             
+        get_messages()
+    });
+
+    socket.on('message', (data) => {
+        // console.log(data)
+
+        if ($('#no-messages-here')) {
+             message_spacers = $('#no-messages-here').before(
+                `<span id="top-message-spacer" class="p-1"></span>
+                <span id="bottom-message-spacer" class="p-1"></span>`
+            )
+
+            $('#no-messages-here').remove()
+        }
+
+        if(data.user == username) {
+            displayNewUserMessage(data)
+        } else {
+            displayNewOtherUserMessage(data)
+        }
+
+
+        tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+        tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+        
+        if(!messageBox.classList.contains('active')) {
+            scrollDown()
+        }
+    })
+
+    const sendMessage = () => {
+        let message_val = $('#message-field')
+    
+        if(message_val.val() != '') {
+            socket.emit("message",  {
+                'user': `${username}`,
+                'user_id': `${user_id}`,
+                'room': `${thread_id}`,
+                'message': message_val.val(),
+                'other_user_id': other_user_id
+            });
+
+            message_val.val('')
+
             if(!messageBox.classList.contains('active')) {
                 scrollDown()
             }
-        })
 
-        const sendMessage = () => {
-            let message_val = $('#message-field')
-        
-            if(message_val.val() != '') {
-                socket.emit("message",  {
-                    'user': `${username}`,
-                    'user_id': `${user_id}`,
-                    'room': `${thread_id}`,
-                    'message': message_val.val(),
-                    'other_user_id': other_user_id
-                });
-
-                message_val.val('')
-
-                if(!messageBox.classList.contains('active')) {
-                    scrollDown()
-                }
-
-                $('#inner_error_message').remove()
-            } else {
-                $('#inner_error_message').remove()
-                $('#error_message').append("<div id='inner_error_message'>Add a message</div>")
-            };
+            $('#inner_error_message').remove()
+        } else {
+            $('#inner_error_message').remove()
+            $('#error_message').append("<div id='inner_error_message'>Add a message</div>")
         };
+    };
 
-        /* reference: https://youtu.be/Ezj00-Gbdl0 */
-        let input = document.getElementById('message-field');
+    /* reference: https://youtu.be/Ezj00-Gbdl0 */
+    let input = document.getElementById('message-field');
 
-        input.addEventListener('keyup', (e) => {
-            if(e.keyCode === 13) {
-                sendMessage();
-            }
-        })
-
-        messageBox.onmouseenter = () => {
-            messageBox.classList.add('active')
+    input.addEventListener('keyup', (e) => {
+        if(e.keyCode === 13) {
+            sendMessage();
         }
+    })
 
-        messageBox.onmouseleave = () => {
-            messageBox.classList.remove('active')
-        }
+    messageBox.onmouseenter = () => {
+        messageBox.classList.add('active')
+    }
 
-        function displayNewUserMessage(data) {
-            const message = $('#bottom-message-spacer').before(
-                `<br>
-                <div class="text-end">
-                    <span data-bs-toggle="tooltip" data-bs-title="${data.datetime}" style="cursor: default;">                
-                        <div class="text-wrap text-break my-2 rounded px-4 py-2 my-1 bg-white shadow-sm" style="display: inline; overflow:hidden">
-                            ${data.message}
-                        </div>
-                    </span>
-                </div>`
-            )
-        }
+    messageBox.onmouseleave = () => {
+        messageBox.classList.remove('active')
+    }
 
-        function displayNewOtherUserMessage(data) {
-            const message = $('#bottom-message-spacer').before(
-                `<br>
-                <div>
-                    ${data.user}:
-                    <span data-bs-toggle="tooltip" data-bs-title="${data.datetime}" style="cursor: default;">
-                        <div class="text-wrap text-break my-2 rounded px-4 py-2 my-1 bg-secondary text-white shadow-sm" style="display: inline;">
-                            ${data.message}
-                        </div>
-                    </span>
-                </div>`
-            )
-        }
-
-        function displayUserMessage(data, random_string) {
-            const message = $('#'+random_string+'-message-spacer').before(
-                `<br>
-                <div class="text-end">
-                    <span data-bs-toggle="tooltip" data-bs-title="${data.datetime}" style="cursor: default;">                
-                        <div class="text-wrap text-break my-2 rounded px-4 py-2 my-1 bg-white shadow-sm" style="display: inline; overflow:hidden">
-                            ${data.message}
-                        </div>
-                    </span>
-                </div>`
-            )
-        }
-
-        function displayOtherUserMessage(data, random_string) {
-            const message = $('#'+random_string+'-message-spacer').before(
-                `<br>
-                <div>
-                    ${data.user}:
-                    <span data-bs-toggle="tooltip" data-bs-title="${data.datetime}" style="cursor: default;">
-                        <div class="text-wrap text-break my-2 rounded px-4 py-2 my-1 bg-secondary text-white shadow-sm" style="display: inline;">
-                            ${data.message}
-                        </div>
-                    </span>
-                </div>`
-            )
-        }
-
-        function get_messages() {
-            // is_on_load = false;
-
-            fetch(`${message_url}?message_page=${next_page}`).then((response) => {
-                if(response.status !== 200) {
-                    // console.log('something wrong')
-                }
-                // console.log(flask_says)
-
-                response.json().then((data) => {
-                    if(data.length > 1) {
-                        // console.log(data.length)
-
-                        if ($('#no-messages-here')) {
-                            message_spacers = $('#no-messages-here').before(
-                                `<span id="top-message-spacer" class="p-1"></span>
-                                <span id="bottom-message-spacer" class="p-1"></span>`
-                            )
-
-                            $('#no-messages-here').remove()
-            }
-
-                        $('#load-more').remove()
-
-                        let message_id_list = []
-
-                        let current_scroll_height = messageBox.scrollHeight
-
-                        // program to generate random strings
-
-                        let random_string = Math.random().toString(36).substring(2,9);
-                        
-                        let spacer = `<span id="`+random_string+`-message-spacer" class="p-1"></span>`
-
-                        const message = $('#top-message-spacer').after(spacer)
-                        // console.log(data)
-
-                        
-                        for (let i = data.length -1 ; i > 0 ; i--) {
-                            let the_data = data[i]
-                            if(!message_id_list.includes(the_data.message_id)){
-                                message_id_list.unshift(the_data.message_id)
-
-                                if(the_data.user == username) {
-                                    displayUserMessage(the_data, random_string) 
-                                } else if(the_data.user != username) {
-                                    displayOtherUserMessage(the_data, random_string)
-                                }
-                            }
-
-                        }
-                        
-                        // console.log(data[0].next_page)
-                        // console.log(next_page)
-
-
-                        if(data[0].next_page <= data[0].total_pages) {
-                            addBtn()
-                        }
-
-
-                        next_page += 1
-
-
-                        const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
-                        const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
-                        
-                        let new_scroll_height = messageBox.scrollHeight
-
-                        //console.log(current_scroll_height)
-                        // console.log(new_scroll_height)
-
-
-                        if (next_page < 3) {
-                            scrollDown()
-                        } else {
-                            let new_scroll_height = messageBox.scrollHeight
-                    
-                            messageBox.scrollTop = new_scroll_height-current_scroll_height - 62
-                        }
-                
-                        // scrollDownTo(random_string)
-                    }
-                });
-            });
-
-            
-        }
-
-        function scrollDownTo(random_string) {
-            messageBox.scrollIntoView(`#`+random_string+`-message-spacer`)
-        }
-
-        function addBtn() {
-            $('#top-message-spacer').before(
-            `<div id="load-more" class="text-center p-1">
-                <button id="load-more-messages" class="btn btn-success rounded mt-3" onclick='get_messages()'>Load More</button>
+    function displayNewUserMessage(data) {
+        const message = $('#bottom-message-spacer').before(
+            `<br>
+            <div class="text-end">
+                <span data-bs-toggle="tooltip" data-bs-title="${data.datetime}" style="cursor: default;">                
+                    <div class="text-wrap text-break my-2 rounded px-4 py-2 my-1 bg-white shadow-sm" style="display: inline; overflow:hidden">
+                        ${data.message}
+                    </div>
+                </span>
             </div>`
-            )
+        )
+    }
+
+    function displayNewOtherUserMessage(data) {
+        const message = $('#bottom-message-spacer').before(
+            `<br>
+            <div>
+                ${data.user}:
+                <span data-bs-toggle="tooltip" data-bs-title="${data.datetime}" style="cursor: default;">
+                    <div class="text-wrap text-break my-2 rounded px-4 py-2 my-1 bg-secondary text-white shadow-sm" style="display: inline;">
+                        ${data.message}
+                    </div>
+                </span>
+            </div>`
+        )
+    }
+
+    function displayUserMessage(data, random_string) {
+        const message = $('#'+random_string+'-message-spacer').before(
+            `<br>
+            <div class="text-end">
+                <span data-bs-toggle="tooltip" data-bs-title="${data.datetime}" style="cursor: default;">                
+                    <div class="text-wrap text-break my-2 rounded px-4 py-2 my-1 bg-white shadow-sm" style="display: inline; overflow:hidden">
+                        ${data.message}
+                    </div>
+                </span>
+            </div>`
+        )
+    }
+
+    function displayOtherUserMessage(data, random_string) {
+        const message = $('#'+random_string+'-message-spacer').before(
+            `<br>
+            <div>
+                ${data.user}:
+                <span data-bs-toggle="tooltip" data-bs-title="${data.datetime}" style="cursor: default;">
+                    <div class="text-wrap text-break my-2 rounded px-4 py-2 my-1 bg-secondary text-white shadow-sm" style="display: inline;">
+                        ${data.message}
+                    </div>
+                </span>
+            </div>`
+        )
+    }
+
+    function get_messages() {
+        // is_on_load = false;
+
+        fetch(`${message_url}?message_page=${next_page}`).then((response) => {
+            if(response.status !== 200) {
+                // console.log('something wrong')
+            }
+            // console.log(flask_says)
+
+            response.json().then((data) => {
+                if(data.length > 1) {
+                    // console.log(data.length)
+
+                    if ($('#no-messages-here')) {
+                        message_spacers = $('#no-messages-here').before(
+                            `<span id="top-message-spacer" class="p-1"></span>
+                            <span id="bottom-message-spacer" class="p-1"></span>`
+                        )
+
+                        $('#no-messages-here').remove()
         }
 
-        function scrollDown() {
-            messageBox.scrollTop = messageBox.scrollHeight;
-        };
-    });
+                    $('#load-more').remove()
+
+                    let message_id_list = []
+
+                    let current_scroll_height = messageBox.scrollHeight
+
+                    // program to generate random strings
+
+                    let random_string = Math.random().toString(36).substring(2,9);
+                    
+                    let spacer = `<span id="`+random_string+`-message-spacer" class="p-1"></span>`
+
+                    const message = $('#top-message-spacer').after(spacer)
+                    // console.log(data)
+
+                    
+                    for (let i = data.length -1 ; i > 0 ; i--) {
+                        let the_data = data[i]
+                        if(!message_id_list.includes(the_data.message_id)){
+                            message_id_list.unshift(the_data.message_id)
+
+                            if(the_data.user == username) {
+                                displayUserMessage(the_data, random_string) 
+                            } else if(the_data.user != username) {
+                                displayOtherUserMessage(the_data, random_string)
+                            }
+                        }
+
+                    }
+                    
+                    // console.log(data[0].next_page)
+                    // console.log(next_page)
+
+
+                    if(data[0].next_page <= data[0].total_pages) {
+                        addBtn()
+                    }
+
+
+                    next_page += 1
+
+
+                    const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+                    const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+                    
+                    let new_scroll_height = messageBox.scrollHeight
+
+                    //console.log(current_scroll_height)
+                    // console.log(new_scroll_height)
+
+
+                    if (next_page < 3) {
+                        scrollDown()
+                    } else {
+                        let new_scroll_height = messageBox.scrollHeight
+                
+                        messageBox.scrollTop = new_scroll_height-current_scroll_height - 62
+                    }
+            
+                    // scrollDownTo(random_string)
+                }
+            });
+        });
+
+        
+    }
+
+    function scrollDownTo(random_string) {
+        messageBox.scrollIntoView(`#`+random_string+`-message-spacer`)
+    }
+
+    function addBtn() {
+        $('#top-message-spacer').before(
+        `<div id="load-more" class="text-center p-1">
+            <button id="load-more-messages" class="btn btn-success rounded mt-3" onclick='get_messages()'>Load More</button>
+        </div>`
+        )
+    }
+
+    function scrollDown() {
+        messageBox.scrollTop = messageBox.scrollHeight;
+    };
 </script>
 {% endblock social %}

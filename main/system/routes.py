@@ -92,13 +92,13 @@ def privacy():
 
 # sockectio #
 @socketio.on('connect')
-def test_connect(auth):
+def connect(auth):
     print('conneted')
 
     emit('message', {'message': 'Connected'})
 
 @socketio.on('disconnect')
-def test_disconnect():
+def disconnect():
     print('Client disconnected')
 
 @socketio.on('room-connect')

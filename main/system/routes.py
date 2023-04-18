@@ -91,21 +91,21 @@ def privacy():
 ############################
 
 # sockectio #
-# @socketio.on('connect')
-# def test_connect(auth):
-#     print('conneted')
+@socketio.on('connect')
+def test_connect(auth):
+    print('conneted')
 
-#     emit('my response', {'data': 'Connected'})
+    emit('message', {'message': 'Connected'})
 
-# @socketio.on('disconnect')
-# def test_disconnect():
-#     print('Client disconnected')
+@socketio.on('disconnect')
+def test_disconnect():
+    print('Client disconnected')
 
 @socketio.on('room-connect')
 def room_connect(data):
     # print(data)
     if not data.get('user') == current_user.id:
-        emit('my response', {'data': 'Invalid user'})
+        emit('message', {'message': 'Invalid user'})
     room = data.get('room')
 
     join_room(room)

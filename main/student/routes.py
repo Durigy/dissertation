@@ -29,10 +29,11 @@ def student_home():
         .paginate(page = user_question_page, per_page = 3)
     
 
-    latest_question = ModuleQuestion.query.join(ModuleSubscription) \
-        .filter(ModuleSubscription.user_id == current_user.id) \
+    latest_question = ModuleQuestion.query \
         .filter(ModuleQuestion.user_id != current_user.id) \
         .filter_by(solved = False) \
+        .join(ModuleSubscription, ModuleSubscription.module_id == ModuleQuestion.module_id) \
+        .filter(ModuleSubscription.user_id == current_user.id) \
         .order_by(ModuleQuestion.date.desc()) \
         .first()
     

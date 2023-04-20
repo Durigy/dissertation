@@ -59,75 +59,75 @@
         */
 
         get_messages();
-    });
 
-    socket.on('connect', () => {
-        socket.emit('room-connect', {
-            'user': `${user_id}`,
-            'room': `${thread_id}`
-        });
-    });
-
-    socket.on('message', (data) => {        
-        // console.log(data)
-
-        if ($('#no-messages-here')) {
-             message_spacers = $('#no-messages-here').before(
-                `<span id="top-message-spacer" class="p-1"></span>
-                <span id="bottom-message-spacer" class="p-1"></span>`
-            )
-
-            $('#no-messages-here').remove()
-        }
-
-        if(data.user == username) {
-            displayNewUserMessage(data)
-        } else {
-            displayNewOtherUserMessage(data)
-        }
-
-
-        tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
-        tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
-        
-        if(!messageBox.classList.contains('active')) {
-            scrollDown()
-        }
-    })
-
-    const sendMessage = () => {
-        let message_val = $('#message-field')
-    
-        if(message_val.val() != '') {
-            socket.emit("message",  {
-                'user': `${username}`,
-                'user_id': `${user_id}`,
-                'room': `${thread_id}`,
-                'message': message_val.val(),
-                'other_user_id': other_user_id
+        socket.on('connect', () => {
+            socket.emit('room-connect', {
+                'user': `${user_id}`,
+                'room': `${thread_id}`
             });
+        });
 
-            message_val.val('')
+        socket.on('message', (data) => {        
+            // console.log(data)
 
+            if ($('#no-messages-here')) {
+                message_spacers = $('#no-messages-here').before(
+                    `<span id="top-message-spacer" class="p-1"></span>
+                    <span id="bottom-message-spacer" class="p-1"></span>`
+                )
+
+                $('#no-messages-here').remove()
+            }
+
+            if(data.user == username) {
+                displayNewUserMessage(data)
+            } else {
+                displayNewOtherUserMessage(data)
+            }
+
+
+            tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+            tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+            
             if(!messageBox.classList.contains('active')) {
                 scrollDown()
             }
+        })
 
-            $('#inner_error_message').remove()
-        } else {
-            $('#inner_error_message').remove()
-            $('#error_message').append("<div id='inner_error_message'>Add a message</div>")
+        const sendMessage = () => {
+            let message_val = $('#message-field')
+        
+            if(message_val.val() != '') {
+                socket.emit("message",  {
+                    'user': `${username}`,
+                    'user_id': `${user_id}`,
+                    'room': `${thread_id}`,
+                    'message': message_val.val(),
+                    'other_user_id': other_user_id
+                });
+
+                message_val.val('')
+
+                if(!messageBox.classList.contains('active')) {
+                    scrollDown()
+                }
+
+                $('#inner_error_message').remove()
+            } else {
+                $('#inner_error_message').remove()
+                $('#error_message').append("<div id='inner_error_message'>Add a message</div>")
+            };
         };
-    };
 
-    /* reference: https://youtu.be/Ezj00-Gbdl0 */
-    let input = document.getElementById('message-field');
+        /* reference: https://youtu.be/Ezj00-Gbdl0 */
+        let input = document.getElementById('message-field');
 
-    input.addEventListener('keyup', (e) => {
-        if(e.keyCode === 13) {
-            sendMessage();
-        }
-    })
+        input.addEventListener('keyup', (e) => {
+            if(e.keyCode === 13) {
+                sendMessage();
+            }
+        })
+    });
 
     messageBox.onmouseenter = () => {
         messageBox.classList.add('active')
@@ -284,9 +284,7 @@
                 }
             });
         });
-
-        
-    }
+    };
 
     function scrollDownTo(random_string) {
         messageBox.scrollIntoView(`#`+random_string+`-message-spacer`)

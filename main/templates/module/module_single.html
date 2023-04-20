@@ -347,7 +347,7 @@ Infomation from: <a href="https://data.cardiff.ac.uk/legacy/grails/module/{{ mod
     const messageBox = document.getElementById("messages")
     //scrollDown()
 
-    let socket = io('3.10.174.250:8000'); // 'http://localhost:5000');
+    let socket = io(); // 'http://localhost:5000');
 
     const username = '{{ current_user.username }}'
     const user_id = '{{ current_user.id }}'

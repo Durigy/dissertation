@@ -163,7 +163,7 @@ imagekit = ImageKit(
 )
 
 # socketio setup
-socketio = SocketIO(app)
+socketio = SocketIO(app, cors_allowed_origins="*")
 
 ## Reference for blueprints: https://flask.palletsprojects.com/en/2.2.x/blueprints/
 # import blueprint

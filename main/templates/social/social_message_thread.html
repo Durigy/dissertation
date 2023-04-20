@@ -50,9 +50,9 @@
     $( document ).ready(() => {  
         socket.connect();
 
-        /*
         // send messages to fix connection issue
-        socket.emit("message",  {'user': 'client-get', 'room': `${thread_id}`, 'message': ''});
+        socket.emit("wake_up",  {'user': 'client-get', 'room': `${thread_id}`, 'message': ''});
+        /*
         socket.emit("message",  {'user': 'client-get', 'room': `${thread_id}`, 'message': ''});
         socket.emit("message",  {'user': 'client-get', 'room': `${thread_id}`, 'message': ''});
         socket.emit("message",  {'user': 'client-get', 'room': `${thread_id}`, 'message': ''});

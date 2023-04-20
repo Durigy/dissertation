@@ -98,6 +98,12 @@ def connect(auth):
 
     emit('message', {'message': 'You\'re connected', 'datetime': str(datetime.utcnow().strftime('%I:%M, %d %b %Y')), 'user': 'Server'})
 
+@socketio.on('wake_up')
+def wake_up(auth):
+    print('wake_up')
+
+    emit('message', {'message': '', 'datetime': str(datetime.utcnow().strftime('%I:%M, %d %b %Y')), 'user': 'Server'})
+
 @socketio.on('disconnect')
 def disconnect():
     print('Client disconnected')

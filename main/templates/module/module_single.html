@@ -366,7 +366,10 @@ Infomation from: <a href="https://data.cardiff.ac.uk/legacy/grails/module/{{ mod
             'user': `${user_id}`,
             'room': `${thread_id}`
         });
-            
+        
+        // send messages to fix connection issue
+        socket.emit("wake_up",  {'user': 'client-get', 'room': `${thread_id}`, 'message': ''});
+        
         get_messages()
     });
 

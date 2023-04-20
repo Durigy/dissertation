@@ -103,6 +103,10 @@ def wake_up(auth):
     print('wake_up')
 
     emit('message', {'message': '', 'datetime': str(datetime.utcnow().strftime('%I:%M, %d %b %Y')), 'user': 'Server'})
+    sleep(0.2)
+    emit('message', {'message': '', 'datetime': str(datetime.utcnow().strftime('%I:%M, %d %b %Y')), 'user': 'Server'})
+    sleep(0.2)
+    emit('message', {'message': '', 'datetime': str(datetime.utcnow().strftime('%I:%M, %d %b %Y')), 'user': 'Server'})
 
 @socketio.on('disconnect')
 def disconnect():

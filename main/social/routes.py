@@ -207,8 +207,6 @@ def social_message_thread_new(user_id):
 
     return redirect(url_for('socials.social_message_single', message_thread_id = thread_id, user_id = user_id))
 
-
-
 @socials.route("/user-list")
 @login_required
 def social_user_list():

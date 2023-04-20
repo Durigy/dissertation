@@ -48,8 +48,17 @@
     let message_id_list = []
 
     $( document ).ready(() => {  
-        get_messages();  
         socket.connect();
+
+        /*
+        // send messages to fix connection issue
+        socket.emit("message",  {'user': 'client-get', 'room': `${thread_id}`, 'message': ''});
+        socket.emit("message",  {'user': 'client-get', 'room': `${thread_id}`, 'message': ''});
+        socket.emit("message",  {'user': 'client-get', 'room': `${thread_id}`, 'message': ''});
+        socket.emit("message",  {'user': 'client-get', 'room': `${thread_id}`, 'message': ''});
+        */
+
+        get_messages();
     });
 
     socket.on('connect', () => {
@@ -59,7 +68,7 @@
         });
     });
 
-    socket.on('message', (data) => {
+    socket.on('message', (data) => {        
         // console.log(data)
 
         if ($('#no-messages-here')) {
@@ -129,57 +138,65 @@
     }
 
     function displayNewUserMessage(data) {
-        const message = $('#bottom-message-spacer').before(
-            `<br>
-            <div class="text-end">
-                <span data-bs-toggle="tooltip" data-bs-title="${data.datetime}" style="cursor: default;">                
-                    <div class="text-wrap text-break my-2 rounded px-4 py-2 my-1 bg-white shadow-sm" style="display: inline; overflow:hidden">
-                        ${data.message}
-                    </div>
-                </span>
-            </div>`
-        )
+        if (data.message != '') {
+            const message = $('#bottom-message-spacer').before(
+                `<br>
+                <div class="text-end">
+                    <span data-bs-toggle="tooltip" data-bs-title="${data.datetime}" style="cursor: default;">                
+                        <div class="text-wrap text-break my-2 rounded px-4 py-2 my-1 bg-white shadow-sm" style="display: inline; overflow:hidden">
+                            ${data.message}
+                        </div>
+                    </span>
+                </div>`
+            )
+        }
     }
 
     function displayNewOtherUserMessage(data) {
-        const message = $('#bottom-message-spacer').before(
-            `<br>
-            <div>
-                ${data.user}:
-                <span data-bs-toggle="tooltip" data-bs-title="${data.datetime}" style="cursor: default;">
-                    <div class="text-wrap text-break my-2 rounded px-4 py-2 my-1 bg-secondary text-white shadow-sm" style="display: inline;">
-                        ${data.message}
-                    </div>
-                </span>
-            </div>`
-        )
+        if (data.message != '') {
+            const message = $('#bottom-message-spacer').before(
+                `<br>
+                <div>
+                    ${data.user}:
+                    <span data-bs-toggle="tooltip" data-bs-title="${data.datetime}" style="cursor: default;">
+                        <div class="text-wrap text-break my-2 rounded px-4 py-2 my-1 bg-secondary text-white shadow-sm" style="display: inline;">
+                            ${data.message}
+                        </div>
+                    </span>
+                </div>`
+            )
+        }
     }
 
     function displayUserMessage(data, random_string) {
-        const message = $('#'+random_string+'-message-spacer').before(
-            `<br>
-            <div class="text-end">
-                <span data-bs-toggle="tooltip" data-bs-title="${data.datetime}" style="cursor: default;">                
-                    <div class="text-wrap text-break my-2 rounded px-4 py-2 my-1 bg-white shadow-sm" style="display: inline; overflow:hidden">
-                        ${data.message}
-                    </div>
-                </span>
-            </div>`
-        )
+        if (data.message != '') {
+            const message = $('#'+random_string+'-message-spacer').before(
+                `<br>
+                <div class="text-end">
+                    <span data-bs-toggle="tooltip" data-bs-title="${data.datetime}" style="cursor: default;">                
+                        <div class="text-wrap text-break my-2 rounded px-4 py-2 my-1 bg-white shadow-sm" style="display: inline; overflow:hidden">
+                            ${data.message}
+                        </div>
+                    </span>
+                </div>`
+            )
+        }
     }
 
     function displayOtherUserMessage(data, random_string) {
-        const message = $('#'+random_string+'-message-spacer').before(
-            `<br>
-            <div>
-                ${data.user}:
-                <span data-bs-toggle="tooltip" data-bs-title="${data.datetime}" style="cursor: default;">
-                    <div class="text-wrap text-break my-2 rounded px-4 py-2 my-1 bg-secondary text-white shadow-sm" style="display: inline;">
-                        ${data.message}
-                    </div>
-                </span>
-            </div>`
-        )
+        if (data.message != '') {
+            const message = $('#'+random_string+'-message-spacer').before(
+                `<br>
+                <div>
+                    ${data.user}:
+                    <span data-bs-toggle="tooltip" data-bs-title="${data.datetime}" style="cursor: default;">
+                        <div class="text-wrap text-break my-2 rounded px-4 py-2 my-1 bg-secondary text-white shadow-sm" style="display: inline;">
+                            ${data.message}
+                        </div>
+                    </span>
+                </div>`
+            )
+        }
     }
 
     function get_messages() {

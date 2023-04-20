@@ -6,6 +6,7 @@ from ..main_utils import defaults, aside_dict, generate_id
 from .. import socketio
 from flask_socketio import emit, join_room, leave_room, send
 from datetime import datetime
+from time import sleep
 import html
 
 # system = Blueprint('system', __name__, template_folder='templates')
@@ -95,29 +96,38 @@ def privacy():
 def connect(auth):
     print('conneted')
 
-    emit('message', {'message': 'Connected'})
+    emit('message', {'message': 'You\'re connected', 'datetime': str(datetime.utcnow().strftime('%I:%M, %d %b %Y')), 'user': 'Server'})
 
 @socketio.on('disconnect')
 def disconnect():
     print('Client disconnected')
 
+    emit('message', {'message': 'You\'ve been disconnected', 'datetime': str(datetime.utcnow().strftime('%I:%M, %d %b %Y')), 'user': 'Server'})
+
 @socketio.on('room-connect')
 def room_connect(data):
     # print(data)
     if not data.get('user') == current_user.id:
-        emit('message', {'message': 'Invalid user'})
+        emit('message', {'message': 'Invalid user', 'datetime': str(datetime.utcnow().strftime('%I:%M, %d %b %Y')), 'user': 'Server'})
     room = data.get('room')
 
     join_room(room)
+
+    emit('message', {'message': '', 'datetime': str(datetime.utcnow().strftime('%I:%M, %d %b %Y')), 'user': 'Server'})
+    sleep(0.1)
+    emit('message', {'message': '', 'datetime': str(datetime.utcnow().strftime('%I:%M, %d %b %Y')), 'user': 'Server'})
+
 
     # send({"user": 'Server', "message":f"{current_user.username} is here", 'datetime': str(datetime.utcnow().strftime('%I:%M, %d %b %Y'))}, to = room)
 
 @socketio.on('message')
 def message(data):
     # print(data)
+    
     room = data.get('room')
     new_message = html.escape(data.get('message'))
     user_id = data.get('other_user_id') if data.get('other_user_id') else ''
+    
     # print(new_message)
 
     # print(MessageThread.query.filter_by(id = room).scalar())

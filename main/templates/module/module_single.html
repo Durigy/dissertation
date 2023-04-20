@@ -359,7 +359,7 @@ Infomation from: <a href="https://data.cardiff.ac.uk/legacy/grails/module/{{ mod
 
     let message_id_list = []
     
-    socket.connect()
+    socket.connect({withCredentials: true})
 
     $( document ).ready(() => { 
         socket.on('connect', () => {

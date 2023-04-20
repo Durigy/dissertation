@@ -48,7 +48,7 @@
     let message_id_list = []
 
     $( document ).ready(() => {  
-        socket.connect();
+        socket.connect({secure: true});
 
         // send messages to fix connection issue
         socket.emit("wake_up",  {'user': 'client-get', 'room': `${thread_id}`, 'message': ''});

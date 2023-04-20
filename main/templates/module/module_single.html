@@ -359,7 +359,7 @@ Infomation from: <a href="https://data.cardiff.ac.uk/legacy/grails/module/{{ mod
 
     let message_id_list = []
     
-    socket.connect()
+    socket.connect({secure: true})
 
     $( document ).ready(() => { 
         socket.on('connect', () => {
@@ -387,6 +387,8 @@ Infomation from: <a href="https://data.cardiff.ac.uk/legacy/grails/module/{{ mod
             // scrollDown()
             // }
         });*/
+
+
 
         socket.on('message', (data) => {
             if ($('#no-messages-here')) {

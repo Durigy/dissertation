@@ -1,5 +1,8 @@
 {% extends "social/social_layout.html" %}
 {% block social %}
+
+{% from "helpers/cards.html" import card %}
+
 <h1>Select a user to message</h1>
 <!-- <div>
     <form class="d-flex" role="search">
@@ -8,6 +11,7 @@
     </form>
 </div> -->
 
+{#
 <div id="users_list">
     {% for user in users %}
     <div class="single-user pb-2">
@@ -15,4 +19,67 @@
     </div>
     {% endfor %}
 </div>
+#}
+
+<br>
+
+{#% if questions.pages > 0 %#}
+<div class="d-flex flex-wrap p-2">
+    {% for user in users %}
+    {{ card(
+        title = user.username,
+        link = url_for('socials.social_message_thread_new', user_id = user.id),
+        link_text = 'Message',
+        width = 100
+    ) }}
+    {% endfor %}
+</div>
+
+{#% if users.pages > 1 %}
+{# reference to my past code for pagination: https://github.com/Durigy/neighbourfy-v2/blob/main/main/templates/user/account.html }
+<!-- Pagination Links-->
+
+<div aria-label="User Page Navigation">
+    <ul class="pagination">
+        <li class="page-item">
+            <a href="{{ url_for('modules.module_single', module_id = module_id, user_page = users.prev_num) }}" {% if users.page == 1 %} style="pointer-events: none; cursor: default;" class = "page-link text-secondary"{% else %} class="page-link" {% endif %}>
+                Previous
+            </a>
+        </li>
+
+        {% for page_num in users.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+        {% if page_num %}
+        
+        <li class="page-item">
+            <a class="page-link {% if page_num == users.page %} text-danger {% endif %}" href="{{url_for('modules.module_single', module_id = module_id, user_page = page_num)}}">
+                {{page_num}}
+            </a>
+        </li>
+        
+        {% else %}
+        
+        <li class="page-item">
+            <a class="page-link text-secondary" href="" style="pointer-events: none; cursor: default;">
+                . . .
+            </a>
+        </li>
+        
+        {% endif %}
+        {% endfor %}
+
+        <li class="page-item">
+            <a href="{{ url_for('modules.module_single', module_id = module_id, user_page = users.next_num) }}" {% if users.page == users.pages %} style="pointer-events: none; cursor: default;" class = "page-link text-secondary"{% else %} class="page-link" {% endif %}>
+                Next
+            </a>
+        </li>
+    </ul>
+</div>
+{% endif %}
+
+{% else %}
+<div>
+    There are no other users here yet
+</div>
+{% endif %#}
+
 {% endblock social %}

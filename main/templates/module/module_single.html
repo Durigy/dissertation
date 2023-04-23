@@ -166,8 +166,9 @@
         <div id="inputs">
             <div id="inputs_inner" class="pt-3 d-flex">
                 <input type="text" placeholder="Message" name="message" id="message-field" aria-label="message input box" class="form-control rounded me-2" required>
-                <button type="button" name="send" id="send-btn" onclick="sendMessage()" aria-label="submit message" class=""><i class="fa-solid fa-paper-plane"></i></i></button>
+                <button type="button" name="send" id="send-btn" aria-label="submit message" class=""><i class="fa-solid fa-paper-plane"></i></i></button>
             </div>
+            <!-- onclick="sendMessage()"  -->
             
             <span id="error_message" style="color: red;"></span>
         </div>
@@ -416,6 +417,11 @@ Infomation from: <a href="https://data.cardiff.ac.uk/legacy/grails/module/{{ mod
                 scrollDown()
             }
         })
+
+        $("#send-btn").on('click touchstart', () => {
+            sendMessage()   
+        });
+
 
         const sendMessage = () => {
             let message_val = $('#message-field')

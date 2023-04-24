@@ -4,41 +4,41 @@
 <form method="POST" action="">
     {{ form.hidden_tag() }}
     <fieldset>
-        <div>
-            {{ form.name.label(class="form-label") }}
-
-            <div class="input-group mb-3">
-                {{ form.name(class="form-control") }}
+        <div class="row pb-2">
+            <div class="col-sm-4">
+                {{ form.code.label(class="form-label") }}
+    
+                <div class="input-group mb-3">
+                    {{ form.code(class="form-control") }}
+                </div>
+                    
+                {% if form.code.errors %}
+                <div>
+                    {% for error in form.code.errors %}
+                    <span style="color: red;">{{ error }}</span>
+                    {% endfor %}
+                </div>
+                {% endif %}
             </div>
-                
-            {% if form.name.errors %}
-            <div>
-                {% for error in form.name.errors %}
-                <span style="color: red;">{{ error }}</span>
-                {% endfor %}
+    
+            <div class="col-sm-8">
+                {{ form.name.label(class="form-label") }}
+    
+                <div class="input-group mb-3">
+                    {{ form.name(class="form-control") }}
+                </div>
+                    
+                {% if form.name.errors %}
+                <div>
+                    {% for error in form.name.errors %}
+                    <span style="color: red;">{{ error }}</span>
+                    {% endfor %}
+                </div>
+                {% endif %}
             </div>
-            {% endif %}
         </div>
 
-        <br>
-
-        <div>
-            {{ form.code.label(class="form-label") }}
-
-            <div class="input-group mb-3">
-                {{ form.code(class="form-control") }}
-            </div>
-                
-            {% if form.code.errors %}
-            <div>
-                {% for error in form.code.errors %}
-                <span style="color: red;">{{ error }}</span>
-                {% endfor %}
-            </div>
-            {% endif %}
-        </div>
-
-        <br>
+        <!-- <br> -->
 
         <div>
             {{ form.description.label(class="form-label") }}
@@ -55,6 +55,43 @@
             </div>
             {% endif %}
         </div>
+
+        <br>
+        
+        <div class = "pb-3">
+            {{ form.university_year.label(class="form-label") }}
+
+            <div class="input-group mb-3">
+                {{ form.university_year(class="form-select", placeholder="university_year") }}
+            </div>
+
+            {% if form.university_year.errors %}
+            <div>
+                {% for error in form.university_year.errors %}
+                <span style="color: red;">{{ error }}</span>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+
+        <br>
+
+        <div class = "pb-3">
+            {{ form.university_school.label(class="form-label") }}
+
+            <div class="input-group mb-3">
+                {{ form.university_school(class="form-select", placeholder="university_school") }}
+            </div>
+
+            {% if form.university_school.errors %}
+            <div>
+                {% for error in form.university_school.errors %}
+                <span style="color: red;">{{ error }}</span>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+        
     </fieldset>
 
     <div>

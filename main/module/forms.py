@@ -12,10 +12,31 @@ class AddModuleForm(FlaskForm):
     this is a form for adding modules to the the database for testing
     '''
 
+    university_year_choices = [('','Select a Year')]
+    university_school_choices = [('','Select a School')]
+    
+    if UniversityYear.query.order_by(UniversityYear.name).first():
+        university_year_choices += [(university_year.id, university_year.name) for university_year in UniversityYear.query.order_by(UniversityYear.name).all()]
+
+    if UniversitySchool.query.order_by(UniversitySchool.name).first():
+        university_school_choices += [(university_school.id, university_school.name) for university_school in UniversitySchool.query.order_by(UniversitySchool.name).all()]
+
+
     name = StringField('Module Name: *', render_kw = {"placeholder": "Module Name"}, validators = [DataRequired(), Length(min=4, max=240)])
     code = StringField('Module Code: *', render_kw = {"placeholder": "Module Code"}, validators = [DataRequired(), Length(min=4, max=30)])
     description = TextAreaField('Module Description:', render_kw = {"placeholder": "Module Description"})
+    university_year = SelectField('University Year *', choices = university_year_choices, validators = [DataRequired()])
+    university_school = SelectField('University School *', choices = university_school_choices, validators = [DataRequired()])
     submit = SubmitField('Add Module')
+
+    def validate_university_year(self, university_year):
+       if university_year == 0:
+           raise ValidationError('Please select a Year')
+
+    def validate_university_school(self, university_school):
+       if university_school == 0:
+           raise ValidationError('Please select a School')
+
 
 class AddModuleQuestionForm(FlaskForm):
     '''

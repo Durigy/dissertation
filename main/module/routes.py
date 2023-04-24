@@ -1,7 +1,7 @@
 from flask import render_template, url_for, request, redirect, flash, Blueprint, make_response, jsonify
 from flask_login import login_required, current_user
 from .forms import AddModuleForm, AddModuleQuestionForm, AddModuleQuestionCommentForm, AddModuleResourceForm
-from ..models import User, Module, ModuleReview, ModuleSubscription, ModuleQuestion, ModuleQuestionComment, Image, Document, ModuleResource, MessageThread, Message
+from ..models import User, Module, ModuleReview, ModuleSubscription, ModuleQuestion, ModuleQuestionComment, Image, Document, ModuleResource, MessageThread, Message, University, UniversitySchool, UniversityYear
 from ..main_utils import generate_id, defaults, aside_dict, allowed_file
 from .. import db, app, IMAGE_EXTENSIONS, DOCUMENT_EXTENSIONS, IMAGEKIT_URL_ENDPOINT, imagekit
 import os
@@ -517,6 +517,10 @@ def module_add():
         return redirect(url_for('index'))
 
     form = AddModuleForm()
+    
+    cardiff_uni_university = University.query.filter_by(name = 'Cardiff University').first()
+    university_years = UniversityYear.query.order_by(UniversityYear.name).all()
+    university_schools = UniversitySchool.query.order_by(UniversitySchool.name).all()
 
     if form.validate_on_submit() and request.method == "POST":
         thread_id = generate_id(MessageThread)
@@ -531,7 +535,10 @@ def module_add():
             name = form.name.data,
             code = form.code.data,
             description = form.description.data if len(form.description.data) > 0 else None,
-            message_thread_id = thread_id
+            message_thread_id = thread_id,
+            university_id = cardiff_uni_university.id,
+            university_school_id = form.university_school.data,
+            university_year_id = form.university_year.data,
         )
 
         db.session.add(message_thread)
@@ -546,7 +553,9 @@ def module_add():
         'module/module_add.html',
         title = "Add a new module",
         form = form,
-        my_aside_dict = aside_dict(current_user)
+        my_aside_dict = aside_dict(current_user),
+        university_schools = university_schools, 
+        university_years = university_years
     )
 
 

@@ -59,3 +59,14 @@
         <i class="fa-regular fa-comments"></i>
     </a>
 </li>
+{% if current_user.is_admin %}
+<!-- Admin Panel -->
+<li class="nav-item pe-4">
+    <a class="nav-link d-block d-lg-none d-xl-block" href="{{ url_for('admin.index') }}">
+        <i class="fa-solid fa-toolbox"></i> Admin
+    </a>
+    <a class="nav-link d-none d-lg-block d-xl-none" data-toggle="tooltip" data-placement="bottom" title="Admin" href="{{ url_for('admin.index') }}">
+        <i class="fa-solid fa-toolbox"></i>
+    </a>
+</li>
+{% endif %}

@@ -1,0 +1,36 @@
+{% extends "layout.html" %}
+{% block content %}
+    <div class="centre">
+        <h1>{{ title }}</h1>
+    </div>
+
+    <div>
+        <form method="POST" action="">
+            {{ form.hidden_tag() }}
+
+            <div>
+                {{ form.name.label( class="form-label" ) }}
+            
+                <br>
+
+                {{ form.name( class="form-control" ) }}
+                
+                {% if form.name.errors %}
+                    <div>
+                        {% for error in form.name.errors %}
+                            <span style="color: red;">{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+
+            <br>
+        
+            <div>
+                {{ form.submit( class='btn' ) }}
+            </div>
+            <br>
+        </form>
+    </div>
+
+{% endblock content %}

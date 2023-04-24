@@ -1,0 +1,51 @@
+{% extends "social/social_layout.html" %}
+{% block social %}
+
+    {% from "helpers/cards.html" import card %}
+
+    <h1>Public profile for {{ user.username }}</h1>
+
+    <div>
+        <div>
+            Joined date: {{ user.join_date.strftime('%d %b %Y') }}
+        </div>
+    </div>
+
+    <br>
+
+    <div>
+        <h4>Year:</h4>
+        <span>{{ user.university_year.name }}</span>
+    </div>
+
+    <br>
+    
+    <div>
+        <h4>School:</h4>
+        <span>{{ user.university_school.name }}</span>
+    </div>
+
+    <br>
+    
+    <h4>Bio: </h4>
+    <div style="white-space: pre;" class="text-break text-start">{{ user.profile.bio }}</div>
+    
+    <br>
+
+    <h3>Modules they take</h3>
+
+    <div class="">
+        {% if users_modules %}    
+        <div class="d-flex flex-wrap p-2">
+            {% for module in users_modules %}
+            {% set temp = module.module.code + " - " + module.module.name %}
+            {{ card(title = temp, link = url_for('modules.module_single', module_id=module.module.id), link_text = 'View') }}
+            {% endfor %}
+        </div>
+        {% else %}
+        <h5>They haven't subscribed to any modules yet.</h5>
+        {% endif %}
+    </div>
+
+    <br><br><br>
+{% endblock social %}

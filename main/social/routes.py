@@ -1,7 +1,7 @@
 from flask import jsonify, render_template, url_for, request, redirect, flash, Blueprint
 from flask_login import login_required, current_user
 from .forms import AddPostForm, AddPublicPostCommentForm
-from ..models import Message, Module, User, PublicPost, PublicPostComment, MessageThread
+from ..models import Message, Module, User, PublicPost, PublicPostComment, MessageThread, ModuleSubscription
 from ..main_utils import generate_id, defaults, aside_dict
 from .. import db
 
@@ -241,6 +241,26 @@ def social_message_thread_remove(thread_id):
 
     return redirect(url_for('socials.social_user_list'))
 
+
+############################
+#                          #
+#      Profile Stuff       #
+#                          #
+############################
+@socials.route("/profile/<user_id>")
+@login_required
+def social_profile(user_id):
+    user = User.query.get_or_404(user_id)
+
+    users_modules = ModuleSubscription.query.filter_by(user_id = user_id).all()
+
+    return render_template(
+        'social/social_profile.html',
+        title='Socail Messages',
+        my_aside_dict = aside_dict(current_user),
+        user = user,
+        users_modules = users_modules
+    )
 
 
 ############################

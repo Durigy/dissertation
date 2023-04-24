@@ -1,11 +1,12 @@
-from flask import Flask
+from flask import Flask, redirect, url_for, flash
 from flask_sqlalchemy import SQLAlchemy
-from flask_login import LoginManager
+from flask_login import LoginManager, current_user
 from flask_migrate import Migrate
 from flask_bcrypt import Bcrypt
 from datetime import timedelta
 from flask_socketio import SocketIO
 from imagekitio import ImageKit
+from flask_admin import Admin, AdminIndexView
 import os
 
 
@@ -152,6 +153,22 @@ login_manager.login_message_category = 'info'
 migrate = Migrate(app, db)
 
 bcrypt = Bcrypt(app)
+
+class NewAdminIndexView(AdminIndexView):
+    def is_accessible(self):
+        if not current_user.is_authenticated:
+            return False
+        
+        if not current_user.is_admin:
+            return False
+        
+        return True
+    
+    def inaccessible_callback(self, name, **kwargs):
+        flash('You can\'t access that')
+        return redirect(url_for('index'))
+
+admin = Admin(app, index_view=NewAdminIndexView())
 
 # Image Kit SDK initialization
 # imagekit = ''

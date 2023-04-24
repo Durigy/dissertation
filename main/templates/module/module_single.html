@@ -313,13 +313,23 @@ This is for resources such as:
     </div>
 
     <div class="text-center">
-        <div id="messages" class="scrollarea bg-light rounded p-5" style="max-height: 20vh;">
+        <div id="messages" class="scrollarea bg-light rounded p-5 d-flex flex-wrap" style="max-height: 40vh;">
             {% for student in module.thread.following_user %}
-            <div class="pb-2">
+            <div class="pb-2 col-6 px-2">
                 {% if student == current_user %}
-                <span class="text-danger">YOU</span>
+                {{ card(
+                    title = 'YOU',
+                    width = 100
+                ) }}
+                <!-- <span class="text-danger">YOU</span> -->
                 {% else %}
-                <span>{{ student.username | upper }}</span>
+                {{ card(
+                    title = student.username,
+                    link = url_for('socials.social_profile', user_id = student.id),
+                    link_text = 'See Profile',
+                    width = 100
+                ) }}
+                <!-- <span>{{ student.username | upper }}</span> -->
                 {% endif %}
             </div>
             {% endfor %}

@@ -35,6 +35,21 @@
     {% endfor %}
 </div>
 
+<div class="">
+    {% if users %}    
+    {% for user in users %}
+    <div class="d-flex flex-wrap p-2">
+        {{ card(
+            title = user.username,
+            link = url_for('socials.social_profile', user_id = user.id),
+            link_text = 'See Profile',
+            width = 100
+        ) }}
+    </div>
+    {% endfor %}
+    {% endif %}
+</div>
+
 {#% if users.pages > 1 %}
 {# reference to my past code for pagination: https://github.com/Durigy/neighbourfy-v2/blob/main/main/templates/user/account.html }
 <!-- Pagination Links-->

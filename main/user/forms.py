@@ -33,7 +33,7 @@ class RegistrationForm(FlaskForm):
             raise ValidationError('Username already Taken. Please choose a different one.')
 
     def validate_email(self, email):
-       email = User.query.filter_by(email = email.data + 'cardiff.ac.uk').first()
+       email = User.query.filter_by(email = email.data.lower() + '@cardiff.ac.uk').first()
        if email:
            raise ValidationError('Email already Used. Please Use a different one.')
 

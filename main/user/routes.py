@@ -43,7 +43,7 @@ def register():
             username = form.username.data,
             firstname = form.firstname.data,
             lastname = form.lastname.data,
-            email = form.email.data,
+            email = form.email.data.lower() + '@cardiff.ac.uk',
             password = hashed_password,
             public_profile_id = profile_id,
             university_id = cardiff_uni_university.id,

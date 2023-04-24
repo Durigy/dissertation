@@ -6,7 +6,7 @@ from flask_bcrypt import Bcrypt
 from datetime import timedelta
 from flask_socketio import SocketIO
 from imagekitio import ImageKit
-from flask_admin import Admin, AdminIndexView
+# from flask_admin import Admin, AdminIndexView
 import os
 
 
@@ -154,21 +154,21 @@ migrate = Migrate(app, db)
 
 bcrypt = Bcrypt(app)
 
-class NewAdminIndexView(AdminIndexView):
-    def is_accessible(self):
-        if not current_user.is_authenticated:
-            return False
+# class NewAdminIndexView(AdminIndexView):
+#     def is_accessible(self):
+#         if not current_user.is_authenticated:
+#             return False
         
-        if not current_user.is_admin:
-            return False
+#         if not current_user.is_admin:
+#             return False
         
-        return True
+#         return True
     
-    def inaccessible_callback(self, name, **kwargs):
-        flash('You can\'t access that')
-        return redirect(url_for('index'))
+#     def inaccessible_callback(self, name, **kwargs):
+#         flash('You can\'t access that')
+#         return redirect(url_for('index'))
 
-admin = Admin(app, index_view=NewAdminIndexView())
+# admin = Admin(app, index_view=NewAdminIndexView())
 
 # Image Kit SDK initialization
 # imagekit = ''

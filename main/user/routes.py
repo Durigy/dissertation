@@ -266,11 +266,11 @@ def admin_add_uni_school():
         my_aside_dict = aside_dict(current_user)
     )
 
-from flask_admin.contrib.sqla import ModelView
-from .. import admin
+# from flask_admin.contrib.sqla import ModelView
+# from .. import admin
 
-admin.add_view(ModelView(User, db.session))
-admin.add_view(ModelView(University, db.session))
-admin.add_view(ModelView(UniversitySchool, db.session))
-admin.add_view(ModelView(UniversityYear, db.session))
-admin.add_view(ModelView(Module, db.session))
+# admin.add_view(ModelView(User, db.session))
+# admin.add_view(ModelView(University, db.session))
+# admin.add_view(ModelView(UniversitySchool, db.session))
+# admin.add_view(ModelView(UniversityYear, db.session))
+# admin.add_view(ModelView(Module, db.session))

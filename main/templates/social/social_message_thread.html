@@ -16,14 +16,14 @@
         <div id="inputs">
             <div id="inputs_inner" class="pt-3 d-flex">
                 <input type="text" placeholder="Message" name="message" id="message-field" aria-label="message input box" class="form-control rounded me-2" required>
-                <button type="button" name="send" id="send-btn" onclick="sendMessage()" aria-label="submit message" class=""><i class="fa-solid fa-paper-plane"></i></i></button>
+                <button type="button" name="send" id="send-btn" aria-label="submit message" class=""><i class="fa-solid fa-paper-plane"></i></i></button>
             </div>
 
             <span id="error_message" style="color: red;"></span>
         </div>
     </div>
+    
     <br>
-        
 </div>
 
 <script type="text/javascript" charset="utf-8">
@@ -47,37 +47,54 @@
 
     let message_id_list = []
 
-    $( document ).ready(() => {  
-        socket.connect({secure: true});
+    let message_field = $('#message-field')
+    let message_btn = $('#send-btn')
+    
+    // socket.connect({withCredentials: true})
 
-        // send messages to fix connection issue
-        socket.emit("wake_up",  {'user': 'client-get', 'room': `${thread_id}`, 'message': ''});
-        /*
-        socket.emit("message",  {'user': 'client-get', 'room': `${thread_id}`, 'message': ''});
-        socket.emit("message",  {'user': 'client-get', 'room': `${thread_id}`, 'message': ''});
-        socket.emit("message",  {'user': 'client-get', 'room': `${thread_id}`, 'message': ''});
-        */
-
-        get_messages();
-
+    $( document ).ready(() => { 
         socket.on('connect', () => {
             socket.emit('room-connect', {
                 'user': `${user_id}`,
                 'room': `${thread_id}`
             });
+            
+            // send messages to fix connection issue
+            socket.emit("wake_up",  {'user': 'client-get', 'room': `${thread_id}`, 'message': ''});
+            
+            get_messages()
+        });
+
+        /*socket.on('connect', () => {
+            socket.emit('room-connect', {
+                'user': `${user_id}`,
+                'room': `${thread_id}`
+            });
+            // console.log('connected');
+            // if(next_page > 0) {
+                
+            get_messages()
+
+            // scrollDown()
+            // }
+        });*/
+
+        socket.on("disconnect", () => {
+            // need to come back and do something here
         });
 
         socket.on('message', (data) => {
-            // console.log(data)
-
             if ($('#no-messages-here')) {
                 message_spacers = $('#no-messages-here').before(
-                    `<span id="top-message-spacer" class="p-1"></span>
-                    <span id="bottom-message-spacer" class="p-1"></span>`
-                )
+                `<span id="top-message-spacer" class="p-1"></span>
+                <span id="bottom-message-spacer" class="p-1"></span>`
+            )
 
                 $('#no-messages-here').remove()
             }
+
+
+            // console.log(data)
 
             if(data.user == username) {
                 displayNewUserMessage(data)
@@ -85,48 +102,112 @@
                 displayNewOtherUserMessage(data)
             }
 
+            // console.log(data.message)
 
-            tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
-            tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+            // tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+            // tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
             
-            if(!messageBox.classList.contains('active')) {
-                scrollDown()
-            }
+            // if(!messageBox.classList.contains('active')) {
+            //     scrollDown()
+            // }
         })
 
-        const sendMessage = () => {            
-            let message_val = $('#message-field')
-        
-            if(message_val.val() != '') {
-                socket.emit("message",  {
-                    'user': `${username}`,
-                    'user_id': `${user_id}`,
-                    'room': `${thread_id}`,
-                    'message': message_val.val(),
-                    'other_user_id': other_user_id
-                });
+        console.log(message_btn.prop('disabled'))
 
-                message_val.val('')
+        const sendMessage = () => {
+            if(message_btn.prop('disabled') == false) {
+                let message_val = $('#message-field')
+            
+                if(message_val.val() != '') {
+                    socket.emit("message",  {
+                        'user': `${username}`,
+                        'user_id': `${user_id}`,
+                        'room': `${thread_id}`,
+                        'message': message_val.val()
+                    });
+                    
+                    message_val.val('')
 
-                if(!messageBox.classList.contains('active')) {
-                    scrollDown()
-                }
-
-                $('#inner_error_message').remove()
-            } else {
-                $('#inner_error_message').remove()
-                $('#error_message').append("<div id='inner_error_message'>Add a message</div>")
-            };
+                    // if(!messageBox.classList.contains('active')) {
+                    //     scrollDown()
+                    // }
+                    
+                    $('#inner_error_message').remove()
+                } else {
+                    $('#inner_error_message').remove()
+                    $('#error_message').append("<div id='inner_error_message'>Add a message</div>")
+                };
+            }
         };
+
+        message_btn.on('click touchstart', () => {
+            if(message_btn.prop('disabled') == false) {
+                sendMessage();
+            }
+        });
 
         /* reference: https://youtu.be/Ezj00-Gbdl0 */
         let input = document.getElementById('message-field');
 
         input.addEventListener('keyup', (e) => {
-            if(e.keyCode === 13) {
-                sendMessage();
+            if(message_btn.prop('disabled') == false) {
+                if(e.keyCode === 13) {
+                    sendMessage();
+                }
             }
         })
+    });
+
+    window.addEventListener('online', () => {
+        console.log('Became online')
+        message_field.removeAttr('disabled')
+        message_btn.prop('disabled', false);
+
+        let now = new Date();
+
+        const date_options = { day: 'numeric', month: 'short', year: 'numeric' };
+        const time_options = { hour12: false, hour: '2-digit', minute: '2-digit'};
+
+        const formattedTime = now.toLocaleTimeString('en-GB', time_options);
+        const formattedDate = now.toLocaleDateString('en-GB', date_options);
+        
+        const formattedDateTime = `${formattedTime}, ${formattedDate}`;
+        
+        console.log(formattedDateTime);
+
+        data = {
+            'user': 'Device',
+            'message': 'You are online',
+            'datetime': formattedDateTime
+        }
+        
+        displayNewOtherUserMessage(data)
+    });
+    
+    window.addEventListener('offline', () => {
+        console.log('Became offline')
+        message_field.attr('disabled','disabled');
+        message_btn.prop('disabled', true);
+
+        let now = new Date();
+        
+        const date_options = { day: 'numeric', month: 'short', year: 'numeric' };
+        const time_options = { hour12: false, hour: '2-digit', minute: '2-digit'};
+
+        const formattedTime = now.toLocaleTimeString('en-GB', time_options);
+        const formattedDate = now.toLocaleDateString('en-GB', date_options);
+        
+        const formattedDateTime = `${formattedTime}, ${formattedDate}`;
+        
+        console.log(formattedDateTime);
+
+        data = {
+            'user': 'Device',
+            'message': 'You are offline',
+            'datetime': formattedDateTime
+        }
+
+        displayNewOtherUserMessage(data)
     });
 
     messageBox.onmouseenter = () => {
@@ -149,6 +230,13 @@
                     </span>
                 </div>`
             )
+
+            tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+            tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+                
+            if(!messageBox.classList.contains('active')) {
+                scrollDown()
+            }
         }
     }
 
@@ -165,6 +253,13 @@
                     </span>
                 </div>`
             )
+
+            tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+            tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+                
+            if(!messageBox.classList.contains('active')) {
+                scrollDown()
+            }
         }
     }
 
@@ -200,8 +295,6 @@
     }
 
     function get_messages() {
-        // is_on_load = false;
-
         fetch(`${message_url}?message_page=${next_page}`).then((response) => {
             if(response.status !== 200) {
                 // console.log('something wrong')
@@ -210,8 +303,6 @@
 
             response.json().then((data) => {
                 if(data.length > 1) {
-                    // console.log(data.length)
-
                     if ($('#no-messages-here')) {
                         message_spacers = $('#no-messages-here').before(
                             `<span id="top-message-spacer" class="p-1"></span>
@@ -219,7 +310,7 @@
                         )
 
                         $('#no-messages-here').remove()
-        }
+                    }
 
                     $('#load-more').remove()
 
@@ -259,22 +350,22 @@
                         addBtn()
                     }
 
-
                     next_page += 1
-
 
                     const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
                     const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
                     
-                    let new_scroll_height = messageBox.scrollHeight
+                    // let new_scroll_height = messageBox.scrollHeight
 
-                    //console.log(current_scroll_height)
+                    // console.log(current_scroll_height)
                     // console.log(new_scroll_height)
 
 
                     if (next_page < 3) {
+                        // console.log(next_page)
                         scrollDown()
                     } else {
+                        // console.log('here')
                         let new_scroll_height = messageBox.scrollHeight
                 
                         messageBox.scrollTop = new_scroll_height-current_scroll_height - 62
@@ -283,8 +374,8 @@
                     // scrollDownTo(random_string)
                 }
             });
-        });
-    };
+        });        
+    }   
 
     function scrollDownTo(random_string) {
         messageBox.scrollIntoView(`#`+random_string+`-message-spacer`)

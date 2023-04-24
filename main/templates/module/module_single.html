@@ -166,7 +166,7 @@
         <div id="inputs">
             <div id="inputs_inner" class="pt-3 d-flex">
                 <input type="text" placeholder="Message" name="message" id="message-field" aria-label="message input box" class="form-control rounded me-2" required>
-                <button type="button" name="send" id="send-btn" aria-label="submit message" class=""><i class="fa-solid fa-paper-plane"></i></i></button>
+                <button type="button" name="send" id="send-btn" aria-label="submit message"><i class="fa-solid fa-paper-plane"></i></i></button>
             </div>
             <!-- onclick="sendMessage()"  -->
             
@@ -200,12 +200,14 @@
     </div>
 </div>
 
+{#
 This is for resources such as:
 <ul>
-    <li>images</li>
+    <li>images (gif, png, jpg, jpeg)</li>
     <li>docs (pdf)</li>
     <!-- <li>videos (lectures, youtube, etc)</li> -->
 </ul>
+#}
 
 <!-- <br> -->
 
@@ -335,7 +337,9 @@ This is for resources such as:
 
 <br><br>
 
-Infomation from: <a href="https://data.cardiff.ac.uk/legacy/grails/module/{{ module.code }}/22.html">https://data.cardiff.ac.uk/legacy/grails/module/{{ module.code }}/22.html</a>
+<span class="text-break">
+    Infomation from: <a href="https://data.cardiff.ac.uk/legacy/grails/module/{{ module.code }}/22.html">https://data.cardiff.ac.uk/legacy/grails/module/{{ module.code }}/22.html</a>
+</span>
 
 <br><br>
 
@@ -359,6 +363,9 @@ Infomation from: <a href="https://data.cardiff.ac.uk/legacy/grails/module/{{ mod
     let total_pages = 2
 
     let message_id_list = []
+
+    let message_field = $('#message-field')
+    let message_btn = $('#send-btn')
     
     // socket.connect({withCredentials: true})
 
@@ -389,6 +396,10 @@ Infomation from: <a href="https://data.cardiff.ac.uk/legacy/grails/module/{{ mod
             // }
         });*/
 
+        socket.on("disconnect", () => {
+            // need to come back and do something here
+        });
+
         socket.on('message', (data) => {
             if ($('#no-messages-here')) {
                 message_spacers = $('#no-messages-here').before(
@@ -410,51 +421,110 @@ Infomation from: <a href="https://data.cardiff.ac.uk/legacy/grails/module/{{ mod
 
             // console.log(data.message)
 
-            tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
-            tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+            // tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+            // tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
             
-            if(!messageBox.classList.contains('active')) {
-                scrollDown()
-            }
+            // if(!messageBox.classList.contains('active')) {
+            //     scrollDown()
+            // }
         })
 
-        $("#send-btn").on('click touchstart', () => {
-            sendMessage()   
-        });
-
+        console.log(message_btn.prop('disabled'))
 
         const sendMessage = () => {
-            let message_val = $('#message-field')
-        
-            if(message_val.val() != '') {
-                socket.emit("message",  {
-                    'user': `${username}`,
-                    'user_id': `${user_id}`,
-                    'room': `${thread_id}`,
-                    'message': message_val.val()
-                });
-                
-                message_val.val('')
+            if(message_btn.prop('disabled') == false) {
+                let message_val = $('#message-field')
+            
+                if(message_val.val() != '') {
+                    socket.emit("message",  {
+                        'user': `${username}`,
+                        'user_id': `${user_id}`,
+                        'room': `${thread_id}`,
+                        'message': message_val.val()
+                    });
+                    
+                    message_val.val('')
 
-                if(!messageBox.classList.contains('active')) {
-                    scrollDown()
-                }
-                
-                $('#inner_error_message').remove()
-            } else {
-                $('#inner_error_message').remove()
-                $('#error_message').append("<div id='inner_error_message'>Add a message</div>")
-            };
+                    // if(!messageBox.classList.contains('active')) {
+                    //     scrollDown()
+                    // }
+                    
+                    $('#inner_error_message').remove()
+                } else {
+                    $('#inner_error_message').remove()
+                    $('#error_message').append("<div id='inner_error_message'>Add a message</div>")
+                };
+            }
         };
+
+        message_btn.on('click touchstart', () => {
+            if(message_btn.prop('disabled') == false) {
+                sendMessage();
+            }
+        });
 
         /* reference: https://youtu.be/Ezj00-Gbdl0 */
         let input = document.getElementById('message-field');
 
         input.addEventListener('keyup', (e) => {
-            if(e.keyCode === 13) {
-                sendMessage();
+            if(message_btn.prop('disabled') == false) {
+                if(e.keyCode === 13) {
+                    sendMessage();
+                }
             }
         })
+    });
+
+    window.addEventListener('online', () => {
+        console.log('Became online')
+        message_field.removeAttr('disabled')
+        message_btn.prop('disabled', false);
+
+        let now = new Date();
+
+        const date_options = { day: 'numeric', month: 'short', year: 'numeric' };
+        const time_options = { hour12: false, hour: '2-digit', minute: '2-digit'};
+
+        const formattedTime = now.toLocaleTimeString('en-GB', time_options);
+        const formattedDate = now.toLocaleDateString('en-GB', date_options);
+        
+        const formattedDateTime = `${formattedTime}, ${formattedDate}`;
+        
+        console.log(formattedDateTime);
+
+        data = {
+            'user': 'Device',
+            'message': 'You are online',
+            'datetime': formattedDateTime
+        }
+        
+        displayNewOtherUserMessage(data)
+    });
+    
+    window.addEventListener('offline', () => {
+        console.log('Became offline')
+        message_field.attr('disabled','disabled');
+        message_btn.prop('disabled', true);
+
+        let now = new Date();
+        
+        const date_options = { day: 'numeric', month: 'short', year: 'numeric' };
+        const time_options = { hour12: false, hour: '2-digit', minute: '2-digit'};
+
+        const formattedTime = now.toLocaleTimeString('en-GB', time_options);
+        const formattedDate = now.toLocaleDateString('en-GB', date_options);
+        
+        const formattedDateTime = `${formattedTime}, ${formattedDate}`;
+        
+        console.log(formattedDateTime);
+
+        data = {
+            'user': 'Device',
+            'message': 'You are offline',
+            'datetime': formattedDateTime
+        }
+
+        displayNewOtherUserMessage(data)
     });
 
     messageBox.onmouseenter = () => {
@@ -477,6 +547,13 @@ Infomation from: <a href="https://data.cardiff.ac.uk/legacy/grails/module/{{ mod
                     </span>
                 </div>`
             )
+
+            tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+            tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+                
+            if(!messageBox.classList.contains('active')) {
+                scrollDown()
+            }
         }
     }
 
@@ -493,6 +570,13 @@ Infomation from: <a href="https://data.cardiff.ac.uk/legacy/grails/module/{{ mod
                     </span>
                 </div>`
             )
+
+            tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+            tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+                
+            if(!messageBox.classList.contains('active')) {
+                scrollDown()
+            }
         }
     }
 
@@ -543,7 +627,7 @@ Infomation from: <a href="https://data.cardiff.ac.uk/legacy/grails/module/{{ mod
                         )
 
                         $('#no-messages-here').remove()
-        }
+                    }
 
                     $('#load-more').remove()
 
@@ -583,9 +667,7 @@ Infomation from: <a href="https://data.cardiff.ac.uk/legacy/grails/module/{{ mod
                         addBtn()
                     }
 
-
                     next_page += 1
-
 
                     const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
                     const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
@@ -609,10 +691,8 @@ Infomation from: <a href="https://data.cardiff.ac.uk/legacy/grails/module/{{ mod
                     // scrollDownTo(random_string)
                 }
             });
-        });
-
-        
-    }
+        });        
+    }   
 
     function scrollDownTo(random_string) {
         messageBox.scrollIntoView(`#`+random_string+`-message-spacer`)

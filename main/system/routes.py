@@ -94,13 +94,13 @@ def privacy():
 # sockectio #
 @socketio.on('connect')
 def connect(auth):
-    print('conneted')
+    # print('conneted')
 
     emit('message', {'message': 'You\'re connected', 'datetime': str(datetime.utcnow().strftime('%I:%M, %d %b %Y')), 'user': 'Server'})
 
 @socketio.on('wake_up')
 def wake_up(auth):
-    print('wake_up')
+    # print('wake_up')
 
     emit('message', {'message': '', 'datetime': str(datetime.utcnow().strftime('%I:%M, %d %b %Y')), 'user': 'Server'})
     sleep(0.2)
@@ -110,13 +110,14 @@ def wake_up(auth):
 
 @socketio.on('disconnect')
 def disconnect():
-    print('Client disconnected')
+    # print('Client disconnected')
 
     emit('message', {'message': 'You\'ve been disconnected', 'datetime': str(datetime.utcnow().strftime('%I:%M, %d %b %Y')), 'user': 'Server'})
 
 @socketio.on('room-connect')
 def room_connect(data):
     # print(data)
+
     if not data.get('user') == current_user.id:
         emit('message', {'message': 'Invalid user', 'datetime': str(datetime.utcnow().strftime('%I:%M, %d %b %Y')), 'user': 'Server'})
     room = data.get('room')
@@ -126,7 +127,6 @@ def room_connect(data):
     emit('message', {'message': '', 'datetime': str(datetime.utcnow().strftime('%I:%M, %d %b %Y')), 'user': 'Server'})
     sleep(0.1)
     emit('message', {'message': '', 'datetime': str(datetime.utcnow().strftime('%I:%M, %d %b %Y')), 'user': 'Server'})
-
 
     # send({"user": 'Server', "message":f"{current_user.username} is here", 'datetime': str(datetime.utcnow().strftime('%I:%M, %d %b %Y'))}, to = room)
 

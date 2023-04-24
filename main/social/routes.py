@@ -216,8 +216,7 @@ def social_user_list():
         'social/social_user_list.html',
         title='Socail Messages',
         my_aside_dict = aside_dict(current_user),
-        users = users,
-        cli_test = 'This is to test if python code is auto updated for cli'
+        users = users
     )
 
 @socials.route("/messages/remove-thread/<thread_id>")

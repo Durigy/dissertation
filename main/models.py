@@ -90,7 +90,6 @@ class User(UserMixin, db.Model):
     university_year_id = db.Column(db.String(20), db.ForeignKey('university_year.id'), nullable = True)
     university_school_id = db.Column(db.String(20), db.ForeignKey('university_school.id'), nullable = True)
 
-
     # Relationships #
     # user_settings = db.relationship('UserSettings', backref = 'user', lazy = True, foreign_keys = 'UserSettings.user_id')
     # user_stats = db.relationship('UserStats', backref = 'user', lazy = True, foreign_keys = 'UserStats.user_id')
@@ -107,8 +106,8 @@ class User(UserMixin, db.Model):
     public_post_comment = db.relationship('PublicPostComment', backref = 'user', lazy = True, foreign_keys = 'PublicPostComment.user_id')
     message_thread_owner = db.relationship('MessageThread', backref = 'user', lazy = True, foreign_keys = 'MessageThread.user_id')
     message = db.relationship('Message', backref = 'user', lazy = True, foreign_keys = 'Message.user_id')
-    # image = db.relationship('Image', backref = 'user', lazy = True, foreign_keys = 'Image.user_id')
-    # document = db.relationship('Document', backref = 'user', lazy = True, foreign_keys = 'Document.user_id')
+    image = db.relationship('Image', backref = 'user', lazy = True, foreign_keys = 'Image.user_id')
+    document = db.relationship('Document', backref = 'user', lazy = True, foreign_keys = 'Document.user_id')
     module_resource = db.relationship('ModuleResource', backref = 'user', lazy = True, foreign_keys = 'ModuleResource.user_id')
 
     # M2M Relationships #
@@ -159,15 +158,12 @@ class UserRole(db.Model):
 #     reviews = db.Column(db.Integer, nullable = False, default = 0)
 #     date_edited = db.Column(db.DateTime, nullable = True)
 
-
 #     # Links (ForeignKeys) #
 #     user_id = db.Column(db.String(20), db.ForeignKey('user.id'), nullable = False)
 
 #     # Relationships #
 #     # Add Here
     
-
-
 
 # University
 class University(db.Model):
@@ -231,13 +227,11 @@ class UniversityYear(db.Model):
 #     date_created = db.Column(db.DateTime, nullable = False, default = datetime.utcnow)
 #     date_edited = db.Column(db.DateTime, nullable = True)
 
-
 #     # Links (ForeignKeys) #
 #     user_id = db.Column(db.String(20), db.ForeignKey('user.id'), nullable = False)
 
 #     # Relationships #
 #     # Add Here
-
 
 
 # Module
@@ -251,7 +245,6 @@ class Module(db.Model):
     tutor = db.Column(db.String(240), nullable = True, default = "Unknown")
     date_created = db.Column(db.DateTime, nullable = False, default = datetime.utcnow)
     date_edited = db.Column(db.DateTime, nullable = True)
-
 
     # Links (ForeignKeys) #
     university_id = db.Column(db.String(20), db.ForeignKey('university.id'), nullable = True)
@@ -282,6 +275,7 @@ class ModuleSubscription(db.Model):
     # Relationships #
     # Add Here
 
+
 class ModuleReview(db.Model):
     # Datebase Columns 
     id = db.Column(db.String(20), primary_key = True, default = secrets.token_hex(10))
@@ -298,7 +292,7 @@ class ModuleReview(db.Model):
 
     # Relationships #
     # Add Here
-    
+
 
 # class ModuleLecture(db.Model):
 #     # Datebase Columns 
@@ -306,21 +300,19 @@ class ModuleReview(db.Model):
 #     date_sent = db.Column(db.DateTime, nullable = False, default = datetime.utcnow)
 #     date_edited = db.Column(db.DateTime, nullable = True)
 
-
 #     # Links (ForeignKeys) #
 #     user_id = db.Column(db.String(20), db.ForeignKey('user.id'), nullable = False)
 #     module_id = db.Column(db.String(20), db.ForeignKey('module.id'), nullable = False)
 
 #     # Relationships #
 #     # module_lecture_vote = db.relationship('ModuleLectueVote', backref = 'module_lecture', lazy = True, foreign_keys = 'ModuleLectureVote.module_lecture_id')
-    
+
 
 # class ModuleLectueVote(db.Model):
 #     # Datebase Columns 
 #     id = db.Column(db.String(20), primary_key = True, default = secrets.token_hex(10))
 #     date_sent = db.Column(db.DateTime, nullable = False, default = datetime.utcnow)
 #     vote = db.Column(db.Boolean, nullable = False)
-
 
 #     # Links (ForeignKeys) #
 #     user_id = db.Column(db.String(20), db.ForeignKey('user.id'), nullable = False)
@@ -421,8 +413,7 @@ class ModuleResource(db.Model):
     # Add Here
     
 
-
-# Public
+# Public/Social #
 # class PublicProfile(db.Model):
 #     # Datebase Columns 
 #     id = db.Column(db.String(20), primary_key = True, default = secrets.token_hex(10))
@@ -491,7 +482,6 @@ class MessageThread(db.Model):
     message = db.relationship('Message', backref = 'thread', lazy = True, foreign_keys = 'Message.message_thread_id')
     module = db.relationship('Module', backref = 'thread', lazy = True, foreign_keys = 'Module.message_thread_id')
 
-
 class Message(db.Model):
     # Datebase Columns 
     id = db.Column(db.String(20), primary_key = True, default = secrets.token_hex(10))
@@ -506,7 +496,6 @@ class Message(db.Model):
     # Relationships #
     # Add Here
     
-
 
 # System
 class Image(db.Model):
@@ -549,6 +538,7 @@ class Document(db.Model):
     # Relationships #
     module_resource = db.relationship('ModuleResource', backref = 'document', lazy = True, foreign_keys = 'ModuleResource.document_id')
     
+
 # class URL(db.Model):
 #     """
 #     To store document information

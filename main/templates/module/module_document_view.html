@@ -3,11 +3,11 @@
 
 {% from "helpers/cards.html" import card %}
 <div>
-
     <div class="d-flex flex-wrap p-2">
         <div class="col">
             <a href="{{ url_for('modules.module_single', module_id = module.id) }}"> <i class="fa-solid fa-arrow-left"></i> Back to module</a>
         </div>
+
         <div class="col-9">
             <h2>{{ module_document.title }}</h2>
         </div>
@@ -19,6 +19,18 @@
         <!-- <img src="{{ document_name }}" class="card-img-top p-3" alt="{{ img_alt }}" style="max-height:800px; max-width 100%; height: auto;"> -->
         <!-- <iframe src="{{ document_name }}" frameborder="0" width="100%"></iframe> -->
         <object data="{{ document_name }}" type="application/pdf" width="100%" height="800px"></object>
+    </div>
+
+    <br>
+    
+    <div class="d-flex flex-wrap p-2">
+        <div class="col">
+            Posted by: {{ module_document.user.username }}
+        </div>
+
+        <div class="col text-end">
+            Date: {{ module_document.date.strftime('%I:%M, %d %b %Y') }}
+        </div>
     </div>
 
     <br>

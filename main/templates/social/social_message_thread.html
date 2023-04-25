@@ -34,6 +34,8 @@
     const messageBox = document.getElementById("messages")
     //scrollDown()
 
+    went_offline = false;
+
     let socket = io();
 
     const username = '{{ current_user.username }}'
@@ -62,7 +64,9 @@
             // send messages to fix connection issue
             socket.emit("wake_up",  {'user': 'client-get', 'room': `${thread_id}`, 'message': ''});
             
-            get_messages()
+            if(went_offline == false) {
+                get_messages()
+            }
         });
 
         /*socket.on('connect', () => {
@@ -112,7 +116,7 @@
             // }
         })
 
-        console.log(message_btn.prop('disabled'))
+        // console.log(message_btn.prop('disabled'))
 
         const sendMessage = () => {
             if(message_btn.prop('disabled') == false) {
@@ -158,8 +162,9 @@
         })
     });
 
+    // detect when the user comes back online
     window.addEventListener('online', () => {
-        console.log('Became online')
+        console.log('You\'re back online')
         message_field.removeAttr('disabled')
         message_btn.prop('disabled', false);
 
@@ -173,7 +178,7 @@
         
         const formattedDateTime = `${formattedTime}, ${formattedDate}`;
         
-        console.log(formattedDateTime);
+        // console.log(formattedDateTime);
 
         data = {
             'user': 'Device',
@@ -184,10 +189,12 @@
         displayNewOtherUserMessage(data)
     });
     
+    // detect when the user goes offline
     window.addEventListener('offline', () => {
-        console.log('Became offline')
+        console.log('You\'ve gone offline')
         message_field.attr('disabled','disabled');
         message_btn.prop('disabled', true);
+        went_offline = true;
 
         let now = new Date();
         
@@ -199,7 +206,7 @@
         
         const formattedDateTime = `${formattedTime}, ${formattedDate}`;
         
-        console.log(formattedDateTime);
+        // console.log(formattedDateTime);
 
         data = {
             'user': 'Device',

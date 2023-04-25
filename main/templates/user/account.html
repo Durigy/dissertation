@@ -1,12 +1,18 @@
 {% extends "layout.html" %}
 {% block content %}
-    <h1>Account Page</h1>
 
-    {% if current_user.is_authenticated %}
-        <h2>Hello {{ current_user.username }}</h2>
-    {% else %}
-        <h2>Hello There Friend</h2>
-    {% endif %}
+{% from "helpers/cards.html" import card %}
+
+    <h1>Account Page</h1>
+    <div class="d-flex flex-wrap p-2">
+        <div class="col pe-4">
+            <h2>Hello {{ current_user.username }}</h2>
+        </div>
+
+        <div class="">
+            <a href="{{ url_for('socials.social_profile', user_id = current_user.id) }}" class="btn btn-secondary">See my Profile</a>
+        </div>
+    </div>
     
     <br>
     <br>

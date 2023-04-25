@@ -3,26 +3,46 @@
 
     {% from "helpers/cards.html" import card %}
 
-    <h1>Public profile for {{ user.username }}</h1>
+    <h1>{% if user == current_user %}<span style="text-decoration: underline red;">Your</span> Public Profile{% else %}Public profile for <span style="text-decoration: underline red;">{{ user.username }}</span>{% endif %}</h1>
 
     <div>
         <div>
-            Joined date: {{ user.join_date.strftime('%d %b %Y') }}
+            Member Since: {{ user.join_date.strftime('%d %b %Y') }}
         </div>
     </div>
 
     <br>
 
-    <div>
-        <h4>Year:</h4>
-        <span>{{ user.university_year.name }}</span>
+    <div class="row">
+        <div class="col-md-6">
+            <h4>First Name:</h4>
+            {{ user.firstname }}
+            <br>
+            <br>
+        </div>
+        <div class="col-md-6">
+            <h4>Last Name:</h4>
+            {{ user.lastname }}
+        </div>
     </div>
 
     <br>
-    
-    <div>
-        <h4>School:</h4>
-        <span>{{ user.university_school.name }}</span>
+
+    <div class="row">
+        <div class="col-md-6">
+            <h4>Year:</h4>
+            {% if user.university_year.name %}
+            <span>{{ user.university_year.name }}</span>
+            {% else %}
+            <span>Tutor/Staff</span>
+            {% endif %}
+            <br>
+            <br>
+        </div>
+        <div class="col-md-6">
+            <h4>School:</h4>
+            <span>{{ user.university_school.name }}</span>
+        </div>
     </div>
 
     <br>
@@ -31,8 +51,10 @@
     <div style="white-space: pre;" class="text-break text-start">{{ user.profile.bio }}</div>
     
     <br>
+    <hr>
+    <br>
 
-    <h3>Modules they take</h3>
+    <h3>Modules {% if user == current_user %}<span style="text-decoration: underline red;">you</span> take{% else %}<span style="text-decoration: underline red;">{{ user.username}}</span> takes{% endif %}</h3>
 
     <div class="">
         {% if users_modules %}    

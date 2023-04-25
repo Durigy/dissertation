@@ -25,29 +25,21 @@
 
 {#% if questions.pages > 0 %#}
 <div class="d-flex flex-wrap p-2">
-    {% for user in users %}
-    {{ card(
-        title = user.username,
-        link = url_for('socials.social_message_thread_new', user_id = user.id),
-        link_text = 'Message',
-        width = 100
-    ) }}
-    {% endfor %}
-</div>
-
-<div class="">
-    {% if users %}    
-    {% for user in users %}
-    <div class="d-flex flex-wrap p-2">
-        {{ card(
-            title = user.username,
-            link = url_for('socials.social_profile', user_id = user.id),
-            link_text = 'See Profile',
-            width = 100
-        ) }}
+    <div class="row">
+        {% for user in users %}
+        <div class="col-md-6">
+            {{ card(
+                title = user.username, 
+                link = url_for('socials.social_message_thread_new', user_id = user.id),
+                link_text = 'Message',
+                link_streached = false, 
+                link_2 = url_for('socials.social_profile', user_id = user.id),
+                link_text_2 = 'See Profile',
+                width = 100
+            ) }}
+        </div>
+        {% endfor %}
     </div>
-    {% endfor %}
-    {% endif %}
 </div>
 
 {#% if users.pages > 1 %}

@@ -7,7 +7,7 @@ from .. import db, bcrypt, app
 from flask import render_template, url_for, request, redirect, flash, Blueprint
 from flask_login import login_user, logout_user, login_required, current_user
 from .forms import LoginForm, RegistrationForm, UpdateAccountForm, AddUniSchoolForm, AddUniYearForm, AddUniversityForm
-from ..models import User, PublicProfile, University, UniversitySchool, UniversityYear, Module
+from ..models import User, PublicProfile, University, UniversitySchool, UniversityYear, Module, MessageThread
 from ..main_utils import generate_id, aside_dict
 
 
@@ -153,38 +153,45 @@ def account():
     )
 
 
-# admin stuff throw here #
 
-@users.route(f"/{app.config['USER_CODE']}")
-@login_required
-def get_user_id():
-    if not current_user.is_admin:
-        flash('You don\'t have access to that')
-        return redirect(url_for('index'))
+
+# admin stuff thrown here #
+
+# depricated route due to flask-admin, can be added back if needed
+# @users.route(f"/{app.config['USER_CODE']}")
+# @login_required
+# def get_user_id():
+#     if not current_user.is_admin:
+#         flash('You don\'t have access to that')
+#         return redirect(url_for('index'))
     
-    flash(f"You\'re user_id is: {current_user.id}")
-    return redirect(url_for('index'))
+#     flash(f"You\'re user_id is: {current_user.id}")
+#     return redirect(url_for('index'))
 
-@users.route(f"/{app.config['ADMIN_CODE']}/<user_id>")
-@login_required
-def add_admin(user_id):
-    if not current_user.is_admin:
-        flash('You don\'t have access to that')
-        return redirect(url_for('index'))
+# depricated route due to flask-admin, can be added back if needed
+# @users.route(f"/{app.config['ADMIN_CODE']}/<user_id>")
+# @login_required
+# def add_admin(user_id):
+#     if not current_user.is_admin:
+#         flash('You don\'t have access to that')
+#         return redirect(url_for('index'))
     
-    user = User.query.get_or_404(user_id)
+#     user = User.query.get_or_404(user_id)
 
-    user.is_admin = True
+#     user.is_admin = True
 
-    db.session.commit()
+#     db.session.commit()
 
-    flash("You are now an admin")
-    return redirect(url_for('modules.module_add'))
+#     flash("You are now an admin")
+#     return redirect(url_for('modules.module_add'))
 
 
 @users.route(f"/add-uni", methods=['GET', 'POST'])
 @login_required
 def admin_add_uni():
+    """
+    Route for an admin to add new Universities to the application
+    """
     if not current_user.is_admin:
         flash('You don\'t have access to that')
         return redirect(url_for('index'))
@@ -205,7 +212,7 @@ def admin_add_uni():
     
     return render_template(
         'user/add_uni_x.html',
-        title='Add uni',
+        title='Add University',
         form=form,
         my_aside_dict = aside_dict(current_user)
     )
@@ -213,6 +220,9 @@ def admin_add_uni():
 @users.route(f"/add-uni-year", methods=['GET', 'POST'])
 @login_required
 def admin_add_uni_year():
+    """
+    Route for an admin to add new University Years to the application
+    """
     if not current_user.is_admin:
         flash('You don\'t have access to that')
         return redirect(url_for('index'))
@@ -233,7 +243,7 @@ def admin_add_uni_year():
     
     return render_template(
         'user/add_uni_x.html',
-        title='Add uni year',
+        title='Add Uni Year',
         form=form,
         my_aside_dict = aside_dict(current_user)
     )
@@ -241,6 +251,9 @@ def admin_add_uni_year():
 @users.route(f"/add-uni-school", methods=['GET', 'POST'])
 @login_required
 def admin_add_uni_school():
+    """
+    Route for an admin to add new University Schools to the application
+    """
     if not current_user.is_admin:
         flash('You don\'t have access to that')
         return redirect(url_for('index'))
@@ -261,16 +274,52 @@ def admin_add_uni_school():
     
     return render_template(
         'user/add_uni_x.html',
-        title='Add uni school',
+        title='Add Uni School',
         form=form,
         my_aside_dict = aside_dict(current_user)
     )
 
 from flask_admin.contrib.sqla import ModelView
+from flask_admin import BaseView, expose
 from .. import admin
 
-admin.add_view(ModelView(User, db.session))
-admin.add_view(ModelView(University, db.session))
-admin.add_view(ModelView(UniversitySchool, db.session))
-admin.add_view(ModelView(UniversityYear, db.session))
-admin.add_view(ModelView(Module, db.session))
+class GoHomeLink(BaseView):
+    @expose('/')
+    def index(self):
+        return redirect(url_for('index'))
+    
+class UserView(ModelView):
+    form_columns = ['id', 'username', 'firstname', 'lastname', 'email', 'is_admin', 'university_id', 'university_year_id', 'university_school_id', 'public_profile_id']
+    can_view_details = True
+    can_create = False
+    column_editable_list = ['firstname', 'lastname', 'is_admin']
+
+class UniversityView(ModelView):
+    form_columns = ['id', 'name','url', 'date_established','first_line', 'second_line', 'city', 'country', 'postcode']
+    can_view_details = True
+    # can_edit = False
+    can_create = False
+    column_editable_list = ['name','url', 'first_line', 'second_line', 'city', 'country', 'postcode']
+
+class ModuleView(ModelView):
+    form_columns = ['id', 'name', 'code', 'description', 'tutor', 'university_id', 'university_school_id', 'university_year_id', 'message_thread_id']
+    can_view_details = True
+    # can_edit = False
+    can_create = False
+    column_editable_list = ['name', 'code', 'description', 'tutor']
+
+class NameIdView(ModelView):
+    form_columns = ['id', 'name']
+    can_view_details = True
+    # can_edit = False
+    can_create = False
+    column_editable_list = ['name']
+    
+# flask admin routes for adding databse tables to the view/delete in the admin panel (editing/adding can't be done here due to the dates)
+admin.add_view(UserView(User, db.session))
+admin.add_view(UniversityView(University, db.session))
+admin.add_view(NameIdView(UniversitySchool, db.session))
+admin.add_view(NameIdView(UniversityYear, db.session))
+admin.add_view(ModuleView(Module, db.session))
+admin.add_view(NameIdView(MessageThread, db.session))
+admin.add_view(GoHomeLink(name='<- Back to site'))

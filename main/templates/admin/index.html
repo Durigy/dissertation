@@ -1,0 +1,63 @@
+{% extends 'admin/master.html' %}
+{% block body %}
+
+{% from "helpers/cards.html" import card %}
+
+<br>
+
+<h2>Add new items</h2>
+<div class="row">
+    <div class="col-md-6 col-lg-3">
+        <div class="card m-1 position-relative" style="width: 100%;">
+            <div class="card-header">
+                <h5>University</h5>
+            </div>
+            <div class="card-body">
+                <a href="{{ url_for('users.admin_add_uni') }}" class="stretched-link">Add New</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6 col-lg-3">
+        <div class="card m-1 position-relative" style="width: 100%;">
+            <div class="card-header">
+                <h5>Uni Year</h5>
+            </div>
+            <div class="card-body">
+                <a href="{{ url_for('users.admin_add_uni_year') }}" class="stretched-link">Add New</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6 col-lg-3">
+        <div class="card m-1 position-relative" style="width: 100%;">
+            <div class="card-header">
+                <h5>Uni School</h5>
+            </div>
+            <div class="card-body">
+                <a href="{{ url_for('users.admin_add_uni_school') }}" class="stretched-link">Add New</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6 col-lg-3">
+        <div class="card m-1 position-relative" style="width: 100%;">
+            <div class="card-header">
+                <h5>Module</h5>
+            </div>
+            <div class="card-body">
+                <a href="{{ url_for('modules.module_add') }}" class="stretched-link">Add New</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<br>
+<hr>
+<br>
+
+<h2>Stats</h2>
+<em>Comming Soon</em>
+
+{% endblock body %}
+

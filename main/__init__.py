@@ -168,7 +168,7 @@ class NewAdminIndexView(AdminIndexView):
         flash('You can\'t access that')
         return redirect(url_for('index'))
 
-admin = Admin(app, index_view=NewAdminIndexView())
+admin = Admin(app, index_view=NewAdminIndexView(), template_mode='bootstrap4')
 
 # Image Kit SDK initialization
 # imagekit = ''

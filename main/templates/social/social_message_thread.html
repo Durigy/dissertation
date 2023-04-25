@@ -196,7 +196,8 @@
         message_btn.prop('disabled', true);
         went_offline = true;
 
-        let now = new Date();
+        let now = new Date().getUTCDate();
+        // now = now.getUTCDate()
         
         const date_options = { day: 'numeric', month: 'short', year: 'numeric' };
         const time_options = { hour12: false, hour: '2-digit', minute: '2-digit'};
@@ -230,7 +231,7 @@
             const message = $('#bottom-message-spacer').before(
                 `<br>
                 <div class="text-end">
-                    <span data-bs-toggle="tooltip" data-bs-title="${data.datetime}" style="cursor: default;">                
+                    <span data-bs-toggle="tooltip" data-bs-title="${data.datetime} (UTC)" style="cursor: default;">                
                         <div class="text-wrap text-break my-2 rounded px-4 py-2 my-1 bg-white shadow-sm" style="display: inline; overflow:hidden">
                             ${data.message}
                         </div>
@@ -253,7 +254,7 @@
                 `<br>
                 <div>
                     ${data.user}:
-                    <span data-bs-toggle="tooltip" data-bs-title="${data.datetime}" style="cursor: default;">
+                    <span data-bs-toggle="tooltip" data-bs-title="${data.datetime} (UTC)" style="cursor: default;">
                         <div class="text-wrap text-break my-2 rounded px-4 py-2 my-1 bg-secondary text-white shadow-sm" style="display: inline;">
                             ${data.message}
                         </div>
@@ -275,7 +276,7 @@
             const message = $('#'+random_string+'-message-spacer').before(
                 `<br>
                 <div class="text-end">
-                    <span data-bs-toggle="tooltip" data-bs-title="${data.datetime}" style="cursor: default;">                
+                    <span data-bs-toggle="tooltip" data-bs-title="${data.datetime} (UTC)" style="cursor: default;">                
                         <div class="text-wrap text-break my-2 rounded px-4 py-2 my-1 bg-white shadow-sm" style="display: inline; overflow:hidden">
                             ${data.message}
                         </div>
@@ -291,7 +292,7 @@
                 `<br>
                 <div>
                     ${data.user}:
-                    <span data-bs-toggle="tooltip" data-bs-title="${data.datetime}" style="cursor: default;">
+                    <span data-bs-toggle="tooltip" data-bs-title="${data.datetime} (UTC)" style="cursor: default;">
                         <div class="text-wrap text-break my-2 rounded px-4 py-2 my-1 bg-secondary text-white shadow-sm" style="display: inline;">
                             ${data.message}
                         </div>

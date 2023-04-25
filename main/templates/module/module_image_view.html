@@ -20,6 +20,18 @@
     </div>
 
     <br>
+    
+    <div class="d-flex flex-wrap p-2">
+        <div class="col">
+            Posted by: {{ module_image.user.username }}
+        </div>
+
+        <div class="col text-end">
+            Date: {{ module_image.date.strftime('%I:%M, %d %b %Y') }} (UTC)
+        </div>
+    </div>
+
+    <br>
     {% if module_image.description %}
     <h3>Description:</h3>
     {{ module_image.description }}

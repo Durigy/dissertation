@@ -354,10 +354,10 @@ This is for resources such as:
 <br><br>
 
 <script type="text/javascript" charset="utf-8">
-    const username = '{{ current_user.username }}'
-    const user_id = '{{ current_user.id }}'
-    const thread_id = '{{ module.message_thread_id }}'
-    const message_url = "{{ url_for('modules.module_get_messages', module_id = module.id) }}"
+    const username = '{{ current_user.username }}';
+    const user_id = '{{ current_user.id }}';
+    const thread_id = '{{ module.message_thread_id }}';
+    const message_url = "{{ url_for('modules.module_get_messages', module_id = module.id) }}";
 </script>
 
 <script src="{{ url_for('static', filename='js/chat.js')}}"></script>

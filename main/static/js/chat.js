@@ -1,19 +1,21 @@
 /* reference: https://getbootstrap.com/docs/5.2/components/tooltips/ */
-tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
-tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
 
-const messageBox = document.getElementById("messages")
+const messageBox = document.getElementById("messages");
 //scrollDown()
 
 let socket = io(); // 'http://localhost:5000');
 
-let next_page = 1
-let total_pages = 2
+let next_page = 1;
+let total_pages = 2;
 
-let message_id_list = []
+let message_id_list = [];
 
-let message_field = $('#message-field')
-let message_btn = $('#send-btn')
+let message_field = $('#message-field');
+let message_btn = $('#send-btn');
+
+let initial_load = true;
 
 // socket.connect({withCredentials: true})
 
@@ -27,7 +29,10 @@ $( document ).ready(() => {
         // send messages to fix connection issue
         socket.emit("wake_up",  {'user': 'client-get', 'room': `${thread_id}`, 'message': ''});
         
-        get_messages()
+        if (initial_load) {
+            get_messages()
+            initial_load = false;
+        }
     });
 
     /*socket.on('connect', () => {

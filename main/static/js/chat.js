@@ -15,7 +15,8 @@ let message_id_list = [];
 let message_field = $('#message-field');
 let message_btn = $('#send-btn');
 
-let initial_load = true;
+// let initial_load = t;
+localStorage.setItem('initial_load', 'true');
 
 // socket.connect({withCredentials: true})
 
@@ -27,11 +28,12 @@ $( document ).ready(() => {
         });
         
         // send messages to fix connection issue
-        socket.emit("wake_up",  {'user': 'client-get', 'room': `${thread_id}`, 'message': ''});
+        socket.emit('wake_up',  {'user': 'client-get', 'room': `${thread_id}`, 'message': ''});
         
-        if (initial_load) {
+        // console.log(localStorage.getItem('initial_load'))
+        if (localStorage.getItem('initial_load') == 'true') {
             get_messages()
-            initial_load = false;
+            localStorage.setItem('initial_load', 'false');
         }
     });
 
@@ -49,7 +51,7 @@ $( document ).ready(() => {
         // }
     });*/
 
-    socket.on("disconnect", () => {
+    socket.on('disconnect', () => {
         // need to come back and do something here
     });
 
@@ -371,3 +373,7 @@ function addBtn() {
 function scrollDown() {
     messageBox.scrollTop = messageBox.scrollHeight;
 };
+
+window.onbeforeunload = function(){
+    localStorage.removeItem('initial_load');
+  };

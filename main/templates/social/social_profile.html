@@ -1,73 +1,110 @@
 {% extends "social/social_layout.html" %}
 {% block social %}
 
-    {% from "helpers/cards.html" import card %}
+{% from "helpers/cards.html" import card %}
 
-    <h1>{% if user == current_user %}<span style="text-decoration: underline red;">Your</span> Public Profile{% else %}Public profile for <span style="text-decoration: underline red;">{{ user.username }}</span>{% endif %}</h1>
 
-    <div>
-        <div>
-            Member Since: {{ user.join_date.strftime('%d %b %Y') }}
-        </div>
+<div class="row p-2">
+    <div class="col-lg-8">
+        <h1>{% if user == current_user %}<span style="text-decoration: underline red;">Your</span> Public Profile{% else %}Public profile for <span style="text-decoration: underline red;">{{ user.username }}</span>{% endif %}</h1>
     </div>
-
-    <br>
-
-    <div class="row">
-        <div class="col-md-6">
-            <h4>First Name:</h4>
-            {{ user.firstname }}
-            <br>
-            <br>
-        </div>
-        <div class="col-md-6">
-            <h4>Last Name:</h4>
-            {{ user.lastname }}
-        </div>
-    </div>
-
-    <br>
-
-    <div class="row">
-        <div class="col-md-6">
-            <h4>Year:</h4>
-            {% if user.university_year.name and not user.is_tutor %}
-            <span>{{ user.university_year.name }}</span>
-            {% else %}
-            <span>Tutor</span>
-            {% endif %}
-            <br>
-            <br>
-        </div>
-        <div class="col-md-6">
-            <h4>School:</h4>
-            <span>{{ user.university_school.name }}</span>
-        </div>
-    </div>
-
-    <br>
-    
-    <h4>Bio: </h4>
-    <div style="white-space: pre;" class="text-break text-start">{{ user.profile.bio }}</div>
-    
-    <br>
-    <hr>
-    <br>
-
-    <h3>Modules {% if user == current_user %}<span style="text-decoration: underline red;">you</span>{% else %}<span style="text-decoration: underline red;">{{ user.username}}</span>{% endif %} follow</h3>
-
-    <div class="">
-        {% if users_modules %}    
-        <div class="d-flex flex-wrap p-2">
-            {% for module in users_modules %}
-            {% set temp = module.module.code + " - " + module.module.name %}
-            {{ card(title = temp, link = url_for('modules.module_single', module_id=module.module.id), link_text = 'View') }}
-            {% endfor %}
-        </div>
-        {% else %}
-        <h5>They haven't subscribed to any modules yet.</h5>
+    <div class="col-lg-4">
+        {% if not user == current_user %}
+        <a href="{{ url_for('socials.social_message_thread_new', user_id = user.id) }}" class="btn btn-secondary">Message {{ user.username }}</a>
+        <br>
+        <br>
         {% endif %}
     </div>
+</div>
 
-    <br><br><br>
+
+<div>
+    <div>
+        Member Since: {{ user.join_date.strftime('%d %b %Y') }}
+    </div>
+</div>
+
+<br>
+
+<div class="row">
+    <div class="col-md-6">
+        <h4>First Name:</h4>
+        {% if user.firstname %}
+        {{ user.firstname }}
+        {% else %}
+        <span><em>Unknown</em></span>
+        {% endif %}
+        <br>
+        <br>
+    </div>
+
+    <div class="col-md-6">
+        {% if user.lastname %}
+        <h4>Last Name:</h4>
+        {{ user.lastname }}
+        {% else %}
+        <span><em>Unknown</em></span>
+        {% endif %}
+    </div>
+</div>
+
+<br>
+
+<div class="row">
+    <div class="col-md-6">
+        <h4>Year:</h4>
+        {% if user.university_year_id %}
+        <span>{{ user.university_year.name }}</span>
+        {% elif user.if_tutor %}
+        <span>Tutor</span>
+        {% else %}
+        <span><em>Unknown</em></span>
+        {% endif %}
+        <br>
+        <br>
+    </div>
+    <div class="col-md-6">
+        <h4>School:</h4>
+        {% if user.university_school_id %}
+        <span>{{ user.university_school.name }}</span>
+        {% else %}
+        <span><em>Unknown</em></span>
+        {% endif %}
+    </div>
+</div>
+
+<br>
+
+<h4>Bio: </h4>
+
+{% if user.bio %}
+<div style="white-space: pre;" class="text-break text-start">
+    {{ user.profile.bio }}
+</div>
+{% else %}
+<span><em>They don't have anything to say right now</em></span>
+
+<br>
+{% endif %}
+
+<br>
+<hr>
+<br>
+
+<h3>Modules {% if user == current_user %}<span style="text-decoration: underline red;">you</span>{% else %}<span style="text-decoration: underline red;">{{ user.username}}</span>{% endif %} follow</h3>
+
+<div class="">
+    {% if users_modules %}    
+    <div class="d-flex flex-wrap p-2">
+        {% for module in users_modules %}
+        {% set temp = module.module.code + " - " + module.module.name %}
+        {{ card(title = temp, link = url_for('modules.module_single', module_id=module.module.id), link_text = 'View') }}
+        {% endfor %}
+    </div>
+    {% else %}
+    <span><em>They haven't subscribed to any modules yet.</em></span>
+    {% endif %}
+</div>
+
+<br><br><br>
 {% endblock social %}

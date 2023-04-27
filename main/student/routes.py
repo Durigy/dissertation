@@ -21,7 +21,7 @@ def student_home():
         .filter(ModuleSubscription.user_id == current_user.id) \
         .filter_by(module_id = ModuleSubscription.module_id) \
         .order_by(ModuleResource.date.desc()) \
-        .paginate(page = resource_page, per_page = 4)    
+        .paginate(page = resource_page, per_page = 3)    
 
     user_question_page = request.args.get('user_question_page', 1, type = int)
 

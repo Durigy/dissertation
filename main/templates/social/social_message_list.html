@@ -13,14 +13,17 @@
 </div>
 
 <br>
+{% if my_aside_dict.message_threads %}
 <div>
-        {#% for i in range(10) %#}
-        {% for thread in my_aside_dict.message_threads %}
-        {#% set num = i + 1 %#}
-        {% set temp = 'Members: ' + thread.member_count | string + ' | Messages: ' + thread.message_count | string  %}
-        {{ card(title = thread.name, link = url_for('socials.social_message_single', message_thread_id = thread.id), link_text = 'View Message', description = temp, width = 98) }}
-        {% endfor %} 
+    {% for thread in my_aside_dict.message_threads %}
+    {#% set num = i + 1 %#}
+    {% set temp = 'Members: ' + thread.member_count | string + ' | Messages: ' + thread.message_count | string  %}
+    {{ card(title = thread.name, link = url_for('socials.social_message_single', message_thread_id = thread.id), link_text = 'View Message', description = temp, width = 98) }}
+    {% endfor %} 
 </div>
+{% else %}
+<em>No message here yet</em>
+{% endif %} 
 
 <br>
     

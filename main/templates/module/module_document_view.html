@@ -25,7 +25,7 @@
     
     <div class="d-flex flex-wrap p-2">
         <div class="col">
-            Posted by: {{ module_document.user.username }}
+            Posted by: {{ module_document.user.username }} {% if module_document.user.is_tutor %}(Tutor){% endif %}
         </div>
 
         <div class="col text-end">

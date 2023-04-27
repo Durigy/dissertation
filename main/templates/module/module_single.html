@@ -445,13 +445,13 @@ This is for resources such as:
             <div class="pb-2 col-6 px-2">
                 {% if student == current_user %}
                 {{ card(
-                    title = 'YOU',
+                    title = 'YOU - Tutor' if student.is_tutor else 'YOU',
                     width = 100
                 ) }}
                 <!-- <span class="text-danger">YOU</span> -->
                 {% else %}
                 {{ card(
-                    title = student.username,
+                    title = student.username + ' - Tutor' if student.is_tutor else student.username,
                     link = url_for('socials.social_profile', user_id = student.id),
                     link_text = 'See Profile',
                     width = 100

@@ -290,10 +290,10 @@ class GoHomeLink(BaseView):
         return redirect(url_for('index'))
     
 class UserView(ModelView):
-    form_columns = ['id', 'username', 'firstname', 'lastname', 'email', 'is_admin', 'university_id', 'university_year_id', 'university_school_id', 'public_profile_id']
+    form_columns = ['id', 'username', 'firstname', 'lastname', 'email', 'is_admin', 'is_tutor', 'university_id', 'university_year_id', 'university_school_id', 'public_profile_id']
     can_view_details = True
     can_create = False
-    column_editable_list = ['firstname', 'lastname', 'is_admin']
+    column_editable_list = ['firstname', 'lastname', 'is_admin', 'is_tutor']
 
 class UniversityView(ModelView):
     form_columns = ['id', 'name','url', 'date_established','first_line', 'second_line', 'city', 'country', 'postcode']

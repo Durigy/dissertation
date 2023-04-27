@@ -89,7 +89,11 @@ def student_note_single(note_id):
 
         else:
             note = Note.query.get_or_404(note_id)
-            print(note.title)
+
+            if not note.user_id == current_user.id:
+                flash("You can\'t access that")
+                return redirect(url_for('students.student_home'))
+            
             form.title.data = note.title
             form.text.data = note.text
             module_select_id = note.module_id

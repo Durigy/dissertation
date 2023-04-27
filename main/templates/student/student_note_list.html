@@ -2,6 +2,7 @@
 {% block content %}
 
 {% from "helpers/cards.html" import card %}
+{% from "helpers/blue_tile.html" import blue_tile %}
 
 
 <!-- <div class="position-relative" style="height: 30vh; width: 45vw">
@@ -21,7 +22,7 @@
         <a href="{{ url_for('students.student_note_single', note_id='new', new='new') }}" class="btn btn-secondary">New Note</a>
     </div>
 </div>
-
+{% if notes %}
 <div class="row p-2">
     {% for note in notes %}
     <div class="pb-2 col-md-6 px-2">
@@ -29,15 +30,18 @@
     </div>
     {% endfor %}
 </div>
-
-{#
-<div class="d-flex flex-wrap p-2">
-    {% for i in range(10) %}
-    {% set num = i + 1 %}
-    {% set temp = 'Note ' + num | string %}
-    {{ card(title = temp, link = '#', link_text = 'See More') }}
-    {% endfor %}
+{% else %}
+<div>
+    <em>You haven't created any notes yet</em>
 </div>
-#}
+
+<br>
+{% endif %}
+
+<br>
+
+{{ blue_tile(title = 'In a lecture and need to take some notes?', description = 'Why not do it here? All your notes can be in one place', link = url_for('students.student_note_single', note_id='new', new='new'), link_text = 'Create a note') }}
+
+<br><br><br>
 
 {% endblock content %}

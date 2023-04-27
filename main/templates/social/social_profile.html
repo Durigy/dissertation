@@ -31,10 +31,10 @@
     <div class="row">
         <div class="col-md-6">
             <h4>Year:</h4>
-            {% if user.university_year.name %}
+            {% if user.university_year.name and not user.is_tutor %}
             <span>{{ user.university_year.name }}</span>
             {% else %}
-            <span>Tutor/Staff</span>
+            <span>Tutor</span>
             {% endif %}
             <br>
             <br>
@@ -54,7 +54,7 @@
     <hr>
     <br>
 
-    <h3>Modules {% if user == current_user %}<span style="text-decoration: underline red;">you</span> take{% else %}<span style="text-decoration: underline red;">{{ user.username}}</span> takes{% endif %}</h3>
+    <h3>Modules {% if user == current_user %}<span style="text-decoration: underline red;">you</span>{% else %}<span style="text-decoration: underline red;">{{ user.username}}</span>{% endif %} follow</h3>
 
     <div class="">
         {% if users_modules %}    

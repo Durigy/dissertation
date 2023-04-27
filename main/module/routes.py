@@ -44,8 +44,18 @@ def module_single(module_id):
     
     resources = ModuleResource.query \
         .filter_by(module_id = module_id) \
+        .filter_by(is_tutor_resource = False) \
         .order_by(ModuleResource.date.desc()) \
         .paginate(page = resource_page, per_page = 4)
+
+    # module tutor resources
+    tutor_resource_page = request.args.get('tutor_resource_page', 1, type = int)
+    
+    tutor_resources = ModuleResource.query \
+        .filter_by(module_id = module_id) \
+        .filter_by(is_tutor_resource = True) \
+        .order_by(ModuleResource.date.desc()) \
+        .paginate(page = tutor_resource_page, per_page = 4)
     
 
     following_module = True if ModuleSubscription.query.filter_by(module_id=module_id).filter_by(user_id=current_user.id).first() else False
@@ -66,6 +76,7 @@ def module_single(module_id):
         questions = questions,
         module_id = module_id,
         resources = resources,
+        tutor_resources = tutor_resources,
         img_url = IMAGEKIT_URL_ENDPOINT + '/module-resource-image/',
         doc_url = IMAGEKIT_URL_ENDPOINT + '/module-resource-document/',
         use_web_socket = True,
@@ -436,7 +447,8 @@ def module_resource_add():
                         id = module_file_id,
                         user_id = current_user.id,
                         module_id = module_id,
-                        image_id = image_id
+                        image_id = image_id,
+                        is_tutor_resource = True if current_user.is_tutor else False
                     )
 
                 else:
@@ -477,7 +489,8 @@ def module_resource_add():
                         id = module_file_id,
                         user_id = current_user.id,
                         module_id = module_id,
-                        document_id = document_id
+                        document_id = document_id,
+                        is_tutor_resource = True if current_user.is_tutor else False
                     )
 
 

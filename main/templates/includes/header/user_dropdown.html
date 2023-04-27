@@ -8,11 +8,11 @@
                 <i class="fa-solid fa-user-large"></i>  Account
             </a>
         </li>
-        <!-- <li>
-            <a class="dropdown-item" href="#">
+        <li>
+            <a class="dropdown-item" href="{{ url_for('students.student_note_single', note_id='new', new='new') }}">
                 <i class="fa-solid fa-note-sticky"></i>  Add a Note
             </a>
-        </li> -->
+        </li>
         <li>
             <a class="dropdown-item" href="{{ url_for('modules.module_question_add') }}">
                 <i class="fa-solid fa-question"></i>  Ask a Question

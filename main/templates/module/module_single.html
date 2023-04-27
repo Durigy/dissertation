@@ -189,13 +189,15 @@
 
 <div class="d-flex flex-wrap p-2">
     <div class="col pe-4">
-        <h3>Resources</h3>
+        <h3>Resources from students</h3>
     </div>
     <div class="text-end">
+        {% if not current_user.is_tutor %}
         {% if following_module %}
         <a href="{{ url_for('modules.module_resource_add', module_id = module.id) }}" class="btn btn-secondary">Add a resource</a>
         {% else %}
         <h4 class="text-danger">Subscribe to this module to interact</h4><a href="{{ url_for('modules.module_add_sub', module_id = module.id) }}" class="btn btn-success">Subscribe</a>
+        {% endif %}
         {% endif %}
     </div>
 </div>
@@ -286,11 +288,136 @@ This is for resources such as:
     </ul>
 </div>
 {% endif %}
+{% else %}
+<div>
+    <em>There are no resources form students yet</em>
+</div>
 {% endif %}
 
 {% else %}
 <div>
-    <em>There are no resources for this module yet</em>
+    <em>Something when wrong</em>
+</div>
+{% endif %}
+
+<br>
+<br>
+<hr class="text-muted">
+<br>
+
+
+<!-- module resources -->
+
+<div class="d-flex flex-wrap p-2">
+    <div class="col pe-4">
+        <h3>Resources by your tutor(s)</h3>
+    </div>
+    <div class="text-end">
+        {% if current_user.is_tutor %}
+        {% if following_module %}
+        <a href="{{ url_for('modules.module_resource_add', module_id = module.id) }}" class="btn btn-secondary">Add a resource</a>
+        {% else %}
+        <h4 class="text-danger">Subscribe to this module to interact</h4><a href="{{ url_for('modules.module_add_sub', module_id = module.id) }}" class="btn btn-success">Subscribe</a>
+        {% endif %}
+        {% endif %}
+    </div>
+</div>
+
+{#
+This is for resources such as:
+<ul>
+    <li>images (gif, png, jpg, jpeg)</li>
+    <li>docs (pdf)</li>
+    <!-- <li>videos (lectures, youtube, etc)</li> -->
+</ul>
+#}
+
+<!-- <br> -->
+
+<!-- <\ all resources will appeare here - paginated \> -->
+{% if tutor_resources %}
+{% if tutor_resources.pages > 0 %}
+<div class="d-flex flex-wrap p-2">
+    {% for tutor_resource in tutor_resources.items %}
+    
+    {# image #}
+    {% if tutor_resource.image %}
+    {#% set image_name = 'uploads/img/' + resource.image_id +'.png' %#}
+    {% set image_name = img_url + tutor_resource.image.imagekit_id %}
+
+    {{ card(
+        title = tutor_resource.image.title|truncate(40, True),
+        description = tutor_resource.image.description|truncate(300, True) if tutor_resource.image.description else None,
+        img_source = image_name,
+        link = url_for('modules.module_image_view', module_resource_id = tutor_resource.id),
+        link_text = 'View',
+        width = 32
+    ) }}
+
+    {# document #}
+    {% else %}
+    {{ card(
+        title = tutor_resource.document.title|truncate(40, True),
+        description = tutor_resource.document.description|truncate(300, True) if tutor_resource.document.description else None,
+        img_source = url_for('static', filename = 'images/file-lines-regular.svg'),
+        img_icon = true,
+        link = url_for('modules.module_document_view', module_resource_id = tutor_resource.id),
+        link_text = 'View',
+        width = 32
+    ) }}
+    {% endif %}
+    {% endfor %}
+</div>
+
+{% if tutor_resources.pages > 1 %}
+{# reference to my past code for pagination: https://github.com/Durigy/neighbourfy-v2/blob/main/main/templates/user/account.html #}
+<!-- Pagination Links-->
+
+<div aria-label="Tutor Resource Page Navigation">
+    <ul class="pagination">
+        <li class="page-item">
+            <a href="{{ url_for('modules.module_single', module_id = module_id, tutor_resource_page = tutor_resources.prev_num) }}" {% if tutor_resources.page == 1 %} style="pointer-events: none; cursor: default;" class = "page-link text-secondary"{% else %} class="page-link" {% endif %}>
+                Previous
+            </a>
+        </li>
+
+        {% for page_num in tutor_resources.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+        {% if page_num %}
+        
+        <li class="page-item">
+            <a class="page-link {% if page_num == tutor_resources.page %} text-danger {% endif %}" href="{{url_for('modules.module_single', module_id = module_id, tutor_resource_page = page_num)}}">
+                {{page_num}}
+            </a>
+        </li>
+        
+        {% else %}
+        
+        <li class="page-item">
+            <a class="page-link text-secondary" href="" style="pointer-events: none; cursor: default;">
+                . . .
+            </a>
+        </li>
+        
+        {% endif %}
+        {% endfor %}
+
+        <li class="page-item">
+            <a href="{{ url_for('modules.module_single', module_id = module_id, tutor_resource_page = tutor_resources.next_num) }}" {% if tutor_resources.page == tutor_resources.pages %} style="pointer-events: none; cursor: default;" class = "page-link text-secondary"{% else %} class="page-link" {% endif %}>
+                Next
+            </a>
+        </li>
+    </ul>
+</div>
+{% endif %}
+{% else %}
+<div>
+    <em>There are no resources from your tutor(s) yet</em>
+</div>
+{% endif %}
+
+{% else %}
+<div>
+    <em>Something when wrong</em>
 </div>
 {% endif %}
 

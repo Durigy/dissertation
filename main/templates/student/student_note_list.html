@@ -4,14 +4,31 @@
 {% from "helpers/cards.html" import card %}
 
 
-<div class="position-relative" style="height: 30vh; width: 45vw">
+<!-- <div class="position-relative" style="height: 30vh; width: 45vw">
     <div class="position-absolute top-50 start-50 text-center">
         <h1 class="pb-3">Your notes</h1>
         <hr class="text-muted">
         <span style="font-size: 5rem;">Comming Soon</span>
     </div>
+</div> -->
+
+
+<div class="d-flex flex-wrap p-2">
+    <div class="col pe-4">
+        <h1>Your Notes</h1>
+    </div>
+    <div class="text-end">
+        <a href="{{ url_for('students.student_note_single', note_id='new', new='new') }}" class="btn btn-secondary">New Note</a>
+    </div>
 </div>
 
+<div class="row p-2">
+    {% for note in notes %}
+    <div class="pb-2 col-md-6 px-2">
+        {{ card(title = note.title, link = url_for('students.student_note_single', note_id=note.id), link_text = 'View', width=100) }}
+    </div>
+    {% endfor %}
+</div>
 
 {#
 <div class="d-flex flex-wrap p-2">

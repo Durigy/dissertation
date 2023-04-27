@@ -14,10 +14,12 @@
 
 <div class="">
     {% if subscribed_modules %}    
-    <div class="d-flex flex-wrap p-2">
+    <div class="row p-2">
         {% for module in subscribed_modules %}
-        {% set temp = module.module.code + " - " + module.module.name %}
-        {{ card(title = temp, link = url_for('modules.module_single', module_id=module.module.id), link_text = 'View') }}
+        <div class="col-md-6">
+            {% set temp = module.module.code + " - " + module.module.name %}
+            {{ card(title = temp, link = url_for('modules.module_single', module_id=module.module.id), link_text = 'View', width=100) }}
+        </div>
         {% endfor %}
     </div>
     {% else %}

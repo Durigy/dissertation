@@ -4,7 +4,7 @@ from wtforms import StringField, PasswordField, SubmitField, BooleanField, TextA
 from wtforms.validators import DataRequired, Length, EqualTo, ValidationError, Regexp, InputRequired, NumberRange, Email
 from ..models import User, UniversitySchool, UniversityYear
 from flask_login import current_user
-from datetime import timedelta, date
+# from datetime import timedelta, date
 
 class RegistrationForm(FlaskForm):
     university_year_choices = [('','Select a Year')]

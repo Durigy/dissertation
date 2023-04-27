@@ -7,7 +7,7 @@ from .. import db, bcrypt, app
 from flask import render_template, url_for, request, redirect, flash, Blueprint
 from flask_login import login_user, logout_user, login_required, current_user
 from .forms import LoginForm, RegistrationForm, UpdateAccountForm, AddUniSchoolForm, AddUniYearForm, AddUniversityForm
-from ..models import User, PublicProfile, University, UniversitySchool, UniversityYear, Module, MessageThread
+from ..models import User, PublicProfile, University, UniversitySchool, UniversityYear, Module, MessageThread, Note, Message
 from ..main_utils import generate_id, aside_dict
 
 
@@ -28,6 +28,7 @@ def register():
     university_schools = UniversitySchool.query.order_by(UniversitySchool.name).all()
 
     form = RegistrationForm()
+
     if form.validate_on_submit() and request.method == "POST":
         user_id = generate_id(User) # pass the table name as a varible
         hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
@@ -314,7 +315,21 @@ class NameIdView(ModelView):
     # can_edit = False
     can_create = False
     column_editable_list = ['name']
-    
+
+class NoteView(ModelView):
+    form_columns = ['id', 'title', 'text', 'user_id', 'module_id']
+    can_view_details = True
+    # can_edit = False
+    can_create = False
+    column_editable_list = ['title', 'text', 'user_id', 'module_id']
+
+class MessageView(ModelView):
+    form_columns = ['id', 'body', 'date_sent', 'user_id']
+    can_view_details = True
+    can_edit = False
+    can_create = False
+    can_delete = False
+
 # flask admin routes for adding databse tables to the view/delete in the admin panel (editing/adding can't be done here due to the dates)
 admin.add_view(UserView(User, db.session))
 admin.add_view(UniversityView(University, db.session))
@@ -322,4 +337,6 @@ admin.add_view(NameIdView(UniversitySchool, db.session))
 admin.add_view(NameIdView(UniversityYear, db.session))
 admin.add_view(ModuleView(Module, db.session))
 admin.add_view(NameIdView(MessageThread, db.session))
+admin.add_view(MessageView(Message, db.session))
+admin.add_view(NoteView(Note, db.session))
 admin.add_view(GoHomeLink(name='<- Back to site'))

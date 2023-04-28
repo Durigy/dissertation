@@ -129,7 +129,7 @@
 <div aria-label="Resource Page Navigation">
     <ul class="pagination">
         <li class="page-item">
-            <a href="{{ url_for('modules.module_single', module_id = module_id, resource_page = resources.prev_num) }}" {% if resources.page == 1 %} style="pointer-events: none; cursor: default;" class = "page-link text-secondary"{% else %} class="page-link" {% endif %}>
+            <a href="{{ url_for('students.student_home', resource_page = resources.prev_num) }}" {% if resources.page == 1 %} style="pointer-events: none; cursor: default;" class = "page-link text-secondary"{% else %} class="page-link" {% endif %}>
                 Previous
             </a>
         </li>
@@ -138,7 +138,7 @@
         {% if page_num %}
         
         <li class="page-item">
-            <a class="page-link {% if page_num == resources.page %} text-danger {% endif %}" href="{{url_for('modules.module_single', module_id = module_id, resource_page = page_num)}}">
+            <a class="page-link {% if page_num == resources.page %} text-danger {% endif %}" href="{{url_for('students.student_home', resource_page = page_num)}}">
                 {{page_num}}
             </a>
         </li>
@@ -155,7 +155,7 @@
         {% endfor %}
 
         <li class="page-item">
-            <a href="{{ url_for('modules.module_single', module_id = module_id, resource_page = resources.next_num) }}" {% if resources.page == resources.pages %} style="pointer-events: none; cursor: default;" class = "page-link text-secondary"{% else %} class="page-link" {% endif %}>
+            <a href="{{ url_for('students.student_home', resource_page = resources.next_num) }}" {% if resources.page == resources.pages %} style="pointer-events: none; cursor: default;" class = "page-link text-secondary"{% else %} class="page-link" {% endif %}>
                 Next
             </a>
         </li>

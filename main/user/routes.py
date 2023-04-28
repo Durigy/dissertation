@@ -6,7 +6,7 @@ from .. import db, bcrypt, app
 # import secrets
 from flask import render_template, url_for, request, redirect, flash, Blueprint
 from flask_login import login_user, logout_user, login_required, current_user
-from .forms import LoginForm, RegistrationForm, UpdateAccountForm, AddUniSchoolForm, AddUniYearForm, AddUniversityForm
+from .forms import LoginForm, RegistrationForm, UpdateAccountForm, AddUniSchoolForm, AddUniYearForm, AddUniversityForm, PasswordChangeForm
 from ..models import User, PublicProfile, University, UniversitySchool, UniversityYear, Module, MessageThread, Note, Message
 from ..main_utils import generate_id, aside_dict
 
@@ -149,6 +149,33 @@ def account():
     return render_template(
         'user/account.html',
         title='Account',
+        form=form,
+        my_aside_dict = aside_dict(current_user)
+    )
+
+
+@users.route("/password-reset", methods=['GET', 'POST'])
+@login_required
+def student_password_change():
+    form = PasswordChangeForm()
+
+    if form.validate_on_submit() and request.method == "POST":
+        if bcrypt.check_password_hash(current_user.password, form.old_password.data):
+            hashed_password = bcrypt.generate_password_hash(form.new_password.data).decode('utf-8')
+
+            current_user.password = hashed_password
+
+            db.session.commit()
+
+            flash('Your Password has been updated')
+            return redirect(url_for('users.account'))
+        else:
+            flash("Couldn\'t change password")
+
+
+    return render_template(
+        'user/password_change.html',
+        title='Reset Password',
         form=form,
         my_aside_dict = aside_dict(current_user)
     )

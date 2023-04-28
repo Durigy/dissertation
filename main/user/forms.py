@@ -47,8 +47,8 @@ class RegistrationForm(FlaskForm):
 
 
 class LoginForm(FlaskForm):
-    username_email = StringField('Username or Email')
-    password = PasswordField('Password', validators=[DataRequired()]) # Regexp('^(?=.*\d).{6,8}$', message='Your password should be between 6 and 8 Charaters long and contain at least 1 number')
+    username_email = StringField('Username or Email *', validators=[DataRequired()])
+    password = PasswordField('Password *', validators=[DataRequired()]) # Regexp('^(?=.*\d).{6,8}$', message='Your password should be between 6 and 8 Charaters long and contain at least 1 number')
     remember = BooleanField('Remember Me')
     submit = SubmitField('Login')
     
@@ -85,3 +85,9 @@ class AddUniYearForm(FlaskForm):
 class AddUniSchoolForm(FlaskForm):
     name = StringField('University School *', validators=[DataRequired(), Length(min=2, max=50)])
     submit = SubmitField('Add Uni School')
+
+class PasswordChangeForm(FlaskForm):
+    old_password = PasswordField('Old Password *', validators=[DataRequired()])
+    new_password = PasswordField('New Password *', validators = [DataRequired()]) #, Regexp('^(? = .*\d).{6,8}$', message = 'Your password should be between 6 and 8 Charaters long and contain at least 1 number')])
+    confirm_new_password = PasswordField('Confirm New Password *', validators = [DataRequired(), EqualTo('new_password', message = 'Passwords do not match')])
+    submit = SubmitField('Change Password')

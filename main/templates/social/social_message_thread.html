@@ -31,6 +31,7 @@
     const user_id = '{{ current_user.id }}';
     const thread_id = '{{ message_thread_id }}';
     const message_url = "{{ url_for('socials.social_get_messages', message_thread_id = message_thread_id) }}";
+    const other_user_id = '{{ other_user_id }}';
 </script>
 
 <script src="{{ url_for('static', filename='js/chat.js')}}"></script>

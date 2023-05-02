@@ -136,19 +136,21 @@ def message(data):
     
     room = data.get('room')
     new_message = html.escape(data.get('message'))
-    user_id = data.get('other_user_id') if data.get('other_user_id') else ''
+    user_id = data.get('user_id') if data.get('user_id') else ''
+    other_user_id = data.get('other_user_id') if data.get('other_user_id') else ''
     
     # print(new_message)
 
-    # print(MessageThread.query.filter_by(id = room).scalar())
+    print(MessageThread.query.filter_by(id = room).scalar())
 
-    if MessageThread.query.filter_by(id = room).scalar() == None:
+    if not MessageThread.query.filter_by(id = room).first(): # == None:
         user = User.query.filter_by(id = user_id).first()
+        other_user = User.query.filter_by(id = other_user_id).first()
 
         message_thread = MessageThread(
             id = room,
-            name = f'{user.username} & {current_user.username}',
-            user_id = current_user.id,
+            name = f'{other_user.username} & {user.username}',
+            user_id = user_id,
             member_count = 2
         )
 

@@ -94,6 +94,7 @@ $( document ).ready(() => {
                 socket.emit("message",  {
                     'user': `${username}`,
                     'user_id': `${user_id}`,
+                    'other_user_id': `${other_user_id}`,
                     'room': `${thread_id}`,
                     'message': message_val.val()
                 });

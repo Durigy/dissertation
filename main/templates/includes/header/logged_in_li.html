@@ -20,6 +20,18 @@
     </a>
 </li>
 
+<!-- Lecture -->
+<li class="nav-item pe-4">
+    <a class="nav-link d-block d-lg-none d-xl-block" href="{{ url_for('modules.module_lecture') }}">
+        <!-- <i class="fa-solid fa-person-chalkboard"></i> -->
+        <i class="fa-solid fa-chalkboard-user"></i> Lectures
+    </a>
+    <a class="nav-link d-none d-lg-block d-xl-none" data-toggle="tooltip" data-placement="bottom" title="Lectures" href="{{ url_for('modules.module_lecture') }}">
+        <!-- <i class="fa-solid fa-person-chalkboard"></i> -->
+        <i class="fa-solid fa-chalkboard-user"></i>
+    </a>
+</li>
+
 <!-- Notes -->
 <li class="nav-item pe-4">
     <a class="nav-link d-block d-lg-none d-xl-block" href="{{ url_for('students.student_note') }}">

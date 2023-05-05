@@ -57,7 +57,7 @@
             {% for question in my_aside_dict.questions %}
             <div class="mb-2">
                 {% set question_name = question.module.code + ' - ' + question.title %}
-                <span data-bs-toggle="tooltip" data-bs-title="{{ question.date.strftime('%I:%M, %d %b %Y') }}" style="cursor: default;">
+                <span data-bs-toggle="tooltip" data-bs-title="{{ question.date.strftime('%H:%M, %d %b %Y') }}" style="cursor: default;">
                     <a class="aside-text-links" href="{{ url_for('modules.module_question_single', question_id = question.id) }}">{{ question_name|truncate(30, True) }}</a>
                 </span>
             </div>

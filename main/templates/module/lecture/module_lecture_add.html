@@ -1,0 +1,166 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="centre">
+    <h1>Add a Lecture</h1>
+</div>
+
+<div>
+    <form method="POST" action="" enctype="multipart/form-data">
+        {{ form.hidden_tag() }}
+        <div>
+            <p class="form-label">Select a Module *</p>
+            <select name="module" id="module" class="form-select" required>
+                <option value="">Select a Module</option>
+                {% if my_aside_dict %}
+                {% for module in my_aside_dict.subscribed_modules %}
+                    <option value="{{ module.module.id }}" {% if module.module.id == module_id %} selected {% endif %}>{{ module.module.code }} - {{ module.module.name }}</option>
+                {% endfor %}
+                {% else %}
+                Error with module selection
+                {% endif %}
+            </select>
+        </div>
+
+        <br>
+
+        <div>
+            {{ form.title.label( class="form-label" ) }}
+        
+            <br>
+
+            {{ form.title( class="form-control" ) }}
+            
+            {% if form.title.errors %}
+                <div>
+                    {% for error in form.title.errors %}
+                        <span style="color: red;">{{ error }}</span>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <br>
+        
+        <div>
+            {{ form.description.label( class="form-label" ) }}
+        
+            <br>
+            
+            {{ form.description( class="form-control", rows="6" ) }}
+            
+            {% if form.description.errors %}
+                <div>
+                    {% for error in form.description.errors %}
+                        <span style="color: red;">{{ error }}</span>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <br>
+        
+        <div id="date_start_div" class="row">
+            <div class="col-md-6">
+                {{ form.date_start.label( class="form-label" ) }}
+            
+                <br>
+                
+                {{ form.date_start( class="form-control", type="datetime-local" ) }}
+                
+                {% if form.date_start.errors %}
+                    <div>
+                        {% for error in form.date_start.errors %}
+                            <span style="color: red;">{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="col-md-6">
+                {{ form.date_end.label( class="form-label" ) }}
+            
+                <br>
+                
+                {{ form.date_end( class="form-control", type="datetime-local" ) }}
+                
+                {% if form.date_end.errors %}
+                    <div>
+                        {% for error in form.date_end.errors %}
+                            <span style="color: red;">{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <br>
+        
+        <div id="location_div">
+            <br>
+
+            {{ form.location.label( class="form-label" ) }}
+        
+            <br>
+            
+            {{ form.location( class="form-control" ) }}
+            
+            {% if form.location.errors %}
+                <div>
+                    {% for error in form.location.errors %}
+                        <span style="color: red;">{{ error }}</span>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <br>
+        
+        <div id="online_link_div">
+            <br>
+
+            {{ form.online_link.label( class="form-label" ) }}
+        
+            <br>
+            
+            {{ form.online_link( class="form-control" ) }}
+            
+            {% if form.online_link.errors %}
+                <div>
+                    {% for error in form.online_link.errors %}
+                        <span style="color: red;">{{ error }}</span>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <br>
+        
+        <div id="quizing_link_div">
+            <br>
+
+            {{ form.quizing_link.label( class="form-label" ) }}
+        
+            <br>
+            
+            {{ form.quizing_link( class="form-control" ) }}
+            
+            {% if form.quizing_link.errors %}
+                <div>
+                    {% for error in form.quizing_link.errors %}
+                        <span style="color: red;">{{ error }}</span>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <br>
+
+        <div>
+            {{ form.submit( class='btn btn-submit' ) }}
+        </div>
+        <br>
+    </form>
+</div>
+
+<br>
+{% endblock content %}

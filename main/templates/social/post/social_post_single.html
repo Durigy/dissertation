@@ -26,7 +26,7 @@
         {% endif %}
     </div>
     <div class="">
-        <span>Date posted: </span> {{ post.date.strftime('%I:%M, %d %b %Y') }} (UTC)
+        <span>Date posted: </span> {{ post.date.strftime('%H:%M, %d %b %Y') }} (UTC)
     </div>
 </div>
 
@@ -36,7 +36,7 @@
 <div class="d-flex flex-wrap p-2">
     {% for comment in comments.items %}
     {# reference for formating time: https://www.programiz.com/python-programming/datetime/strftime [accessed: 2 apr, 2023] #}
-    {% set temp = comment.user.username + ' - ' + comment.date.strftime('%I:%M, %d %b %Y') + ' (UTC)'%}
+    {% set temp = comment.user.username + ' - ' + comment.date.strftime('%H:%M, %d %b %Y') + ' (UTC)'%}
     {# reference: https://stackoverflow.com/posts/36458482/how-to-not-render-a-entire-string-with-jinja2 [accessed: 26 Mar 2023] #}
     {{ card(
         title = temp,

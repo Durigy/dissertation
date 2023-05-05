@@ -7,6 +7,37 @@
 
 <hr class="text-muted"> -->
 <br>
+<!-- the newest lecture -->
+<div class="d-flex flex-wrap p-2">
+    <div class="col">
+        <h3>Next Lecture</h3>
+    </div>
+</div>
+{% if next_lecture %}
+<div class="d-flex flex-wrap p-2">
+{% set temp = next_lecture.title|truncate(40, True) + ' - ' + next_lecture.module.code  + ' | ' + next_lecture.date_start.strftime('%H:%M, %d %b %Y') %}
+{{ card(
+    title = temp,
+    description = next_lecture.description|truncate(300, True) if next_lecture.description else None,
+    link = url_for('modules.module_lecture_single', lecture_id = next_lecture.id),
+    link_text = 'See More',
+    width = 100
+) }}
+</div>
+{% else %}
+<em>No lectures to show yet</em>
+<br>
+{% endif %}
+
+<br>
+<a href="{{ url_for('modules.module_lecture') }}" class="btn btn-secondary">See All Lectures</a>
+
+<br>
+<br>
+
+<hr class="text-muted">
+
+<br>
 <!-- the newest question -->
 <div class="d-flex flex-wrap p-2">
     <div class="col">

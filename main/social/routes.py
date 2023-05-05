@@ -290,7 +290,7 @@ def social_get_messages(message_thread_id):
         }] +[{
             'user': message.user.username,
             'message': message.body,
-            'datetime': str(message.date_sent.strftime('%I:%M, %d %b %Y')),
+            'datetime': str(message.date_sent.strftime('%H:%M, %d %b %Y')),
             'message_id': message.id
         } for message in messages.items
     ]

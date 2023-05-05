@@ -1,0 +1,68 @@
+{% extends "module/module_layout.html" %}
+{% block module %}
+
+{% from "helpers/cards.html" import card %}
+{% from "helpers/blue_tile.html" import blue_tile %}
+
+<div class="d-flex flex-wrap">
+    <div class="col">
+        <h1>{{ lecture.title }}</h1>
+    </div>
+    <div class="col text-end">
+        {% if current_user.id == lecture.user_id %}
+        <a class="btn btn-danger" href="{{ url_for('modules.module_lecture_delete', lecture_id = lecture.id) }}">Delete lecture</a>
+        {% endif %}
+    </div>
+</div>
+
+<div class="d-flex flex-wrap p-2 ps-0">
+    <div class="col">
+        {% if current_user == lecture.user %}
+        <span>Posted by: </span> YOU
+        {% else %}
+        <span>Posted by: </span> {{ lecture.user.username }}
+        {% endif %}
+    </div>
+    <div class="">
+        <span>Date posted: </span> {{ lecture.date_added.strftime('%H:%M, %d %b %Y') }} (UTC)
+    </div>
+</div>
+
+<div class="bg-light p-4 mt-3 rounded">
+    <div class="row pb-3">
+        <div class="col">
+            <strong>Finishes</strong>: {{ lecture.date_start.strftime('%H:%M, %d %b %Y') }}
+        </div>
+
+        <div class="col text-end">
+            <strong>Finishes</strong>: {{ lecture.date_end.strftime('%H:%M, %d %b %Y') }}
+        </div>
+    </div>
+
+    <div>
+        <strong>Location</strong>: {{ lecture.location }}
+    </div>
+
+    {% if lecture.online_link %}
+    <div>
+        Lecture link: {{ lecture.online_link }}
+    </div>
+    {% endif %}
+
+    {% if lecture.quizing_link %}
+    <div>
+        Quiz link: {{ lecture.quizing_link }}
+    </div>
+    {% endif %}
+
+    {% if lecture.description %}
+    <br>
+    <h3>Description:</h3>
+    <div style="white-space:pre; overflow:hidden" class="text-wrap text-break">
+        {{ lecture.description }}
+    </div>
+    {% else %}
+    <br><br>
+    {% endif %}
+</div>
+{% endblock module %}

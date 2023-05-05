@@ -49,6 +49,7 @@ class User(UserMixin, db.Model):
     image = db.relationship('Image', backref = 'user', lazy = True, foreign_keys = 'Image.user_id')
     document = db.relationship('Document', backref = 'user', lazy = True, foreign_keys = 'Document.user_id')
     module_resource = db.relationship('ModuleResource', backref = 'user', lazy = True, foreign_keys = 'ModuleResource.user_id')
+    module_lecture = db.relationship('ModuleLecture', backref = 'user', lazy = True, foreign_keys = 'ModuleLecture.user_id')
 
     # M2M Relationships #
     in_thread = db.relationship('MessageThread', backref = 'following_user', secondary = user_message_thread_link)
@@ -111,9 +112,13 @@ class UniversityYear(db.Model):
     # Relationships #
     user = db.relationship('User', backref = 'university_year', lazy = True, foreign_keys = 'User.university_year_id')
     module = db.relationship('Module', backref = 'university_year', lazy = True, foreign_keys = 'Module.university_year_id')
+    
 
-
-# Module
+#################################
+#                               #
+#          Module Stuff         #
+#                               #
+#################################
 class Module(db.Model):
     # Datebase Columns 
     id = db.Column(db.String(20), primary_key = True, default = secrets.token_hex(10))
@@ -133,9 +138,10 @@ class Module(db.Model):
 
     # Relationships #
     module_question = db.relationship('ModuleQuestion', backref = 'module', lazy = True, foreign_keys = 'ModuleQuestion.module_id')
+    module_subscription = db.relationship('ModuleSubscription', backref = 'module', lazy = True, foreign_keys = 'ModuleSubscription.module_id')
     note = db.relationship('Note', backref = 'module', lazy = True, foreign_keys = 'Note.module_id')
     module_resource = db.relationship('ModuleResource', backref = 'module', lazy = True, foreign_keys = 'ModuleResource.module_id')
-    module_subscription = db.relationship('ModuleSubscription', backref = 'module', lazy = True, foreign_keys = 'ModuleSubscription.module_id')
+    module_lecture = db.relationship('ModuleLecture', backref = 'module', lazy = True, foreign_keys = 'ModuleLecture.module_id')
 
 
 class ModuleSubscription(db.Model):
@@ -224,9 +230,32 @@ class ModuleResource(db.Model):
 
     # Relationships #
     # Add Here
-    
 
-# Public/Social #
+class ModuleLecture(db.Model):
+    # Datebase Columns 
+    id = db.Column(db.String(20), primary_key = True, default = secrets.token_hex(10))
+    title = db.Column(db.String(100), nullable = True)
+    date_added = db.Column(db.DateTime, nullable = False, default = datetime.utcnow)
+    date_start = db.Column(db.DateTime, nullable = False)
+    date_end = db.Column(db.DateTime, nullable = True)
+    location = db.Column(db.String(100), nullable = True)
+    description = db.Column(db.Text, nullable = True)
+    online_link = db.Column(db.String(300), nullable = True)
+    quizing_link = db.Column(db.String(300), nullable = True)
+
+    # Links (ForeignKeys)
+    module_id = db.Column(db.String(20), db.ForeignKey('module.id'), nullable = False)
+    user_id = db.Column(db.String(20), db.ForeignKey('user.id'), nullable = True)
+
+    # Relationships
+    # Add here
+
+
+#################################
+#                               #
+#          Social Stuff         #
+#                               #
+#################################
 class PublicProfile(db.Model):
     # Datebase Columns 
     id = db.Column(db.String(20), primary_key = True, default = secrets.token_hex(10))

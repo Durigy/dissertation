@@ -96,39 +96,39 @@ def privacy():
 def connect(auth):
     # print('conneted')
 
-    emit('message', {'message': 'You\'re connected', 'datetime': str(datetime.utcnow().strftime('%I:%M, %d %b %Y')), 'user': 'Server'})
+    emit('message', {'message': 'You\'re connected', 'datetime': str(datetime.utcnow().strftime('%H:%M, %d %b %Y')), 'user': 'Server'})
 
 @socketio.on('wake_up')
 def wake_up(auth):
     # print('wake_up')
 
-    emit('message', {'message': '', 'datetime': str(datetime.utcnow().strftime('%I:%M, %d %b %Y')), 'user': 'Server'})
+    emit('message', {'message': '', 'datetime': str(datetime.utcnow().strftime('%H:%M, %d %b %Y')), 'user': 'Server'})
     sleep(0.2)
-    emit('message', {'message': '', 'datetime': str(datetime.utcnow().strftime('%I:%M, %d %b %Y')), 'user': 'Server'})
+    emit('message', {'message': '', 'datetime': str(datetime.utcnow().strftime('%H:%M, %d %b %Y')), 'user': 'Server'})
     sleep(0.2)
-    emit('message', {'message': '', 'datetime': str(datetime.utcnow().strftime('%I:%M, %d %b %Y')), 'user': 'Server'})
+    emit('message', {'message': '', 'datetime': str(datetime.utcnow().strftime('%H:%M, %d %b %Y')), 'user': 'Server'})
 
 @socketio.on('disconnect')
 def disconnect():
     # print('Client disconnected')
 
-    emit('message', {'message': 'You\'ve been disconnected', 'datetime': str(datetime.utcnow().strftime('%I:%M, %d %b %Y')), 'user': 'Server'})
+    emit('message', {'message': 'You\'ve been disconnected', 'datetime': str(datetime.utcnow().strftime('%H:%M, %d %b %Y')), 'user': 'Server'})
 
 @socketio.on('room-connect')
 def room_connect(data):
     # print(data)
 
     if not data.get('user') == current_user.id:
-        emit('message', {'message': 'Invalid user', 'datetime': str(datetime.utcnow().strftime('%I:%M, %d %b %Y')), 'user': 'Server'})
+        emit('message', {'message': 'Invalid user', 'datetime': str(datetime.utcnow().strftime('%H:%M, %d %b %Y')), 'user': 'Server'})
     room = data.get('room')
 
     join_room(room)
 
-    emit('message', {'message': '', 'datetime': str(datetime.utcnow().strftime('%I:%M, %d %b %Y')), 'user': 'Server'})
+    emit('message', {'message': '', 'datetime': str(datetime.utcnow().strftime('%H:%M, %d %b %Y')), 'user': 'Server'})
     sleep(0.1)
-    emit('message', {'message': '', 'datetime': str(datetime.utcnow().strftime('%I:%M, %d %b %Y')), 'user': 'Server'})
+    emit('message', {'message': '', 'datetime': str(datetime.utcnow().strftime('%H:%M, %d %b %Y')), 'user': 'Server'})
 
-    # send({"user": 'Server', "message":f"{current_user.username} is here", 'datetime': str(datetime.utcnow().strftime('%I:%M, %d %b %Y'))}, to = room)
+    # send({"user": 'Server', "message":f"{current_user.username} is here", 'datetime': str(datetime.utcnow().strftime('%H:%M, %d %b %Y'))}, to = room)
 
 @socketio.on('message')
 def message(data):
@@ -167,7 +167,7 @@ def message(data):
     content = {
         'user': data.get('user'),
         'message': new_message,
-        'datetime': str(message_datetime.strftime('%I:%M, %d %b %Y'))
+        'datetime': str(message_datetime.strftime('%H:%M, %d %b %Y'))
     }
 
     send(content, to = room)

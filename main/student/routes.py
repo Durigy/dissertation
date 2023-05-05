@@ -5,11 +5,11 @@ from flask_login import login_required, current_user
 from .. import db
 from .. import IMAGEKIT_URL_ENDPOINT
 from .forms import CreateNoteForm
-from ..models import ModuleQuestion, ModuleResource, ModuleSubscription, PublicPost, User, Note
+from ..models import ModuleQuestion, ModuleResource, ModuleSubscription, PublicPost, User, Note, ModuleLecture
 from ..main_utils import generate_id, defaults, aside_dict
 
 # referece: https://flask.palletsprojects.com/en/2.2.x/blueprints/#registering-blueprints
-students = Blueprint('students', __name__, template_folder='templates',  url_prefix='/student') 
+students = Blueprint('students', __name__, template_folder='templates',  url_prefix='/mine') 
 
 @students.route("")
 @login_required
@@ -43,6 +43,13 @@ def student_home():
         .order_by(PublicPost.date.desc()) \
         .first()
     
+    next_lecture = ModuleLecture.query \
+        .filter(ModuleSubscription.user_id == current_user.id) \
+        .filter_by(module_id = ModuleSubscription.module_id) \
+        .filter(ModuleLecture.date_end >= datetime.now()) \
+        .order_by(ModuleLecture.date_start) \
+        .first()
+    
     return render_template(
         'student/student_home.html',
         title='Home',
@@ -51,6 +58,7 @@ def student_home():
         resources = resources,
         latest_question = latest_question,
         latest_post = latest_post,
+        next_lecture = next_lecture,
         img_url = IMAGEKIT_URL_ENDPOINT + '/module-resource-image/',
         doc_url = IMAGEKIT_URL_ENDPOINT + '/module-resource-document/'
     )

@@ -2,22 +2,86 @@
 {% block module %}
 
 {% from "helpers/cards.html" import card %}
+<br>
 
-{# <div class="d-flex flex-wrap p-2">
-    <div class="col-3 pe-4">
-        <h3>Lecture Today</h3>
+<!-- module lectures -->
+
+<div class="d-flex flex-wrap p-2">
+    <div class="col pe-4">
+        <h3>Upcoming Lectures</h3>
     </div>
-    <div class="">
-        <strong>Comming Soon</strong>
-        <!-- <a href="#" class="btn btn-secondary">See more lectures</a> -->
+    <div class="text-end">
+        {% if current_user.is_tutor %}
+        {% if following_module %}
+        <a href="{{ url_for('modules.module_lecture_add', module_id = module.id) }}" class="btn btn-secondary">Add a Lecture</a>
+        {% else %}
+        <h4 class="text-danger">Subscribe to this module to interact</h4><a href="{{ url_for('modules.module_add_sub', module_id = module.id) }}" class="btn btn-success">Subscribe</a>
+        {% endif %}
+        {% endif %}
     </div>
 </div>
 
+<!-- <\ all posts will appeare here - paginated \> -->
 
-<br>
-<br>
-<hr class="text-muted">
-<br> #}
+{% if lectures.pages > 0 %}
+<div class="d-flex flex-wrap p-2">
+    {% for lecture in lectures.items %}
+    {% set temp = lecture.title|truncate(40, True) + ' - ' + lecture.module.code  + ' | ' + lecture.date_start.strftime('%H:%M, %d %b %Y') %}
+    {{ card(
+        title = temp,
+        description = lecture.description|truncate(300, True) if lecture.description else None,
+        link = url_for('modules.module_lecture_single', lecture_id = lecture.id),
+        link_text = 'See More',
+        width = 100
+    ) }}
+    {% endfor %}
+</div>
+
+{% if lectures.pages > 1 %}
+<!-- Pagination Links-->
+
+<div aria-label="Lecture Page Navigation">
+    <ul class="pagination">
+        <li class="page-item">
+            <a href="{{ url_for('modules.module_single', module_id = module_id, lecture_page = lectures.prev_num) }}" {% if lectures.page == 1 %} style="pointer-events: none; cursor: default;" class = "page-link text-secondary"{% else %} class="page-link" {% endif %}>
+                Previous
+            </a>
+        </li>
+
+        {% for page_num in lectures.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+        {% if page_num %}
+        
+        <li class="page-item">
+            <a class="page-link {% if page_num == lectures.page %} text-danger {% endif %}" href="{{url_for('modules.module_single', module_id = module_id, lecture_page = page_num)}}">
+                {{page_num}}
+            </a>
+        </li>
+        
+        {% else %}
+        
+        <li class="page-item">
+            <a class="page-link text-secondary" href="" style="pointer-events: none; cursor: default;">
+                . . .
+            </a>
+        </li>
+        
+        {% endif %}
+        {% endfor %}
+
+        <li class="page-item">
+            <a href="{{ url_for('modules.module_single', module_id = module_id, lecture_page = lectures.next_num) }}" {% if lectures.page == lectures.pages %} style="pointer-events: none; cursor: default;" class = "page-link text-secondary"{% else %} class="page-link" {% endif %}>
+                Next
+            </a>
+        </li>
+    </ul>
+</div>
+{% endif %}
+
+{% else %}
+<div>
+    There are no lectures for this module yet
+</div>
+{% endif %}
 
 <br>
 
@@ -109,7 +173,7 @@
 <br>
 
 <!-- module chat -->
-<div id="module-chat">
+<div id="chat">
     <div class="d-flex flex-wrap p-2">
         <div class="col pe-4">
             <h3>Module Chat</h3>
@@ -121,40 +185,6 @@
 
     <div>
         <div id="messages" class="scrollarea bg-light rounded px-5" style="max-height: 50vh;">
-
-            {#% if messages %}
-            {% for message in messages %}
-            <br>
-            {% if message.user == current_user %}
-            <!-- main user -->
-            <div class="text-end">
-                <div class="text-wrap text-break my-2 rounded px-4 py-2 my-1 bg-white shadow-sm" style="display: inline; overflow:hidden">
-                    <span data-bs-toggle="tooltip" data-bs-title="{{ message.date_sent.strftime('%I:%M, %d %b %Y') }}" style="cursor: default;">
-                    {{ message.body }}
-                    </span>
-                </div>
-            </div>
-
-            {% else %}
-
-            <!-- other users -->
-            <div>
-                {{ message.user.username }}:
-                <div class="text-wrap text-break my-2 rounded px-4 py-2 my-1 bg-secondary text-white shadow-sm" style="display: inline;">
-                        <span data-bs-toggle="tooltip" data-bs-title="{{ message.date_sent.strftime('%I:%M, %d %b %Y') }}" style="cursor: default;">
-                    {{ html.unescape(message.body) }}
-                    </span>
-                </div>
-            </div>
-
-            {% endif %}
-            {% endfor %}
-            {% else %}
-            <div id="no-messages-here">
-                <h5><em>There are no messages here yet</em></h5>
-            </div>
-            {% endif %#}
-
             <div id="no-messages-here">
                 <br>
                 <h5><em>There are no messages here yet</em></h5>
@@ -166,10 +196,9 @@
         <div id="inputs">
             <div id="inputs_inner" class="pt-3 d-flex">
                 <input type="text" placeholder="Message" name="message" id="message-field" aria-label="message input box" class="form-control rounded me-2" required>
-                <button type="button" name="send" id="send-btn" aria-label="submit message"><i class="fa-solid fa-paper-plane"></i></i></button>
+                <button type="button" name="send" id="send-btn" aria-label="submit message" class=""><i class="fa-solid fa-paper-plane"></i></i></button>
             </div>
-            <!-- onclick="sendMessage()"  -->
-            
+
             <span id="error_message" style="color: red;"></span>
         </div>
         {% else %}
@@ -290,7 +319,7 @@ This is for resources such as:
 {% endif %}
 {% else %}
 <div>
-    <em>There are no resources form students yet</em>
+    <em>There are no resources from students yet</em>
 </div>
 {% endif %}
 
@@ -485,6 +514,7 @@ This is for resources such as:
     const user_id = '{{ current_user.id }}';
     const thread_id = '{{ module.message_thread_id }}';
     const message_url = "{{ url_for('modules.module_get_messages', module_id = module.id) }}";
+    const other_user_id = '';
 </script>
 
 <script src="{{ url_for('static', filename='js/chat.js')}}"></script>

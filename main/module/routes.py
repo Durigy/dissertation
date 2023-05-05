@@ -1,7 +1,8 @@
+from datetime import datetime
 from flask import render_template, url_for, request, redirect, flash, Blueprint, make_response, jsonify
 from flask_login import login_required, current_user
-from .forms import AddModuleForm, AddModuleQuestionForm, AddModuleQuestionCommentForm, AddModuleResourceForm
-from ..models import User, Module, ModuleReview, ModuleSubscription, ModuleQuestion, ModuleQuestionComment, Image, Document, ModuleResource, MessageThread, Message, University, UniversitySchool, UniversityYear
+from .forms import AddModuleForm, AddModuleQuestionForm, AddModuleQuestionCommentForm, AddModuleResourceForm, AddModuleLectureForm
+from ..models import User, Module, ModuleReview, ModuleSubscription, ModuleQuestion, ModuleQuestionComment, Image, Document, ModuleResource, MessageThread, Message, University, UniversitySchool, UniversityYear, ModuleLecture
 from ..main_utils import generate_id, defaults, aside_dict, allowed_file
 from .. import db, app, IMAGE_EXTENSIONS, DOCUMENT_EXTENSIONS, IMAGEKIT_URL_ENDPOINT, imagekit
 import os
@@ -60,7 +61,18 @@ def module_single(module_id):
 
     following_module = True if ModuleSubscription.query.filter_by(module_id=module_id).filter_by(user_id=current_user.id).first() else False
     
+    # module lectures
+    lecture_page = request.args.get('lecture_page', 1, type = int)
+    
+    lectures = ModuleLecture.query \
+        .filter_by(module_id = module_id) \
+        .filter(ModuleLecture.date_end >= datetime.now()) \
+        .order_by(ModuleLecture.date_start) \
+        .paginate(page = lecture_page, per_page = 3)
+    
 
+    following_module = True if ModuleSubscription.query.filter_by(module_id=module_id).filter_by(user_id=current_user.id).first() else False
+    
     # message_page = request.args.get('message_page', 1, type = int)
     
     # messages = Message.query \
@@ -81,7 +93,8 @@ def module_single(module_id):
         doc_url = IMAGEKIT_URL_ENDPOINT + '/module-resource-document/',
         use_web_socket = True,
         socket_room = module.message_thread_id,
-        following_module = following_module # ,
+        following_module = following_module,
+        lectures = lectures # ,
         # messages = messages
     )
 
@@ -518,6 +531,120 @@ def module_resource_add():
 
 ############################
 #                          #
+#       Lecture Stuff      #
+#                          #
+############################
+@modules.route("/lecture/add", methods=['GET', 'POST'])
+@login_required
+def module_lecture_add():
+    if not current_user.is_tutor:
+        flash("You don\'t have access to that")
+        return redirect(url_for('index'))
+
+    form = AddModuleLectureForm()
+
+    module_id = request.args.get('module_id', default = None, type = str)
+
+    if form.validate_on_submit() and request.method == "POST":
+        lecture_id = generate_id(ModuleLecture)
+        module_id = request.form.get('module')
+        print(f'Start: {form.date_start.data}')
+        print(f'end: {form.date_end.data}')
+        print(f'now: {datetime.utcnow()}')
+
+        lecture = ModuleLecture(
+            id = lecture_id,
+            title = form.title.data,
+            description = form.description.data if len(form.description.data) > 0 else None,
+            date_start = form.date_start.data,
+            date_end = form.date_end.data,
+            location = form.location.data,
+            online_link = form.online_link.data,
+            quizing_link = form.quizing_link.data,
+            user_id = current_user.id,
+            module_id = module_id 
+        )
+
+        db.session.add(lecture)
+        db.session.commit()
+
+        flash('Your Lecture has been added')   
+
+        if module_id:
+            return redirect(url_for('modules.module_single', module_id = module_id))
+
+        return redirect(url_for('modules.module_lecture_add'))
+
+
+    return render_template(
+        'module/lecture/module_lecture_add.html',
+        title = "Add Lecture",
+        my_aside_dict = aside_dict(current_user),
+        form = form,
+        module_id = module_id
+    )
+
+
+@modules.route("/lecture/<lecture_id>", methods=['GET', 'POST'])
+@login_required
+def module_lecture_single(lecture_id):
+    lecture = ModuleLecture.query.get_or_404(lecture_id)
+
+    module = Module.query.filter_by(id = lecture.module_id).first()
+
+    return render_template(
+        'module/lecture/module_lecture_single.html',
+        title = "Lecture",
+        my_aside_dict = aside_dict(current_user),
+        lecture = lecture,
+        module_id = lecture.module_id,
+        module = module
+    )
+
+@modules.route("/lecture/<lecture_id>/delete")
+@login_required
+def module_lecture_delete(lecture_id):
+    if not current_user.is_tutor:
+        flash("You don\'t have access to that")
+        return redirect(url_for('index'))
+    
+    lecture = ModuleLecture.query.get_or_404(lecture_id)
+
+    if not current_user.id == lecture.user_id:
+        flash("You don\'t have access to that")
+        return redirect(url_for('index'))
+    
+    module_id = lecture.module_id
+
+    db.session.delete(lecture)
+
+    db.session.commit()
+
+    return redirect(url_for('modules.module_single', module_id = module_id))
+
+
+@modules.route("/lectures")
+@login_required
+def module_lecture():
+    lecture_page = request.args.get('lecture_page', 1, type = int)
+
+    lectures = ModuleLecture.query \
+        .filter(ModuleSubscription.user_id == current_user.id) \
+        .filter_by(module_id = ModuleSubscription.module_id) \
+        .filter(ModuleLecture.date_end >= datetime.now()) \
+        .order_by(ModuleLecture.date_start) \
+        .paginate(page = lecture_page, per_page = 10)
+    
+    return render_template(
+        'module/lecture/module_lecture_list.html',
+        title = "Lectures",
+        my_aside_dict = aside_dict(current_user),
+        lectures = lectures
+    )
+
+
+############################
+#                          #
 #     Admin Test Stuff     #
 #                          #
 ############################
@@ -599,7 +726,7 @@ def module_get_messages(module_id):
         }] +[{
             'user': message.user.username,
             'message': message.body,
-            'datetime': str(message.date_sent.strftime('%I:%M, %d %b %Y')),
+            'datetime': str(message.date_sent.strftime('%H:%M, %d %b %Y')),
             'message_id': message.id
         } for message in messages.items
     ]
@@ -612,6 +739,6 @@ def module_get_messages(module_id):
     #     return jsonify({
     #         'user': 'server',
     #         'message': 'no messages'
-    #         'datetime': str(message.date_sent.strftime('%I:%M, %d %b %Y'))
+    #         'datetime': str(message.date_sent.strftime('%H:%M, %d %b %Y'))
     #     })
 

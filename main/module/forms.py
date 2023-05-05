@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, TextAreaField, SubmitField,SelectField, URLField, FileField
+from wtforms import StringField, TextAreaField, SubmitField,SelectField, URLField, FileField, DateTimeField
 from wtforms.validators import DataRequired, Length, EqualTo, ValidationError, Regexp, InputRequired, NumberRange, Email
 from ..models import University, UniversitySchool, UniversityYear
 from datetime import date, datetime, time, timedelta
@@ -65,3 +65,35 @@ class AddModuleResourceForm(FlaskForm):
     url = URLField('Add a URL', render_kw={"placeholder": "https://www.example.com"})
     file = FileField(f'Upload a file: {allowed_extensions}', render_kw={"placeholder": f"Upload a file: {allowed_extensions}"}) #, "multiple": ""})
     submit = SubmitField('Post Resource')
+
+
+class AddModuleLectureForm(FlaskForm):
+    '''
+    this is a form to add a module lecture
+    '''
+    
+    title = StringField('Title of the Lecture: *', render_kw = {"placeholder": "Give your Lecture a Title for students"}, validators = [DataRequired(), Length(min=4, max=240)])
+    date_start = DateTimeField('When the lecture starts *', format='%Y-%m-%dT%H:%M')
+    date_end = DateTimeField('When the lecture finishes *', format='%Y-%m-%dT%H:%M')
+    location = TextAreaField('Location or Online *:', render_kw = {"placeholder": "Location of the lecture or \'Online\' if it is online"}, validators = [DataRequired(), Length(min=2, max=100)])
+    description = TextAreaField('More Detail:', render_kw = {"placeholder": "More detail about the lecture i.e what it will be about"})
+    online_link = URLField('Online link i.e Zoom/Teams:', render_kw = {"placeholder": "Online link i.e Zoom/Teams"}, validators = [Length(max=300)])
+    quizing_link = URLField('Online quiz link i.e Mentimeter/Kahoot:', render_kw = {"placeholder": "Online quiz link i.e Mentimeter/Kahoot"}, validators = [Length(max=300)])
+    submit = SubmitField('Add Lecture')
+
+    def validate_date_start(self, date_start):
+       if not date_start.data:
+           raise ValidationError('Please add a date')
+
+    def validate_date_end(self, date_end):
+       if not date_end.data:
+           raise ValidationError('Please add a date')
+       
+       if date_end.data < self.date_start.data:
+           raise ValidationError('A lecture can\'t end before it has started')
+       
+       if date_end.data == self.date_start.data:
+           raise ValidationError('A lecture can\'t end and start at the same time silly')
+       
+       if date_end.data < datetime.now():
+           raise ValidationError('If only we could go back in time, then you could set the end of a lecture to before the current time')

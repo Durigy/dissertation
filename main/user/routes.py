@@ -7,7 +7,7 @@ from .. import db, bcrypt, app
 from flask import render_template, url_for, request, redirect, flash, Blueprint
 from flask_login import login_user, logout_user, login_required, current_user
 from .forms import LoginForm, RegistrationForm, UpdateAccountForm, AddUniSchoolForm, AddUniYearForm, AddUniversityForm, PasswordChangeForm
-from ..models import User, PublicProfile, University, UniversitySchool, UniversityYear, Module, MessageThread, Note, Message
+from ..models import User, PublicProfile, University, UniversitySchool, UniversityYear, Module, MessageThread, Note, Message, ModuleLecture
 from ..main_utils import generate_id, aside_dict
 
 
@@ -357,6 +357,13 @@ class MessageView(ModelView):
     can_create = False
     can_delete = False
 
+class LectureView(ModelView):
+    form_columns = ['id', 'title', 'date_added', 'date_start', 'date_end', 'location', 'description', 'online_link', 'quizing_link', 'module_id', 'user_id']
+    can_view_details = True
+    # can_edit = False
+    can_create = False
+    column_editable_list = ['title', 'location', 'description', 'online_link', 'quizing_link', 'user_id', 'module_id']
+
 # flask admin routes for adding databse tables to the view/delete in the admin panel (editing/adding can't be done here due to the dates)
 admin.add_view(UserView(User, db.session))
 admin.add_view(UniversityView(University, db.session))
@@ -364,6 +371,7 @@ admin.add_view(NameIdView(UniversitySchool, db.session))
 admin.add_view(NameIdView(UniversityYear, db.session))
 admin.add_view(ModuleView(Module, db.session))
 admin.add_view(NameIdView(MessageThread, db.session))
-admin.add_view(MessageView(Message, db.session))
-admin.add_view(NoteView(Note, db.session))
+# admin.add_view(MessageView(Message, db.session))
+# admin.add_view(NoteView(Note, db.session))
+admin.add_view(LectureView(ModuleLecture, db.session))
 admin.add_view(GoHomeLink(name='<- Back to site'))

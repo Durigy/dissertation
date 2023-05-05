@@ -1,0 +1,88 @@
+{% extends "layout.html" %}
+{% block content %}
+
+{% from "helpers/cards.html" import card %}
+{% from "helpers/blue_tile.html" import blue_tile %}
+
+<!-- Lectures -->
+<div class="d-flex flex-wrap p-2">
+    <div class="col">
+        <h1>Lectures for modules you follow</h1>
+    </div>
+
+    {% if current_user.is_tutor %}
+    <div class="">
+        <a href="{{ url_for('modules.module_lecture_add') }}" class="btn btn-secondary">Add a Lecture</a>
+    </div>
+    {% endif %}
+</div>
+
+{% if lectures.pages > 0 %}
+<div class="d-flex flex-wrap p-2">
+    {% for lecture in lectures.items %}
+    {% set temp = lecture.title|truncate(40, True) + ' - ' + lecture.module.code  + ' | ' + lecture.date_start.strftime('%H:%M, %d %b %Y') %}
+    {{ card(
+        title = temp,
+        description = lecture.description|truncate(300, True) if lecture.description else None,
+        link = url_for('modules.module_lecture_single', lecture_id = lecture.id),
+        link_text = 'See More',
+        width = 100
+    ) }}
+    {% endfor %}
+</div>
+
+{% if lectures.pages > 1 %}
+<div aria-label="Lecture Page Navigation">
+    <ul class="pagination">
+        <li class="page-item">
+            <a href="{{ url_for('modules.module_lecture', lecture_page = lectures.prev_num, user_lecture_page = user_lectures.page) }}" {% if lectures.page == 1 %} style="pointer-events: none; cursor: default;" class = "page-link text-secondary"{% else %} class="page-link" {% endif %}>
+                Previous
+            </a>
+        </li>
+
+        {% for page_num in lectures.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+        {% if page_num %}
+        
+        <li class="page-item">
+            <a class="page-link {% if page_num == lectures.page %} text-danger {% endif %}" href="{{url_for('modules.module_lecture', lecture_page = page_num, user_lecture_page = user_lectures.page) }}">
+                {{page_num}}
+            </a>
+        </li>
+        
+        {% else %}
+        
+        <li class="page-item">
+            <a class="page-link text-secondary" href="" style="pointer-events: none; cursor: default;">
+                . . .
+            </a>
+        </li>
+        
+        {% endif %}
+        {% endfor %}
+
+        <li class="page-item">
+            <a href="{{ url_for('modules.module_lecture', lecture_page = lectures.next_num, user_lecture_page = user_lectures.page) }}" {% if lectures.page == lectures.pages %} style="pointer-events: none; cursor: default;" class = "page-link text-secondary"{% else %} class="page-link" {% endif %}>
+                Next
+            </a>
+        </li>
+    </ul>
+</div>
+{% endif %}
+
+{% else %}
+<div>
+    <em>There are no lectures for any of your modules yet</em>
+</div>
+
+<br>
+{% endif %}
+
+<br>
+
+{% if current_user.is_tutor %}
+{{ blue_tile(title = 'Why not add a lecture?', description = 'If you have an upcomming lecture, why not add it for your students to see', link = url_for('modules.module_lecture_add'), link_text = 'Add a Lecture') }}
+{% endif %}
+
+<br><br><br>
+
+{% endblock content %}

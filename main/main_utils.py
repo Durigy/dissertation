@@ -27,7 +27,7 @@ def check_id(query_table, query_id):
 def defaults(current_user):
     module_list = Module.query.order_by(Module.code).all()
 
-    subscribed_modules = ModuleSubscription.query.filter_by(user_id = current_user.id).join(Module).order_by(Module.name).all()
+    subscribed_modules = ModuleSubscription.query.filter_by(user_id = current_user.id).join(Module).order_by(Module.name.desc()).all()
 
     taken_modules = ModuleSubscription.query.filter(ModuleSubscription.user_id == current_user.id).join(Module).order_by(Module.name).all()
 
@@ -48,7 +48,7 @@ def defaults(current_user):
     )
 
 def aside_dict(current_user):
-    subscribed_modules = ModuleSubscription.query.filter_by(user_id = current_user.id).join(Module).order_by(Module.code).limit(10).all()
+    subscribed_modules = ModuleSubscription.query.filter_by(user_id = current_user.id).join(Module).order_by(Module.code.desc()).limit(10).all()
    
     questions = ModuleQuestion.query.filter(ModuleSubscription.user_id == current_user.id) \
             .filter_by(module_id = ModuleSubscription.module_id).filter_by(solved = False) \

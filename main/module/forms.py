@@ -78,7 +78,7 @@ class AddModuleLectureForm(FlaskForm):
     location = TextAreaField('Location or Online *:', render_kw = {"placeholder": "Location of the lecture or \'Online\' if it is online"}, validators = [DataRequired(), Length(min=2, max=100)])
     description = TextAreaField('More Detail:', render_kw = {"placeholder": "More detail about the lecture i.e what it will be about"})
     online_link = URLField('Online link i.e Zoom/Teams:', render_kw = {"placeholder": "Online link i.e Zoom/Teams"}, validators = [Length(max=300)])
-    quizing_link = URLField('Online quiz link i.e Mentimeter/Kahoot:', render_kw = {"placeholder": "Online quiz link i.e Mentimeter/Kahoot"}, validators = [Length(max=300)])
+    quizing_link = URLField('Quiz link i.e Mentimeter/Kahoot:', render_kw = {"placeholder": "Quiz link i.e Mentimeter/Kahoot"}, validators = [Length(max=300)])
     submit = SubmitField('Add Lecture')
 
     def validate_date_start(self, date_start):

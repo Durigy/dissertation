@@ -1,6 +1,6 @@
 {% extends "social/social_layout.html" %}
 {% block social %}
-<h1>Thread: {{ thread.name }}</h1>
+<h1>Thread: {% if thread.name %}{{ thread.name }}{% else %}{{ thread_name }}{% endif %}</h1>
 
 <!-- module chat -->
 <div id="chat">

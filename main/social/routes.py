@@ -182,6 +182,8 @@ def social_message():
 def social_message_single(message_thread_id):
     other_user_id = request.args.get('user_id')
 
+    other_user = User.query.filter_by(id = other_user_id).first()
+
     if other_user_id:
         thread = MessageThread.query.filter_by(id = message_thread_id).scalar()
     else:
@@ -195,7 +197,8 @@ def social_message_single(message_thread_id):
         socket_room = message_thread_id ,
         message_thread_id = message_thread_id,
         thread = thread,
-        other_user_id = other_user_id
+        other_user_id = other_user_id,
+        thread_name = f'{other_user.username} & {current_user.username}'
     )
 
 @socials.route("/messages/new-thread/<user_id>")

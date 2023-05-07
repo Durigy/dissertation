@@ -155,7 +155,7 @@ window.addEventListener('online', () => {
 
     data = {
         'user': 'Device',
-        'message': 'You are online',
+        'message': 'You\'re online',
         'datetime': formattedDateTime
     }
     
@@ -185,7 +185,7 @@ window.addEventListener('offline', () => {
 
     data = {
         'user': 'Device',
-        'message': 'You are offline',
+        'message': 'You\'re offline',
         'datetime': formattedDateTime
     }
 

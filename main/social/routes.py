@@ -228,8 +228,13 @@ def social_message_thread_remove(thread_id):
     # user = User.query.get_or_404(user_id)
     thread = MessageThread.query.filter_by(id = thread_id).first()
 
+    messages = Message.query.filter_by(message_thread_id = thread_id).all()
+
     for user in thread.following_user:
         user.in_thread.remove(thread)
+
+    for message in messages:
+        db.session.delete(message)
 
 
     # current_user.in_thread.remove(thread)

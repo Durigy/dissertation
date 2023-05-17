@@ -156,8 +156,8 @@ def message(data):
 
         db.session.add(message_thread)
 
-        current_user.in_thread.append(message_thread)
         user.in_thread.append(message_thread)
+        other_user.in_thread.append(message_thread)
 
         db.session.commit()
 

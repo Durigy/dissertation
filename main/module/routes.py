@@ -322,7 +322,7 @@ def module_user_list():
 @modules.route("/selection")
 @login_required
 def module_selection():
-    module_list = Module.query.order_by(Module.code).all()
+    module_list = Module.query.filter_by(university_school_id = current_user.university_school_id).filter_by(university_year_id = current_user.university_year_id).order_by(Module.code).all()
 
     subscribed_modules = ModuleSubscription.query.filter_by(user_id = current_user.id).join(Module).order_by(Module.name).all()
 

@@ -198,7 +198,7 @@ def social_message_single(message_thread_id):
         message_thread_id = message_thread_id,
         thread = thread,
         other_user_id = other_user_id,
-        thread_name = f'{other_user.username} & {current_user.username}'
+        thread_name = f'{other_user.username} & {current_user.username}' if (other_user and current_user) else thread.name
     )
 
 @socials.route("/messages/new-thread/<user_id>")
